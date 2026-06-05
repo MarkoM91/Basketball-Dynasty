@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Basketball Dynasty">
+  <rect width="512" height="512" rx="96" fill="#0a0c10"/>
+  <rect x="48" y="48" width="416" height="416" rx="72" fill="#151b28" stroke="#a67c3d" stroke-width="8"/>
+  <text x="256" y="290" text-anchor="middle" fill="#c9a84c" font-family="DM Sans, Arial, sans-serif" font-size="120" font-weight="800">BD</text>
+  <rect x="96" y="360" width="320" height="8" rx="4" fill="#a67c3d" opacity="0.6"/>
+</svg>

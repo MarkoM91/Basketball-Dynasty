@@ -1,0 +1,26 @@
+User-agent: *
+Allow: /
+Allow: /start
+Allow: /guide
+Allow: /compare
+
+# App screens — local save required; keep crawl budget on public pages.
+Disallow: /office
+Disallow: /roster
+Disallow: /trades
+Disallow: /draft
+Disallow: /cap
+Disallow: /development
+Disallow: /coach
+Disallow: /media
+Disallow: /history
+Disallow: /ghosts
+Disallow: /playoffs
+Disallow: /free-agency
+Disallow: /league
+Disallow: /results
+Disallow: /play
+Disallow: /schedule
+Disallow: /finances
+
+Sitemap: https://basketballdynasty.com/sitemap.xml

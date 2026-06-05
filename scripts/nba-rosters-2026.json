@@ -1,0 +1,2222 @@
+{
+  "Boston|Harbor": [
+    {
+      "name": "Jayson Tatum",
+      "position": "SF"
+    },
+    {
+      "name": "Nikola Vučević",
+      "position": "C"
+    },
+    {
+      "name": "Jaylen Brown",
+      "position": "SG"
+    },
+    {
+      "name": "John Tonje",
+      "position": "SG"
+    },
+    {
+      "name": "Derrick White",
+      "position": "SG"
+    },
+    {
+      "name": "Payton Pritchard",
+      "position": "SG"
+    },
+    {
+      "name": "Ron Harper Jr.",
+      "position": "SG"
+    },
+    {
+      "name": "Jordan Walsh",
+      "position": "SG"
+    },
+    {
+      "name": "Hugo González",
+      "position": "SG"
+    },
+    {
+      "name": "Sam Hauser",
+      "position": "SF"
+    },
+    {
+      "name": "Max Shulga",
+      "position": "SG"
+    },
+    {
+      "name": "Dalano Banton",
+      "position": "SF"
+    },
+    {
+      "name": "Luka Garza",
+      "position": "C"
+    },
+    {
+      "name": "Baylor Scheierman",
+      "position": "SG"
+    },
+    {
+      "name": "Amari Williams",
+      "position": "SF"
+    },
+    {
+      "name": "Neemias Queta",
+      "position": "C"
+    },
+    {
+      "name": "JD Davison",
+      "position": "SF"
+    },
+    {
+      "name": "Juhann Begarin",
+      "position": "SF"
+    }
+  ],
+  "Brooklyn|Union": [
+    {
+      "name": "Josh Minott",
+      "position": "SF"
+    },
+    {
+      "name": "Ziaire Williams",
+      "position": "SF"
+    },
+    {
+      "name": "Danny Wolf",
+      "position": "SF"
+    },
+    {
+      "name": "Drake Powell",
+      "position": "SG"
+    },
+    {
+      "name": "Egor Dëmin",
+      "position": "SG"
+    },
+    {
+      "name": "E.J. Liddell",
+      "position": "SF"
+    },
+    {
+      "name": "Tyson Etienne",
+      "position": "SG"
+    },
+    {
+      "name": "Terance Mann",
+      "position": "SG"
+    },
+    {
+      "name": "Michael Porter Jr.",
+      "position": "SF"
+    },
+    {
+      "name": "Malachi Smith",
+      "position": "SG"
+    },
+    {
+      "name": "Day'Ron Sharpe",
+      "position": "C"
+    },
+    {
+      "name": "Noah Clowney",
+      "position": "SF"
+    },
+    {
+      "name": "Jalen Wilson",
+      "position": "SF"
+    },
+    {
+      "name": "Ochai Agbaji",
+      "position": "SG"
+    },
+    {
+      "name": "Chaney Johnson",
+      "position": "SG"
+    },
+    {
+      "name": "Nic Claxton",
+      "position": "C"
+    },
+    {
+      "name": "Ben Saraf",
+      "position": "SG"
+    },
+    {
+      "name": "Nolan Traore",
+      "position": "SG"
+    }
+  ],
+  "New York|Skyline": [
+    {
+      "name": "Jordan Clarkson",
+      "position": "SG"
+    },
+    {
+      "name": "Miles McBride",
+      "position": "SG"
+    },
+    {
+      "name": "Josh Hart",
+      "position": "SG"
+    },
+    {
+      "name": "Pacôme Dadiet",
+      "position": "SF"
+    },
+    {
+      "name": "Jose Alvarado",
+      "position": "SG"
+    },
+    {
+      "name": "OG Anunoby",
+      "position": "SF"
+    },
+    {
+      "name": "Kevin McCullar Jr.",
+      "position": "SG"
+    },
+    {
+      "name": "Jalen Brunson",
+      "position": "SG"
+    },
+    {
+      "name": "Tyler Kolek",
+      "position": "SG"
+    },
+    {
+      "name": "Jeremy Sochan",
+      "position": "SF"
+    },
+    {
+      "name": "Mitchell Robinson",
+      "position": "C"
+    },
+    {
+      "name": "Mikal Bridges",
+      "position": "SG"
+    },
+    {
+      "name": "Karl-Anthony Towns",
+      "position": "C"
+    },
+    {
+      "name": "Dillon Jones",
+      "position": "SF"
+    },
+    {
+      "name": "Landry Shamet",
+      "position": "SG"
+    },
+    {
+      "name": "Trey Jemison III",
+      "position": "C"
+    },
+    {
+      "name": "Mohamed Diawara",
+      "position": "SF"
+    },
+    {
+      "name": "Ariel Hukporti",
+      "position": "C"
+    }
+  ],
+  "Philadelphia|Colonials": [
+    {
+      "name": "Tyrese Maxey",
+      "position": "SG"
+    },
+    {
+      "name": "Andre Drummond",
+      "position": "C"
+    },
+    {
+      "name": "Quentin Grimes",
+      "position": "SG"
+    },
+    {
+      "name": "Kyle Lowry",
+      "position": "SG"
+    },
+    {
+      "name": "Paul George",
+      "position": "SF"
+    },
+    {
+      "name": "Kelly Oubre Jr.",
+      "position": "SF"
+    },
+    {
+      "name": "Justin Edwards",
+      "position": "SF"
+    },
+    {
+      "name": "Trendon Watford",
+      "position": "SG"
+    },
+    {
+      "name": "Dalen Terry",
+      "position": "SF"
+    },
+    {
+      "name": "MarJon Beauchamp",
+      "position": "SF"
+    },
+    {
+      "name": "Joel Embiid",
+      "position": "C"
+    },
+    {
+      "name": "Johni Broome",
+      "position": "SF"
+    },
+    {
+      "name": "Tyrese Martin",
+      "position": "SF"
+    },
+    {
+      "name": "Dominick Barlow",
+      "position": "SF"
+    },
+    {
+      "name": "Adem Bona",
+      "position": "SF"
+    },
+    {
+      "name": "Jabari Walker",
+      "position": "SF"
+    },
+    {
+      "name": "VJ Edgecombe",
+      "position": "SG"
+    },
+    {
+      "name": "Cameron Payne",
+      "position": "SF"
+    }
+  ],
+  "Toronto|Sentinel": [
+    {
+      "name": "A.J. Lawson",
+      "position": "SG"
+    },
+    {
+      "name": "Gradey Dick",
+      "position": "SG"
+    },
+    {
+      "name": "Jonathan Mogbo",
+      "position": "SF"
+    },
+    {
+      "name": "Brandon Ingram",
+      "position": "SF"
+    },
+    {
+      "name": "Scottie Barnes",
+      "position": "SF"
+    },
+    {
+      "name": "Immanuel Quickley",
+      "position": "SG"
+    },
+    {
+      "name": "RJ Barrett",
+      "position": "SF"
+    },
+    {
+      "name": "Collin Murray-Boyles",
+      "position": "SF"
+    },
+    {
+      "name": "Ja'Kobe Walter",
+      "position": "SG"
+    },
+    {
+      "name": "Garrett Temple",
+      "position": "SG"
+    },
+    {
+      "name": "Jakob Poeltl",
+      "position": "C"
+    },
+    {
+      "name": "Jamal Shead",
+      "position": "SG"
+    },
+    {
+      "name": "Chucky Hepburn",
+      "position": "SG"
+    },
+    {
+      "name": "Trayce Jackson-Davis",
+      "position": "SF"
+    },
+    {
+      "name": "Sandro Mamukelashvili",
+      "position": "SF"
+    },
+    {
+      "name": "Alijah Martin",
+      "position": "SG"
+    },
+    {
+      "name": "Jamison Battle",
+      "position": "SF"
+    },
+    {
+      "name": "Chris Paul",
+      "position": "SF"
+    }
+  ],
+  "Chicago|Gale": [
+    {
+      "name": "Collin Sexton",
+      "position": "SG"
+    },
+    {
+      "name": "Josh Giddey",
+      "position": "SG"
+    },
+    {
+      "name": "Mac McClung",
+      "position": "SG"
+    },
+    {
+      "name": "Rob Dillingham",
+      "position": "SG"
+    },
+    {
+      "name": "Yuki Kawamura",
+      "position": "SG"
+    },
+    {
+      "name": "Leonard Miller",
+      "position": "SF"
+    },
+    {
+      "name": "Zach Collins",
+      "position": "SF"
+    },
+    {
+      "name": "Nick Richards",
+      "position": "C"
+    },
+    {
+      "name": "Matas Buzelis",
+      "position": "SF"
+    },
+    {
+      "name": "Mouhamadou Gueye",
+      "position": "SF"
+    },
+    {
+      "name": "Anfernee Simons",
+      "position": "SG"
+    },
+    {
+      "name": "Noa Essengue",
+      "position": "SF"
+    },
+    {
+      "name": "Jalen Smith",
+      "position": "SF"
+    },
+    {
+      "name": "Guerschon Yabusele",
+      "position": "SF"
+    },
+    {
+      "name": "Tre Jones",
+      "position": "SG"
+    },
+    {
+      "name": "Isaac Okoro",
+      "position": "SF"
+    },
+    {
+      "name": "Patrick Williams",
+      "position": "SF"
+    },
+    {
+      "name": "Lachlan Olbrich",
+      "position": "C"
+    }
+  ],
+  "Cleveland|Rust": [
+    {
+      "name": "James Harden",
+      "position": "SG"
+    },
+    {
+      "name": "Max Strus",
+      "position": "SG"
+    },
+    {
+      "name": "Thomas Bryant",
+      "position": "C"
+    },
+    {
+      "name": "Evan Mobley",
+      "position": "C"
+    },
+    {
+      "name": "Sam Merrill",
+      "position": "SG"
+    },
+    {
+      "name": "Dennis Schröder",
+      "position": "SG"
+    },
+    {
+      "name": "Craig Porter Jr.",
+      "position": "SG"
+    },
+    {
+      "name": "Riley Minix",
+      "position": "SF"
+    },
+    {
+      "name": "Keon Ellis",
+      "position": "SG"
+    },
+    {
+      "name": "Jaylon Tyson",
+      "position": "SG"
+    },
+    {
+      "name": "Tristan Enaruna",
+      "position": "SF"
+    },
+    {
+      "name": "Larry Nance Jr.",
+      "position": "SF"
+    },
+    {
+      "name": "Tyrese Proctor",
+      "position": "SG"
+    },
+    {
+      "name": "Jarrett Allen",
+      "position": "C"
+    },
+    {
+      "name": "Dean Wade",
+      "position": "SF"
+    },
+    {
+      "name": "Olivier Sarr",
+      "position": "C"
+    },
+    {
+      "name": "Nae'Qwan Tomlin",
+      "position": "SF"
+    },
+    {
+      "name": "Donovan Mitchell",
+      "position": "SG"
+    }
+  ],
+  "Detroit|Assembly": [
+    {
+      "name": "Jalen Duren",
+      "position": "C"
+    },
+    {
+      "name": "Cade Cunningham",
+      "position": "SG"
+    },
+    {
+      "name": "Isaac Jones",
+      "position": "SF"
+    },
+    {
+      "name": "Ronald Holland II",
+      "position": "SF"
+    },
+    {
+      "name": "Paul Reed",
+      "position": "SF"
+    },
+    {
+      "name": "Caris LeVert",
+      "position": "SG"
+    },
+    {
+      "name": "Ausar Thompson",
+      "position": "SG"
+    },
+    {
+      "name": "Tobias Harris",
+      "position": "SF"
+    },
+    {
+      "name": "Wendell Moore Jr.",
+      "position": "SG"
+    },
+    {
+      "name": "Chaz Lanier",
+      "position": "SG"
+    },
+    {
+      "name": "Daniss Jenkins",
+      "position": "SG"
+    },
+    {
+      "name": "Marcus Sasser",
+      "position": "SG"
+    },
+    {
+      "name": "Kevin Huerter",
+      "position": "SG"
+    },
+    {
+      "name": "Isaiah Stewart",
+      "position": "SF"
+    },
+    {
+      "name": "Javonte Green",
+      "position": "SG"
+    },
+    {
+      "name": "Tolu Smith",
+      "position": "SF"
+    },
+    {
+      "name": "Duncan Robinson",
+      "position": "SF"
+    },
+    {
+      "name": "Ron Holland",
+      "position": "SF"
+    }
+  ],
+  "Indiana|Velocity": [
+    {
+      "name": "Tyrese Haliburton",
+      "position": "SG"
+    },
+    {
+      "name": "Obi Toppin",
+      "position": "SF"
+    },
+    {
+      "name": "Andrew Nembhard",
+      "position": "SG"
+    },
+    {
+      "name": "Taelon Peter",
+      "position": "SG"
+    },
+    {
+      "name": "Jarace Walker",
+      "position": "SF"
+    },
+    {
+      "name": "Kam Jones",
+      "position": "SG"
+    },
+    {
+      "name": "T.J. McConnell",
+      "position": "SG"
+    },
+    {
+      "name": "Micah Potter",
+      "position": "C"
+    },
+    {
+      "name": "Johnny Furphy",
+      "position": "SG"
+    },
+    {
+      "name": "Jalen Slawson",
+      "position": "SF"
+    },
+    {
+      "name": "Aaron Nesmith",
+      "position": "SG"
+    },
+    {
+      "name": "Kobe Brown",
+      "position": "SF"
+    },
+    {
+      "name": "Ben Sheppard",
+      "position": "SG"
+    },
+    {
+      "name": "Quenton Jackson",
+      "position": "SG"
+    },
+    {
+      "name": "Jay Huff",
+      "position": "C"
+    },
+    {
+      "name": "Ivica Zubac",
+      "position": "C"
+    },
+    {
+      "name": "Pascal Siakam",
+      "position": "SF"
+    },
+    {
+      "name": "Ethan Thompson",
+      "position": "SG"
+    }
+  ],
+  "Milwaukee|Hops": [
+    {
+      "name": "Jericho Sims",
+      "position": "C"
+    },
+    {
+      "name": "Myles Turner",
+      "position": "C"
+    },
+    {
+      "name": "Gary Trent Jr.",
+      "position": "SG"
+    },
+    {
+      "name": "Kevin Porter Jr.",
+      "position": "SG"
+    },
+    {
+      "name": "Bobby Portis",
+      "position": "SF"
+    },
+    {
+      "name": "Gary Harris",
+      "position": "SG"
+    },
+    {
+      "name": "Taurean Prince",
+      "position": "SF"
+    },
+    {
+      "name": "Ryan Rollins",
+      "position": "SG"
+    },
+    {
+      "name": "Kyle Kuzma",
+      "position": "SF"
+    },
+    {
+      "name": "AJ Green",
+      "position": "SG"
+    },
+    {
+      "name": "Ousmane Dieng",
+      "position": "SF"
+    },
+    {
+      "name": "Alex Antetokounmpo",
+      "position": "SF"
+    },
+    {
+      "name": "Cormac Ryan",
+      "position": "SG"
+    },
+    {
+      "name": "Giannis Antetokounmpo",
+      "position": "SF"
+    },
+    {
+      "name": "Pete Nance",
+      "position": "SF"
+    },
+    {
+      "name": "Thanasis Antetokounmpo",
+      "position": "SF"
+    },
+    {
+      "name": "Andre Jackson Jr.",
+      "position": "SG"
+    },
+    {
+      "name": "A.J. Green",
+      "position": "SG"
+    }
+  ],
+  "Atlanta|Peachtree": [
+    {
+      "name": "Keshon Gilbert",
+      "position": "SG"
+    },
+    {
+      "name": "RayJ Dennis",
+      "position": "SG"
+    },
+    {
+      "name": "Jonathan Kuminga",
+      "position": "SF"
+    },
+    {
+      "name": "Jalen Johnson",
+      "position": "SF"
+    },
+    {
+      "name": "Keaton Wallace",
+      "position": "SG"
+    },
+    {
+      "name": "CJ McCollum",
+      "position": "SG"
+    },
+    {
+      "name": "Gabe Vincent",
+      "position": "SG"
+    },
+    {
+      "name": "Dyson Daniels",
+      "position": "SG"
+    },
+    {
+      "name": "Nickeil Alexander-Walker",
+      "position": "SG"
+    },
+    {
+      "name": "Buddy Hield",
+      "position": "SG"
+    },
+    {
+      "name": "Zaccharie Risacher",
+      "position": "SF"
+    },
+    {
+      "name": "Christian Koloko",
+      "position": "C"
+    },
+    {
+      "name": "Tony Bradley",
+      "position": "C"
+    },
+    {
+      "name": "Asa Newell",
+      "position": "SF"
+    },
+    {
+      "name": "Onyeka Okongwu",
+      "position": "SF"
+    },
+    {
+      "name": "Mouhamed Gueye",
+      "position": "SF"
+    },
+    {
+      "name": "Corey Kispert",
+      "position": "SF"
+    },
+    {
+      "name": "Jock Landale",
+      "position": "C"
+    }
+  ],
+  "Charlotte|Mint": [
+    {
+      "name": "Miles Bridges",
+      "position": "SF"
+    },
+    {
+      "name": "LaMelo Ball",
+      "position": "SG"
+    },
+    {
+      "name": "Grant Williams",
+      "position": "SF"
+    },
+    {
+      "name": "Coby White",
+      "position": "SG"
+    },
+    {
+      "name": "Sion James",
+      "position": "SG"
+    },
+    {
+      "name": "Kon Knueppel",
+      "position": "SG"
+    },
+    {
+      "name": "Josh Green",
+      "position": "SG"
+    },
+    {
+      "name": "Ryan Kalkbrenner",
+      "position": "C"
+    },
+    {
+      "name": "Antonio Reeves",
+      "position": "SG"
+    },
+    {
+      "name": "Moussa Diabaté",
+      "position": "SF"
+    },
+    {
+      "name": "PJ Hall",
+      "position": "C"
+    },
+    {
+      "name": "Tosan Evbuomwan",
+      "position": "SF"
+    },
+    {
+      "name": "Pat Connaughton",
+      "position": "SG"
+    },
+    {
+      "name": "Tre Mann",
+      "position": "SG"
+    },
+    {
+      "name": "Brandon Miller",
+      "position": "SF"
+    },
+    {
+      "name": "Xavier Tillman",
+      "position": "SF"
+    },
+    {
+      "name": "Tidjane Salaün",
+      "position": "SF"
+    },
+    {
+      "name": "Liam McNeeley",
+      "position": "SF"
+    }
+  ],
+  "Miami|Surge": [
+    {
+      "name": "Simone Fontecchio",
+      "position": "SF"
+    },
+    {
+      "name": "Trevor Keels",
+      "position": "SG"
+    },
+    {
+      "name": "Nikola Jović",
+      "position": "SF"
+    },
+    {
+      "name": "Kel'el Ware",
+      "position": "C"
+    },
+    {
+      "name": "Pelle Larsson",
+      "position": "SG"
+    },
+    {
+      "name": "Jaime Jaquez Jr.",
+      "position": "SG"
+    },
+    {
+      "name": "Dru Smith",
+      "position": "SG"
+    },
+    {
+      "name": "Bam Adebayo",
+      "position": "C"
+    },
+    {
+      "name": "Tyler Herro",
+      "position": "SG"
+    },
+    {
+      "name": "Myron Gardner",
+      "position": "SF"
+    },
+    {
+      "name": "Keshad Johnson",
+      "position": "SF"
+    },
+    {
+      "name": "Jahmir Young",
+      "position": "SG"
+    },
+    {
+      "name": "Andrew Wiggins",
+      "position": "SF"
+    },
+    {
+      "name": "Norman Powell",
+      "position": "SG"
+    },
+    {
+      "name": "Kasparas Jakučionis",
+      "position": "SG"
+    },
+    {
+      "name": "Davion Mitchell",
+      "position": "SG"
+    },
+    {
+      "name": "Vladislav Goldin",
+      "position": "C"
+    },
+    {
+      "name": "Terry Rozier",
+      "position": "SF"
+    }
+  ],
+  "Orlando|Aurora": [
+    {
+      "name": "Alex Morales",
+      "position": "SG"
+    },
+    {
+      "name": "Anthony Black",
+      "position": "SG"
+    },
+    {
+      "name": "Jonathan Isaac",
+      "position": "SF"
+    },
+    {
+      "name": "Jevon Carter",
+      "position": "SG"
+    },
+    {
+      "name": "Desmond Bane",
+      "position": "SG"
+    },
+    {
+      "name": "Jalen Suggs",
+      "position": "SG"
+    },
+    {
+      "name": "Paolo Banchero",
+      "position": "SF"
+    },
+    {
+      "name": "Jamal Cain",
+      "position": "SF"
+    },
+    {
+      "name": "Jase Richardson",
+      "position": "SG"
+    },
+    {
+      "name": "Jett Howard",
+      "position": "SG"
+    },
+    {
+      "name": "Colin Castleton",
+      "position": "C"
+    },
+    {
+      "name": "Moritz Wagner",
+      "position": "SF"
+    },
+    {
+      "name": "Franz Wagner",
+      "position": "SF"
+    },
+    {
+      "name": "Tristan da Silva",
+      "position": "SF"
+    },
+    {
+      "name": "Wendell Carter Jr.",
+      "position": "C"
+    },
+    {
+      "name": "Goga Bitadze",
+      "position": "C"
+    },
+    {
+      "name": "Noah Penda",
+      "position": "SG"
+    },
+    {
+      "name": "Tristan Da Silva",
+      "position": "SF"
+    }
+  ],
+  "Washington|Monument": [
+    {
+      "name": "Julian Reese",
+      "position": "SF"
+    },
+    {
+      "name": "Bilal Coulibaly",
+      "position": "SG"
+    },
+    {
+      "name": "Tristan Vukcevic",
+      "position": "SF"
+    },
+    {
+      "name": "Cam Whitmore",
+      "position": "SF"
+    },
+    {
+      "name": "Trae Young",
+      "position": "SG"
+    },
+    {
+      "name": "D'Angelo Russell",
+      "position": "SG"
+    },
+    {
+      "name": "Jamir Watkins",
+      "position": "SF"
+    },
+    {
+      "name": "Bub Carrington",
+      "position": "SG"
+    },
+    {
+      "name": "Jaden Hardy",
+      "position": "SG"
+    },
+    {
+      "name": "Justin Champagnie",
+      "position": "SG"
+    },
+    {
+      "name": "Tre Johnson",
+      "position": "SG"
+    },
+    {
+      "name": "Leaky Black",
+      "position": "SF"
+    },
+    {
+      "name": "Sharife Cooper",
+      "position": "SG"
+    },
+    {
+      "name": "Anthony Gill",
+      "position": "SF"
+    },
+    {
+      "name": "Kyshawn George",
+      "position": "SF"
+    },
+    {
+      "name": "Alex Sarr",
+      "position": "C"
+    },
+    {
+      "name": "Anthony Davis",
+      "position": "SF"
+    },
+    {
+      "name": "Will Riley",
+      "position": "SF"
+    }
+  ],
+  "Denver|Altitude": [
+    {
+      "name": "Christian Braun",
+      "position": "SG"
+    },
+    {
+      "name": "Curtis Jones",
+      "position": "SG"
+    },
+    {
+      "name": "Julian Strawther",
+      "position": "SG"
+    },
+    {
+      "name": "Tyus Jones",
+      "position": "SG"
+    },
+    {
+      "name": "Peyton Watson",
+      "position": "SG"
+    },
+    {
+      "name": "Tim Hardaway Jr.",
+      "position": "SG"
+    },
+    {
+      "name": "Bruce Brown",
+      "position": "SG"
+    },
+    {
+      "name": "DaRon Holmes II",
+      "position": "SF"
+    },
+    {
+      "name": "Nikola Jokić",
+      "position": "C"
+    },
+    {
+      "name": "Jonas Valančiūnas",
+      "position": "C"
+    },
+    {
+      "name": "Spencer Jones",
+      "position": "SF"
+    },
+    {
+      "name": "Zeke Nnaji",
+      "position": "SF"
+    },
+    {
+      "name": "Cameron Johnson",
+      "position": "SF"
+    },
+    {
+      "name": "Jalen Pickett",
+      "position": "SG"
+    },
+    {
+      "name": "KJ Simpson",
+      "position": "SG"
+    },
+    {
+      "name": "Jamal Murray",
+      "position": "SG"
+    },
+    {
+      "name": "Aaron Gordon",
+      "position": "SF"
+    },
+    {
+      "name": "David Roddy",
+      "position": "SF"
+    }
+  ],
+  "Minnesota|Northstar": [
+    {
+      "name": "Donte DiVincenzo",
+      "position": "SG"
+    },
+    {
+      "name": "Terrence Shannon Jr.",
+      "position": "SG"
+    },
+    {
+      "name": "Jaden McDaniels",
+      "position": "SF"
+    },
+    {
+      "name": "Julian Phillips",
+      "position": "SF"
+    },
+    {
+      "name": "Anthony Edwards",
+      "position": "SG"
+    },
+    {
+      "name": "Joe Ingles",
+      "position": "SF"
+    },
+    {
+      "name": "Bones Hyland",
+      "position": "SG"
+    },
+    {
+      "name": "Mike Conley",
+      "position": "SG"
+    },
+    {
+      "name": "Naz Reid",
+      "position": "C"
+    },
+    {
+      "name": "Kyle Anderson",
+      "position": "SF"
+    },
+    {
+      "name": "Ayo Dosunmu",
+      "position": "SG"
+    },
+    {
+      "name": "Zyon Pullin",
+      "position": "SG"
+    },
+    {
+      "name": "Joan Beringer",
+      "position": "SF"
+    },
+    {
+      "name": "Jaylen Clark",
+      "position": "SG"
+    },
+    {
+      "name": "Enrique Freeman",
+      "position": "SF"
+    },
+    {
+      "name": "Rudy Gobert",
+      "position": "C"
+    },
+    {
+      "name": "Julius Randle",
+      "position": "SF"
+    },
+    {
+      "name": "Rocco Zikarsky",
+      "position": "C"
+    }
+  ],
+  "Oklahoma City|Voltage": [
+    {
+      "name": "Shai Gilgeous-Alexander",
+      "position": "SG"
+    },
+    {
+      "name": "Jared McCain",
+      "position": "SG"
+    },
+    {
+      "name": "Luguentz Dort",
+      "position": "SG"
+    },
+    {
+      "name": "Jaylin Williams",
+      "position": "SF"
+    },
+    {
+      "name": "Chet Holmgren",
+      "position": "C"
+    },
+    {
+      "name": "Jalen Williams",
+      "position": "SG"
+    },
+    {
+      "name": "Alex Caruso",
+      "position": "SG"
+    },
+    {
+      "name": "Isaiah Joe",
+      "position": "SG"
+    },
+    {
+      "name": "Thomas Sorber",
+      "position": "C"
+    },
+    {
+      "name": "Payton Sandfort",
+      "position": "SF"
+    },
+    {
+      "name": "Branden Carlson",
+      "position": "C"
+    },
+    {
+      "name": "Aaron Wiggins",
+      "position": "SG"
+    },
+    {
+      "name": "Cason Wallace",
+      "position": "SG"
+    },
+    {
+      "name": "Brooks Barnhizer",
+      "position": "SG"
+    },
+    {
+      "name": "Ajay Mitchell",
+      "position": "SG"
+    },
+    {
+      "name": "Kenrich Williams",
+      "position": "SG"
+    },
+    {
+      "name": "Nikola Topić",
+      "position": "SG"
+    },
+    {
+      "name": "Isaiah Hartenstein",
+      "position": "C"
+    }
+  ],
+  "Portland|Rose": [
+    {
+      "name": "Jayson Kent",
+      "position": "SF"
+    },
+    {
+      "name": "Scoot Henderson",
+      "position": "SG"
+    },
+    {
+      "name": "Damian Lillard",
+      "position": "SG"
+    },
+    {
+      "name": "Blake Wesley",
+      "position": "SG"
+    },
+    {
+      "name": "Caleb Love",
+      "position": "SG"
+    },
+    {
+      "name": "Chris Youngblood",
+      "position": "SG"
+    },
+    {
+      "name": "Matisse Thybulle",
+      "position": "SG"
+    },
+    {
+      "name": "Jrue Holiday",
+      "position": "SG"
+    },
+    {
+      "name": "Deni Avdija",
+      "position": "SF"
+    },
+    {
+      "name": "Jerami Grant",
+      "position": "SF"
+    },
+    {
+      "name": "Yang Hansen",
+      "position": "C"
+    },
+    {
+      "name": "Shaedon Sharpe",
+      "position": "SG"
+    },
+    {
+      "name": "Donovan Clingan",
+      "position": "C"
+    },
+    {
+      "name": "Kris Murray",
+      "position": "SF"
+    },
+    {
+      "name": "Vít Krejčí",
+      "position": "SG"
+    },
+    {
+      "name": "Toumani Camara",
+      "position": "SF"
+    },
+    {
+      "name": "Robert Williams III",
+      "position": "C"
+    },
+    {
+      "name": "Sidy Cissoko",
+      "position": "SG"
+    }
+  ],
+  "Utah|Mesa": [
+    {
+      "name": "Hayden Gray",
+      "position": "SG"
+    },
+    {
+      "name": "Blake Hinson",
+      "position": "SF"
+    },
+    {
+      "name": "Keyonte George",
+      "position": "SG"
+    },
+    {
+      "name": "Cody Williams",
+      "position": "SF"
+    },
+    {
+      "name": "Isaiah Collier",
+      "position": "SG"
+    },
+    {
+      "name": "Svi Mykhailiuk",
+      "position": "SG"
+    },
+    {
+      "name": "Elijah Harkless",
+      "position": "SG"
+    },
+    {
+      "name": "Ace Bailey",
+      "position": "SF"
+    },
+    {
+      "name": "Jaren Jackson Jr.",
+      "position": "SF"
+    },
+    {
+      "name": "Bez Mbeng",
+      "position": "SG"
+    },
+    {
+      "name": "Kyle Filipowski",
+      "position": "C"
+    },
+    {
+      "name": "Lauri Markkanen",
+      "position": "SF"
+    },
+    {
+      "name": "Walker Kessler",
+      "position": "C"
+    },
+    {
+      "name": "Brice Sensabaugh",
+      "position": "SF"
+    },
+    {
+      "name": "Jusuf Nurkić",
+      "position": "C"
+    },
+    {
+      "name": "Oscar Tshiebwe",
+      "position": "SF"
+    },
+    {
+      "name": "Kevin Love",
+      "position": "SF"
+    },
+    {
+      "name": "John Konchar",
+      "position": "SG"
+    }
+  ],
+  "Golden State|Spectrum": [
+    {
+      "name": "Gary Payton II",
+      "position": "SG"
+    },
+    {
+      "name": "Brandin Podziemski",
+      "position": "SG"
+    },
+    {
+      "name": "Will Richard",
+      "position": "SG"
+    },
+    {
+      "name": "Moses Moody",
+      "position": "SG"
+    },
+    {
+      "name": "Kristaps Porziņģis",
+      "position": "SF"
+    },
+    {
+      "name": "De'Anthony Melton",
+      "position": "SG"
+    },
+    {
+      "name": "Jimmy Butler III",
+      "position": "SF"
+    },
+    {
+      "name": "Gui Santos",
+      "position": "SF"
+    },
+    {
+      "name": "LJ Cryer",
+      "position": "SG"
+    },
+    {
+      "name": "Nate Williams",
+      "position": "SG"
+    },
+    {
+      "name": "Al Horford",
+      "position": "C"
+    },
+    {
+      "name": "Quinten Post",
+      "position": "C"
+    },
+    {
+      "name": "Draymond Green",
+      "position": "SF"
+    },
+    {
+      "name": "Charles Bassey",
+      "position": "C"
+    },
+    {
+      "name": "Stephen Curry",
+      "position": "SG"
+    },
+    {
+      "name": "Seth Curry",
+      "position": "SG"
+    },
+    {
+      "name": "Malevy Leons",
+      "position": "SF"
+    },
+    {
+      "name": "Pat Spencer",
+      "position": "SG"
+    }
+  ],
+  "LA|Current": [
+    {
+      "name": "Norchad Omier",
+      "position": "SF"
+    },
+    {
+      "name": "Sean Pedulla",
+      "position": "SG"
+    },
+    {
+      "name": "Bradley Beal",
+      "position": "SG"
+    },
+    {
+      "name": "Kawhi Leonard",
+      "position": "SF"
+    },
+    {
+      "name": "Kobe Sanders",
+      "position": "SG"
+    },
+    {
+      "name": "Derrick Jones Jr.",
+      "position": "SF"
+    },
+    {
+      "name": "Bogdan Bogdanović",
+      "position": "SG"
+    },
+    {
+      "name": "Kris Dunn",
+      "position": "SG"
+    },
+    {
+      "name": "Bennedict Mathurin",
+      "position": "SG"
+    },
+    {
+      "name": "Darius Garland",
+      "position": "SG"
+    },
+    {
+      "name": "Brook Lopez",
+      "position": "C"
+    },
+    {
+      "name": "Cam Christie",
+      "position": "SG"
+    },
+    {
+      "name": "TyTy Washington Jr.",
+      "position": "SG"
+    },
+    {
+      "name": "Yanic Konan Niederhäuser",
+      "position": "C"
+    },
+    {
+      "name": "John Collins",
+      "position": "SF"
+    },
+    {
+      "name": "Jordan Miller",
+      "position": "SG"
+    },
+    {
+      "name": "Isaiah Jackson",
+      "position": "SF"
+    },
+    {
+      "name": "Nicolas Batum",
+      "position": "SG"
+    }
+  ],
+  "LA|Cosmos": [
+    {
+      "name": "Adou Thiero",
+      "position": "SG"
+    },
+    {
+      "name": "Jarred Vanderbilt",
+      "position": "SF"
+    },
+    {
+      "name": "Dalton Knecht",
+      "position": "SF"
+    },
+    {
+      "name": "Deandre Ayton",
+      "position": "C"
+    },
+    {
+      "name": "Bronny James",
+      "position": "SG"
+    },
+    {
+      "name": "Luke Kennard",
+      "position": "SG"
+    },
+    {
+      "name": "Jaxson Hayes",
+      "position": "C"
+    },
+    {
+      "name": "Jake LaRavia",
+      "position": "SF"
+    },
+    {
+      "name": "Maxi Kleber",
+      "position": "SF"
+    },
+    {
+      "name": "Austin Reaves",
+      "position": "SG"
+    },
+    {
+      "name": "Drew Timme",
+      "position": "SF"
+    },
+    {
+      "name": "Nick Smith Jr.",
+      "position": "SG"
+    },
+    {
+      "name": "LeBron James",
+      "position": "SF"
+    },
+    {
+      "name": "Rui Hachimura",
+      "position": "SF"
+    },
+    {
+      "name": "Chris Mañon",
+      "position": "SG"
+    },
+    {
+      "name": "Marcus Smart",
+      "position": "SG"
+    },
+    {
+      "name": "Luka Dončić",
+      "position": "SF"
+    },
+    {
+      "name": "Kobe Bufkin",
+      "position": "SF"
+    }
+  ],
+  "Phoenix|Sol": [
+    {
+      "name": "Royce O'Neale",
+      "position": "SF"
+    },
+    {
+      "name": "Ryan Dunn",
+      "position": "SF"
+    },
+    {
+      "name": "Devin Booker",
+      "position": "SG"
+    },
+    {
+      "name": "Amir Coffey",
+      "position": "SG"
+    },
+    {
+      "name": "Dillon Brooks",
+      "position": "SG"
+    },
+    {
+      "name": "Jalen Green",
+      "position": "SG"
+    },
+    {
+      "name": "Haywood Highsmith",
+      "position": "SF"
+    },
+    {
+      "name": "Grayson Allen",
+      "position": "SG"
+    },
+    {
+      "name": "Khaman Maluach",
+      "position": "C"
+    },
+    {
+      "name": "Oso Ighodaro",
+      "position": "SF"
+    },
+    {
+      "name": "Collin Gillespie",
+      "position": "SG"
+    },
+    {
+      "name": "Koby Brea",
+      "position": "SG"
+    },
+    {
+      "name": "Mark Williams",
+      "position": "C"
+    },
+    {
+      "name": "Jamaree Bouyea",
+      "position": "SG"
+    },
+    {
+      "name": "Isaiah Livers",
+      "position": "SF"
+    },
+    {
+      "name": "Rasheer Fleming",
+      "position": "SF"
+    },
+    {
+      "name": "CJ Huntley",
+      "position": "SF"
+    },
+    {
+      "name": "Jordan Goodwin",
+      "position": "SG"
+    }
+  ],
+  "Sacramento|Republic": [
+    {
+      "name": "Malik Monk",
+      "position": "SG"
+    },
+    {
+      "name": "Nique Clifford",
+      "position": "SG"
+    },
+    {
+      "name": "Killian Hayes",
+      "position": "SG"
+    },
+    {
+      "name": "Doug McDermott",
+      "position": "SF"
+    },
+    {
+      "name": "Zach LaVine",
+      "position": "SG"
+    },
+    {
+      "name": "Precious Achiuwa",
+      "position": "SF"
+    },
+    {
+      "name": "DeMar DeRozan",
+      "position": "SG"
+    },
+    {
+      "name": "Domantas Sabonis",
+      "position": "SF"
+    },
+    {
+      "name": "Keegan Murray",
+      "position": "SF"
+    },
+    {
+      "name": "De'Andre Hunter",
+      "position": "SF"
+    },
+    {
+      "name": "Russell Westbrook",
+      "position": "SG"
+    },
+    {
+      "name": "Drew Eubanks",
+      "position": "SF"
+    },
+    {
+      "name": "Devin Carter",
+      "position": "SG"
+    },
+    {
+      "name": "Patrick Baldwin Jr.",
+      "position": "SF"
+    },
+    {
+      "name": "Isaiah Stevens",
+      "position": "SG"
+    },
+    {
+      "name": "Daeqwon Plowden",
+      "position": "SG"
+    },
+    {
+      "name": "Dylan Cardwell",
+      "position": "C"
+    },
+    {
+      "name": "Maxime Raynaud",
+      "position": "C"
+    }
+  ],
+  "Dallas|Lasso": [
+    {
+      "name": "John Poulakidas",
+      "position": "SG"
+    },
+    {
+      "name": "Max Christie",
+      "position": "SG"
+    },
+    {
+      "name": "Dereck Lively II",
+      "position": "C"
+    },
+    {
+      "name": "Dwight Powell",
+      "position": "SF"
+    },
+    {
+      "name": "AJ Johnson",
+      "position": "SG"
+    },
+    {
+      "name": "Ryan Nembhard",
+      "position": "SG"
+    },
+    {
+      "name": "Brandon Williams",
+      "position": "SG"
+    },
+    {
+      "name": "Kyrie Irving",
+      "position": "SG"
+    },
+    {
+      "name": "Naji Marshall",
+      "position": "SF"
+    },
+    {
+      "name": "Caleb Martin",
+      "position": "SF"
+    },
+    {
+      "name": "Khris Middleton",
+      "position": "SF"
+    },
+    {
+      "name": "Daniel Gafford",
+      "position": "SF"
+    },
+    {
+      "name": "Tyler Smith",
+      "position": "SF"
+    },
+    {
+      "name": "P.J. Washington",
+      "position": "SF"
+    },
+    {
+      "name": "Moussa Cisse",
+      "position": "C"
+    },
+    {
+      "name": "Klay Thompson",
+      "position": "SG"
+    },
+    {
+      "name": "Cooper Flagg",
+      "position": "SF"
+    },
+    {
+      "name": "Marvin Bagley III",
+      "position": "SF"
+    }
+  ],
+  "Houston|Comets": [
+    {
+      "name": "Aaron Holiday",
+      "position": "SG"
+    },
+    {
+      "name": "Amen Thompson",
+      "position": "SG"
+    },
+    {
+      "name": "Dorian Finney-Smith",
+      "position": "SF"
+    },
+    {
+      "name": "JD Davison",
+      "position": "SG"
+    },
+    {
+      "name": "Fred VanVleet",
+      "position": "SG"
+    },
+    {
+      "name": "Kevin Durant",
+      "position": "SF"
+    },
+    {
+      "name": "Jae'Sean Tate",
+      "position": "SF"
+    },
+    {
+      "name": "Jabari Smith Jr.",
+      "position": "SF"
+    },
+    {
+      "name": "Steven Adams",
+      "position": "C"
+    },
+    {
+      "name": "Tristen Newton",
+      "position": "SG"
+    },
+    {
+      "name": "Reed Sheppard",
+      "position": "SG"
+    },
+    {
+      "name": "Tari Eason",
+      "position": "SF"
+    },
+    {
+      "name": "Josh Okogie",
+      "position": "SG"
+    },
+    {
+      "name": "Isaiah Crawford",
+      "position": "SF"
+    },
+    {
+      "name": "Alperen Sengun",
+      "position": "C"
+    },
+    {
+      "name": "Clint Capela",
+      "position": "C"
+    },
+    {
+      "name": "Jeff Green",
+      "position": "SF"
+    },
+    {
+      "name": "Alperen Şengün",
+      "position": "C"
+    }
+  ],
+  "Memphis|Sound": [
+    {
+      "name": "Jahmai Mashack",
+      "position": "SG"
+    },
+    {
+      "name": "Jaylen Wells",
+      "position": "SF"
+    },
+    {
+      "name": "Scotty Pippen Jr.",
+      "position": "SG"
+    },
+    {
+      "name": "Ty Jerome",
+      "position": "SG"
+    },
+    {
+      "name": "Kentavious Caldwell-Pope",
+      "position": "SG"
+    },
+    {
+      "name": "Walter Clayton Jr.",
+      "position": "SG"
+    },
+    {
+      "name": "Santi Aldama",
+      "position": "SF"
+    },
+    {
+      "name": "Javon Small",
+      "position": "SG"
+    },
+    {
+      "name": "Ja Morant",
+      "position": "SG"
+    },
+    {
+      "name": "Zach Edey",
+      "position": "C"
+    },
+    {
+      "name": "Brandon Clarke",
+      "position": "SF"
+    },
+    {
+      "name": "Olivier-Maxence Prosper",
+      "position": "SF"
+    },
+    {
+      "name": "Rayan Rupert",
+      "position": "SG"
+    },
+    {
+      "name": "Taylor Hendricks",
+      "position": "SF"
+    },
+    {
+      "name": "Cedric Coward",
+      "position": "SG"
+    },
+    {
+      "name": "Cam Spencer",
+      "position": "SG"
+    },
+    {
+      "name": "GG Jackson",
+      "position": "SF"
+    },
+    {
+      "name": "Taj Gibson",
+      "position": "SF"
+    }
+  ],
+  "New Orleans|Bayou": [
+    {
+      "name": "Josh Oduro",
+      "position": "C"
+    },
+    {
+      "name": "Jeremiah Fears",
+      "position": "SG"
+    },
+    {
+      "name": "Zion Williamson",
+      "position": "SF"
+    },
+    {
+      "name": "Herbert Jones",
+      "position": "SF"
+    },
+    {
+      "name": "Jordan Poole",
+      "position": "SG"
+    },
+    {
+      "name": "Hunter Dickinson",
+      "position": "C"
+    },
+    {
+      "name": "Dejounte Murray",
+      "position": "SG"
+    },
+    {
+      "name": "DeAndre Jordan",
+      "position": "C"
+    },
+    {
+      "name": "Bryce McGowens",
+      "position": "SG"
+    },
+    {
+      "name": "Micah Peavy",
+      "position": "SG"
+    },
+    {
+      "name": "Karlo Matković",
+      "position": "SF"
+    },
+    {
+      "name": "Yves Missi",
+      "position": "C"
+    },
+    {
+      "name": "Derik Queen",
+      "position": "C"
+    },
+    {
+      "name": "Trey Alexander",
+      "position": "SG"
+    },
+    {
+      "name": "Jordan Hawkins",
+      "position": "SG"
+    },
+    {
+      "name": "Trey Murphy III",
+      "position": "SF"
+    },
+    {
+      "name": "Saddiq Bey",
+      "position": "SG"
+    },
+    {
+      "name": "Kevon Looney",
+      "position": "SF"
+    }
+  ],
+  "San Antonio|Mission": [
+    {
+      "name": "Jordan McLaughlin",
+      "position": "SG"
+    },
+    {
+      "name": "Victor Wembanyama",
+      "position": "SF"
+    },
+    {
+      "name": "Dylan Harper",
+      "position": "SG"
+    },
+    {
+      "name": "Keldon Johnson",
+      "position": "SF"
+    },
+    {
+      "name": "De'Aaron Fox",
+      "position": "SG"
+    },
+    {
+      "name": "Stephon Castle",
+      "position": "SG"
+    },
+    {
+      "name": "Luke Kornet",
+      "position": "C"
+    },
+    {
+      "name": "Kelly Olynyk",
+      "position": "SF"
+    },
+    {
+      "name": "Carter Bryant",
+      "position": "SF"
+    },
+    {
+      "name": "Emanuel Miller",
+      "position": "SF"
+    },
+    {
+      "name": "Bismack Biyombo",
+      "position": "C"
+    },
+    {
+      "name": "Devin Vassell",
+      "position": "SG"
+    },
+    {
+      "name": "David Jones Garcia",
+      "position": "SG"
+    },
+    {
+      "name": "Julian Champagnie",
+      "position": "SF"
+    },
+    {
+      "name": "Harrison Barnes",
+      "position": "SF"
+    },
+    {
+      "name": "Lindy Waters III",
+      "position": "SF"
+    },
+    {
+      "name": "Mason Plumlee",
+      "position": "SF"
+    },
+    {
+      "name": "Harrison Ingram",
+      "position": "SF"
+    }
+  ]
+}

@@ -1,0 +1,6672 @@
+{
+  "Atlanta|Peachtree": [
+    {
+      "name": "Jalen T. Johnson",
+      "heightInches": 81,
+      "age": 24,
+      "ppg": 22.5,
+      "rpg": 10.3,
+      "apg": 7.9,
+      "games": 72,
+      "mpg": 35.2
+    },
+    {
+      "name": "Nickeil Alexander-Walker",
+      "heightInches": 78,
+      "age": 27,
+      "ppg": 20.8,
+      "rpg": 3.4,
+      "apg": 3.7,
+      "games": 78,
+      "mpg": 33.4
+    },
+    {
+      "name": "Trae Young",
+      "heightInches": 74,
+      "age": 27,
+      "ppg": 19.3,
+      "rpg": 1.5,
+      "apg": 8.9,
+      "games": 10,
+      "mpg": 27.9
+    },
+    {
+      "name": "C.J. McCollum",
+      "heightInches": 76,
+      "age": 34,
+      "ppg": 18.7,
+      "rpg": 3.1,
+      "apg": 4.1,
+      "games": 41,
+      "mpg": 28.8
+    },
+    {
+      "name": "Kristaps Porzingis",
+      "heightInches": 86,
+      "age": 30,
+      "ppg": 17.1,
+      "rpg": 5.1,
+      "apg": 2.7,
+      "games": 17,
+      "mpg": 24.3
+    },
+    {
+      "name": "Onyeka Okongwu",
+      "heightInches": 81,
+      "age": 25,
+      "ppg": 15.2,
+      "rpg": 7.6,
+      "apg": 3.1,
+      "games": 74,
+      "mpg": 31.1
+    },
+    {
+      "name": "Jonathan Kuminga",
+      "heightInches": 80,
+      "age": 23,
+      "ppg": 12.3,
+      "rpg": 5.3,
+      "apg": 2.1,
+      "games": 16,
+      "mpg": 22.1
+    },
+    {
+      "name": "Dyson Daniels",
+      "heightInches": 78,
+      "age": 22,
+      "ppg": 11.9,
+      "rpg": 6.8,
+      "apg": 5.9,
+      "games": 76,
+      "mpg": 33.2
+    },
+    {
+      "name": "Keshon Gilbert",
+      "heightInches": 76,
+      "age": 22,
+      "ppg": 11,
+      "rpg": 0,
+      "apg": 9,
+      "games": 1,
+      "mpg": 26
+    },
+    {
+      "name": "Zaccharie Risacher",
+      "heightInches": 81,
+      "age": 20,
+      "ppg": 9.6,
+      "rpg": 3.8,
+      "apg": 1.1,
+      "games": 67,
+      "mpg": 22.4
+    },
+    {
+      "name": "Corey Kispert",
+      "heightInches": 79,
+      "age": 26,
+      "ppg": 9.2,
+      "rpg": 2.3,
+      "apg": 1.5,
+      "games": 39,
+      "mpg": 18.3
+    },
+    {
+      "name": "Jock Landale",
+      "heightInches": 84,
+      "age": 30,
+      "ppg": 9.1,
+      "rpg": 4.1,
+      "apg": 1.7,
+      "games": 23,
+      "mpg": 19.4
+    },
+    {
+      "name": "Vit Krejci",
+      "heightInches": 80,
+      "age": 25,
+      "ppg": 9,
+      "rpg": 2.1,
+      "apg": 1.5,
+      "games": 46,
+      "mpg": 22.3
+    },
+    {
+      "name": "Luke Kennard",
+      "heightInches": 77,
+      "age": 29,
+      "ppg": 7.9,
+      "rpg": 2.2,
+      "apg": 2.1,
+      "games": 46,
+      "mpg": 20.5
+    },
+    {
+      "name": "Asa Newell",
+      "heightInches": 81,
+      "age": 20,
+      "ppg": 5.2,
+      "rpg": 2.2,
+      "apg": 0.6,
+      "games": 44,
+      "mpg": 11.4
+    },
+    {
+      "name": "Buddy Hield",
+      "heightInches": 76,
+      "age": 33,
+      "ppg": 5.1,
+      "rpg": 1.1,
+      "apg": 0.7,
+      "games": 7,
+      "mpg": 7.3
+    },
+    {
+      "name": "Mouhamed Gueye",
+      "heightInches": 83,
+      "age": 23,
+      "ppg": 4.4,
+      "rpg": 3.6,
+      "apg": 0.9,
+      "games": 77,
+      "mpg": 15.3
+    },
+    {
+      "name": "Gabe Vincent",
+      "heightInches": 75,
+      "age": 29,
+      "ppg": 3.9,
+      "rpg": 1.1,
+      "apg": 1.6,
+      "games": 24,
+      "mpg": 13.3
+    },
+    {
+      "name": "Tony Bradley",
+      "heightInches": 82,
+      "age": 27,
+      "ppg": 3.7,
+      "rpg": 3,
+      "apg": 0.7,
+      "games": 3,
+      "mpg": 11.7
+    },
+    {
+      "name": "Keaton Wallace",
+      "heightInches": 75,
+      "age": 26,
+      "ppg": 3.5,
+      "rpg": 1.1,
+      "apg": 1.8,
+      "games": 53,
+      "mpg": 10.1
+    },
+    {
+      "name": "Ray Dennis",
+      "heightInches": 74,
+      "age": 24,
+      "ppg": 3.3,
+      "rpg": 1,
+      "apg": 2.3,
+      "games": 3,
+      "mpg": 11.7
+    },
+    {
+      "name": "Christian Koloko",
+      "heightInches": 83,
+      "age": 25,
+      "ppg": 3.1,
+      "rpg": 2.6,
+      "apg": 0.6,
+      "games": 14,
+      "mpg": 11.2
+    },
+    {
+      "name": "Caleb Houstan",
+      "heightInches": 81,
+      "age": 22,
+      "ppg": 2.3,
+      "rpg": 0.6,
+      "apg": 0.2,
+      "games": 18,
+      "mpg": 4.2
+    },
+    {
+      "name": "Jacob Toppin",
+      "heightInches": 79,
+      "age": 25,
+      "ppg": 1.6,
+      "rpg": 0.2,
+      "apg": 0.2,
+      "games": 5,
+      "mpg": 3.4
+    },
+    {
+      "name": "N'Faly Dante",
+      "heightInches": 84,
+      "age": 24,
+      "ppg": 0.8,
+      "rpg": 1.8,
+      "apg": 0,
+      "games": 4,
+      "mpg": 4
+    }
+  ],
+  "Boston|Harbor": [
+    {
+      "name": "Jaylen Brown",
+      "heightInches": 79,
+      "age": 29,
+      "ppg": 28.7,
+      "rpg": 6.9,
+      "apg": 5.1,
+      "games": 71,
+      "mpg": 34.4
+    },
+    {
+      "name": "Jayson Tatum",
+      "heightInches": 81,
+      "age": 27,
+      "ppg": 21.8,
+      "rpg": 10,
+      "apg": 5.3,
+      "games": 16,
+      "mpg": 32.6
+    },
+    {
+      "name": "Payton Pritchard",
+      "heightInches": 73,
+      "age": 27,
+      "ppg": 17,
+      "rpg": 3.9,
+      "apg": 5.2,
+      "games": 79,
+      "mpg": 32.4
+    },
+    {
+      "name": "Derrick White",
+      "heightInches": 76,
+      "age": 31,
+      "ppg": 16.5,
+      "rpg": 4.4,
+      "apg": 5.4,
+      "games": 77,
+      "mpg": 34.1
+    },
+    {
+      "name": "Anfernee Simons",
+      "heightInches": 76,
+      "age": 26,
+      "ppg": 14.2,
+      "rpg": 2.4,
+      "apg": 2.4,
+      "games": 49,
+      "mpg": 24.5
+    },
+    {
+      "name": "Neemias Queta",
+      "heightInches": 84,
+      "age": 26,
+      "ppg": 10.2,
+      "rpg": 8.4,
+      "apg": 1.7,
+      "games": 76,
+      "mpg": 25.4
+    },
+    {
+      "name": "Nikola Vucevic",
+      "heightInches": 83,
+      "age": 35,
+      "ppg": 9.7,
+      "rpg": 6.6,
+      "apg": 2,
+      "games": 16,
+      "mpg": 21.1
+    },
+    {
+      "name": "Sam Hauser",
+      "heightInches": 79,
+      "age": 28,
+      "ppg": 9.2,
+      "rpg": 3.8,
+      "apg": 1.5,
+      "games": 78,
+      "mpg": 24.8
+    },
+    {
+      "name": "Luka Garza",
+      "heightInches": 83,
+      "age": 27,
+      "ppg": 8.1,
+      "rpg": 4.1,
+      "apg": 1,
+      "games": 69,
+      "mpg": 16.1
+    },
+    {
+      "name": "Josh Minott",
+      "heightInches": 80,
+      "age": 23,
+      "ppg": 5.8,
+      "rpg": 3.6,
+      "apg": 1,
+      "games": 33,
+      "mpg": 15.9
+    },
+    {
+      "name": "Baylor Scheierman",
+      "heightInches": 78,
+      "age": 25,
+      "ppg": 5.5,
+      "rpg": 3.5,
+      "apg": 1.5,
+      "games": 77,
+      "mpg": 18.6
+    },
+    {
+      "name": "Jordan Walsh",
+      "heightInches": 79,
+      "age": 21,
+      "ppg": 5.4,
+      "rpg": 4,
+      "apg": 0.8,
+      "games": 68,
+      "mpg": 17.9
+    },
+    {
+      "name": "Ron Harper Jr.",
+      "heightInches": 78,
+      "age": 25,
+      "ppg": 4.2,
+      "rpg": 1.7,
+      "apg": 0.8,
+      "games": 29,
+      "mpg": 10.9
+    },
+    {
+      "name": "Hugo Gonzalez",
+      "heightInches": 76,
+      "age": 19,
+      "ppg": 3.9,
+      "rpg": 3.3,
+      "apg": 0.5,
+      "games": 74,
+      "mpg": 14.6
+    },
+    {
+      "name": "Charles Bassey",
+      "heightInches": 83,
+      "age": 25,
+      "ppg": 2.8,
+      "rpg": 1.2,
+      "apg": 0,
+      "games": 5,
+      "mpg": 3.4
+    },
+    {
+      "name": "John Tonje",
+      "heightInches": 77,
+      "age": 24,
+      "ppg": 2.5,
+      "rpg": 1,
+      "apg": 0.3,
+      "games": 6,
+      "mpg": 7.2
+    },
+    {
+      "name": "Chris Boucher",
+      "heightInches": 82,
+      "age": 32,
+      "ppg": 2.3,
+      "rpg": 2,
+      "apg": 0.3,
+      "games": 9,
+      "mpg": 10.4
+    },
+    {
+      "name": "Xavier Tillman",
+      "heightInches": 80,
+      "age": 26,
+      "ppg": 2.2,
+      "rpg": 1.8,
+      "apg": 0.4,
+      "games": 14,
+      "mpg": 8.1
+    },
+    {
+      "name": "Dalano Banton",
+      "heightInches": 81,
+      "age": 26,
+      "ppg": 1.5,
+      "rpg": 1,
+      "apg": 2.3,
+      "games": 4,
+      "mpg": 13.3
+    },
+    {
+      "name": "Amari Williams",
+      "heightInches": 82,
+      "age": 23,
+      "ppg": 1.4,
+      "rpg": 1.8,
+      "apg": 0.5,
+      "games": 22,
+      "mpg": 6.6
+    },
+    {
+      "name": "Max Shulga",
+      "heightInches": 76,
+      "age": 23,
+      "ppg": 0.6,
+      "rpg": 0.5,
+      "apg": 0.2,
+      "games": 11,
+      "mpg": 3.5
+    }
+  ],
+  "Brooklyn|Union": [
+    {
+      "name": "Michael Porter",
+      "heightInches": 82,
+      "age": 27,
+      "ppg": 24.2,
+      "rpg": 7.1,
+      "apg": 3,
+      "games": 52,
+      "mpg": 32.5
+    },
+    {
+      "name": "Cam Thomas",
+      "heightInches": 76,
+      "age": 24,
+      "ppg": 15.6,
+      "rpg": 1.8,
+      "apg": 3.1,
+      "games": 24,
+      "mpg": 24.3
+    },
+    {
+      "name": "Noah Clowney",
+      "heightInches": 81,
+      "age": 21,
+      "ppg": 12.3,
+      "rpg": 4.1,
+      "apg": 1.6,
+      "games": 66,
+      "mpg": 27
+    },
+    {
+      "name": "Nic Claxton",
+      "heightInches": 83,
+      "age": 26,
+      "ppg": 11.7,
+      "rpg": 6.9,
+      "apg": 3.7,
+      "games": 69,
+      "mpg": 27.8
+    },
+    {
+      "name": "Josh Minott",
+      "heightInches": 80,
+      "age": 23,
+      "ppg": 10.8,
+      "rpg": 2.5,
+      "apg": 0.8,
+      "games": 16,
+      "mpg": 19.3
+    },
+    {
+      "name": "Egor Demin",
+      "heightInches": 79,
+      "age": 19,
+      "ppg": 10.3,
+      "rpg": 3.2,
+      "apg": 3.3,
+      "games": 52,
+      "mpg": 25.1
+    },
+    {
+      "name": "Ziaire Williams",
+      "heightInches": 80,
+      "age": 24,
+      "ppg": 10.2,
+      "rpg": 2.4,
+      "apg": 1.1,
+      "games": 56,
+      "mpg": 22.9
+    },
+    {
+      "name": "Danny Wolf",
+      "heightInches": 83,
+      "age": 21,
+      "ppg": 8.9,
+      "rpg": 4.9,
+      "apg": 2.2,
+      "games": 57,
+      "mpg": 20.9
+    },
+    {
+      "name": "Nolan Traore",
+      "heightInches": 76,
+      "age": 19,
+      "ppg": 8.9,
+      "rpg": 1.8,
+      "apg": 3.8,
+      "games": 56,
+      "mpg": 22.3
+    },
+    {
+      "name": "Day'Ron Sharpe",
+      "heightInches": 83,
+      "age": 24,
+      "ppg": 8.7,
+      "rpg": 6.7,
+      "apg": 2.3,
+      "games": 62,
+      "mpg": 18.7
+    },
+    {
+      "name": "Malachi Smith",
+      "heightInches": 76,
+      "age": 26,
+      "ppg": 8.3,
+      "rpg": 3.4,
+      "apg": 3.3,
+      "games": 15,
+      "mpg": 23.9
+    },
+    {
+      "name": "Chaney Johnson",
+      "heightInches": 79,
+      "age": 24,
+      "ppg": 8.2,
+      "rpg": 4.6,
+      "apg": 2.1,
+      "games": 17,
+      "mpg": 20.3
+    },
+    {
+      "name": "Tre Scott",
+      "heightInches": 80,
+      "age": 29,
+      "ppg": 8,
+      "rpg": 5.2,
+      "apg": 1.7,
+      "games": 6,
+      "mpg": 30.5
+    },
+    {
+      "name": "Tyson Etienne",
+      "heightInches": 72,
+      "age": 26,
+      "ppg": 7.9,
+      "rpg": 1.1,
+      "apg": 1.7,
+      "games": 24,
+      "mpg": 15.8
+    },
+    {
+      "name": "Ben Avraham Saraf",
+      "heightInches": 77,
+      "age": 19,
+      "ppg": 7.5,
+      "rpg": 2.1,
+      "apg": 3.3,
+      "games": 44,
+      "mpg": 20.8
+    },
+    {
+      "name": "Tyrese Martin",
+      "heightInches": 78,
+      "age": 26,
+      "ppg": 7.3,
+      "rpg": 2.9,
+      "apg": 1.9,
+      "games": 37,
+      "mpg": 18.8
+    },
+    {
+      "name": "Terance Mann",
+      "heightInches": 78,
+      "age": 29,
+      "ppg": 7.2,
+      "rpg": 3.2,
+      "apg": 3,
+      "games": 63,
+      "mpg": 24.3
+    },
+    {
+      "name": "Ochai Agbaji",
+      "heightInches": 77,
+      "age": 25,
+      "ppg": 6.7,
+      "rpg": 2.3,
+      "apg": 0.9,
+      "games": 20,
+      "mpg": 16.2
+    },
+    {
+      "name": "Drake Powell",
+      "heightInches": 78,
+      "age": 20,
+      "ppg": 6.5,
+      "rpg": 1.8,
+      "apg": 1.4,
+      "games": 63,
+      "mpg": 20.9
+    },
+    {
+      "name": "Jalen Wilson",
+      "heightInches": 80,
+      "age": 25,
+      "ppg": 6.4,
+      "rpg": 2.1,
+      "apg": 0.9,
+      "games": 54,
+      "mpg": 15.9
+    },
+    {
+      "name": "E.J. Liddell",
+      "heightInches": 79,
+      "age": 25,
+      "ppg": 5.7,
+      "rpg": 2.7,
+      "apg": 0.9,
+      "games": 26,
+      "mpg": 13.4
+    },
+    {
+      "name": "Grant Nelson",
+      "heightInches": 83,
+      "age": 24,
+      "ppg": 4.3,
+      "rpg": 1.5,
+      "apg": 1.3,
+      "games": 4,
+      "mpg": 8.8
+    }
+  ],
+  "Charlotte|Mint": [
+    {
+      "name": "Brandon Miller",
+      "heightInches": 81,
+      "age": 23,
+      "ppg": 20.2,
+      "rpg": 4.9,
+      "apg": 3.3,
+      "games": 65,
+      "mpg": 30.3
+    },
+    {
+      "name": "LaMelo Ball",
+      "heightInches": 79,
+      "age": 24,
+      "ppg": 20.1,
+      "rpg": 4.8,
+      "apg": 7.1,
+      "games": 72,
+      "mpg": 28
+    },
+    {
+      "name": "Kon Knueppel",
+      "heightInches": 79,
+      "age": 20,
+      "ppg": 18.5,
+      "rpg": 5.3,
+      "apg": 3.4,
+      "games": 81,
+      "mpg": 31.5
+    },
+    {
+      "name": "Miles Bridges",
+      "heightInches": 79,
+      "age": 27,
+      "ppg": 17.1,
+      "rpg": 5.8,
+      "apg": 3.2,
+      "games": 77,
+      "mpg": 31
+    },
+    {
+      "name": "Coby White",
+      "heightInches": 78,
+      "age": 25,
+      "ppg": 15.6,
+      "rpg": 3,
+      "apg": 3,
+      "games": 21,
+      "mpg": 19.3
+    },
+    {
+      "name": "Collin Sexton",
+      "heightInches": 75,
+      "age": 26,
+      "ppg": 14.2,
+      "rpg": 1.9,
+      "apg": 3.7,
+      "games": 42,
+      "mpg": 22.3
+    },
+    {
+      "name": "Moussa Diabate",
+      "heightInches": 82,
+      "age": 23,
+      "ppg": 7.9,
+      "rpg": 8.7,
+      "apg": 1.9,
+      "games": 73,
+      "mpg": 26
+    },
+    {
+      "name": "Ryan Kalkbrenner",
+      "heightInches": 84,
+      "age": 23,
+      "ppg": 7.6,
+      "rpg": 5.5,
+      "apg": 0.8,
+      "games": 69,
+      "mpg": 21.4
+    },
+    {
+      "name": "Grant Williams",
+      "heightInches": 79,
+      "age": 27,
+      "ppg": 7,
+      "rpg": 3.9,
+      "apg": 1.6,
+      "games": 36,
+      "mpg": 19.8
+    },
+    {
+      "name": "P.J. Hall",
+      "heightInches": 81,
+      "age": 23,
+      "ppg": 6.1,
+      "rpg": 5.5,
+      "apg": 0.7,
+      "games": 12,
+      "mpg": 15.7
+    },
+    {
+      "name": "K.J. Simpson",
+      "heightInches": 74,
+      "age": 23,
+      "ppg": 6,
+      "rpg": 2.1,
+      "apg": 2.5,
+      "games": 14,
+      "mpg": 15.9
+    },
+    {
+      "name": "Tidjane Salaun",
+      "heightInches": 80,
+      "age": 20,
+      "ppg": 6,
+      "rpg": 4,
+      "apg": 0.7,
+      "games": 37,
+      "mpg": 15.6
+    },
+    {
+      "name": "Tre Mann",
+      "heightInches": 77,
+      "age": 24,
+      "ppg": 5.5,
+      "rpg": 1.7,
+      "apg": 1.6,
+      "games": 53,
+      "mpg": 12.7
+    },
+    {
+      "name": "Sion James",
+      "heightInches": 77,
+      "age": 23,
+      "ppg": 5.4,
+      "rpg": 3.5,
+      "apg": 2,
+      "games": 82,
+      "mpg": 22.4
+    },
+    {
+      "name": "Josh Green",
+      "heightInches": 78,
+      "age": 25,
+      "ppg": 4.3,
+      "rpg": 1.8,
+      "apg": 0.8,
+      "games": 58,
+      "mpg": 15.7
+    },
+    {
+      "name": "Liam Mcneeley",
+      "heightInches": 80,
+      "age": 20,
+      "ppg": 4.3,
+      "rpg": 2.4,
+      "apg": 0.8,
+      "games": 31,
+      "mpg": 11.8
+    },
+    {
+      "name": "Antonio Reeves",
+      "heightInches": 76,
+      "age": 23,
+      "ppg": 2.7,
+      "rpg": 0.8,
+      "apg": 0.3,
+      "games": 10,
+      "mpg": 6.9
+    },
+    {
+      "name": "Pat Connaughton",
+      "heightInches": 77,
+      "age": 32,
+      "ppg": 2.6,
+      "rpg": 1.5,
+      "apg": 0.4,
+      "games": 42,
+      "mpg": 7
+    },
+    {
+      "name": "Mason Plumlee",
+      "heightInches": 83,
+      "age": 35,
+      "ppg": 1.9,
+      "rpg": 2.9,
+      "apg": 1.1,
+      "games": 14,
+      "mpg": 8.9
+    },
+    {
+      "name": "Drew Peterson",
+      "heightInches": 80,
+      "age": 26,
+      "ppg": 0.8,
+      "rpg": 1.5,
+      "apg": 0.3,
+      "games": 6,
+      "mpg": 10.8
+    },
+    {
+      "name": "Xavier Tillman",
+      "heightInches": 80,
+      "age": 26,
+      "ppg": 0.8,
+      "rpg": 1.1,
+      "apg": 0.5,
+      "games": 16,
+      "mpg": 4.6
+    }
+  ],
+  "Chicago|Gale": [
+    {
+      "name": "Coby White",
+      "heightInches": 78,
+      "age": 25,
+      "ppg": 18.6,
+      "rpg": 3.7,
+      "apg": 4.7,
+      "games": 29,
+      "mpg": 29.1
+    },
+    {
+      "name": "Collin Sexton",
+      "heightInches": 75,
+      "age": 26,
+      "ppg": 17.5,
+      "rpg": 2.9,
+      "apg": 2.5,
+      "games": 26,
+      "mpg": 26
+    },
+    {
+      "name": "Josh Giddey",
+      "heightInches": 80,
+      "age": 23,
+      "ppg": 17,
+      "rpg": 8.3,
+      "apg": 9.1,
+      "games": 54,
+      "mpg": 32.1
+    },
+    {
+      "name": "Nikola Vucevic",
+      "heightInches": 83,
+      "age": 35,
+      "ppg": 16.9,
+      "rpg": 9,
+      "apg": 3.8,
+      "games": 48,
+      "mpg": 30.9
+    },
+    {
+      "name": "Matas Buzelis",
+      "heightInches": 82,
+      "age": 21,
+      "ppg": 16.3,
+      "rpg": 5.8,
+      "apg": 2.1,
+      "games": 77,
+      "mpg": 29.2
+    },
+    {
+      "name": "Anfernee Simons",
+      "heightInches": 76,
+      "age": 26,
+      "ppg": 15.2,
+      "rpg": 2.8,
+      "apg": 3,
+      "games": 6,
+      "mpg": 28.3
+    },
+    {
+      "name": "Ayo Dosunmu",
+      "heightInches": 77,
+      "age": 25,
+      "ppg": 15,
+      "rpg": 3,
+      "apg": 3.6,
+      "games": 45,
+      "mpg": 26.4
+    },
+    {
+      "name": "Tre Jones",
+      "heightInches": 75,
+      "age": 25,
+      "ppg": 14.1,
+      "rpg": 3.1,
+      "apg": 5.4,
+      "games": 65,
+      "mpg": 27
+    },
+    {
+      "name": "Leonard Miller",
+      "heightInches": 77,
+      "age": 22,
+      "ppg": 11.7,
+      "rpg": 5.8,
+      "apg": 1.3,
+      "games": 27,
+      "mpg": 23.1
+    },
+    {
+      "name": "Jaden Ivey",
+      "heightInches": 76,
+      "age": 23,
+      "ppg": 11.5,
+      "rpg": 4.8,
+      "apg": 4,
+      "games": 4,
+      "mpg": 29
+    },
+    {
+      "name": "Kevin Huerter",
+      "heightInches": 79,
+      "age": 27,
+      "ppg": 10.9,
+      "rpg": 3.8,
+      "apg": 2.6,
+      "games": 44,
+      "mpg": 23.6
+    },
+    {
+      "name": "Jalen Smith",
+      "heightInches": 82,
+      "age": 25,
+      "ppg": 10.2,
+      "rpg": 6.7,
+      "apg": 1.2,
+      "games": 53,
+      "mpg": 20.6
+    },
+    {
+      "name": "Guerschon Yabusele",
+      "heightInches": 78,
+      "age": 30,
+      "ppg": 10,
+      "rpg": 5.7,
+      "apg": 1.7,
+      "games": 26,
+      "mpg": 24.6
+    },
+    {
+      "name": "Zach Collins",
+      "heightInches": 84,
+      "age": 28,
+      "ppg": 9.7,
+      "rpg": 5.6,
+      "apg": 1.5,
+      "games": 10,
+      "mpg": 18.4
+    },
+    {
+      "name": "Rob Dillingham",
+      "heightInches": 75,
+      "age": 20,
+      "ppg": 9.6,
+      "rpg": 3,
+      "apg": 2.8,
+      "games": 30,
+      "mpg": 21.4
+    },
+    {
+      "name": "Nick Richards",
+      "heightInches": 83,
+      "age": 28,
+      "ppg": 9.4,
+      "rpg": 7.6,
+      "apg": 0.4,
+      "games": 20,
+      "mpg": 22.4
+    },
+    {
+      "name": "Isaac Okoro",
+      "heightInches": 78,
+      "age": 24,
+      "ppg": 9.3,
+      "rpg": 2.7,
+      "apg": 1.6,
+      "games": 63,
+      "mpg": 26.9
+    },
+    {
+      "name": "Mouhamadou Gueye",
+      "heightInches": 81,
+      "age": 27,
+      "ppg": 8,
+      "rpg": 3,
+      "apg": 3,
+      "games": 2,
+      "mpg": 23
+    },
+    {
+      "name": "Patrick Williams",
+      "heightInches": 80,
+      "age": 24,
+      "ppg": 7,
+      "rpg": 3,
+      "apg": 1.5,
+      "games": 72,
+      "mpg": 20.5
+    },
+    {
+      "name": "Mac McClung",
+      "heightInches": 75,
+      "age": 26,
+      "ppg": 6,
+      "rpg": 0.8,
+      "apg": 1.1,
+      "games": 8,
+      "mpg": 12.6
+    },
+    {
+      "name": "Jevon Carter",
+      "heightInches": 74,
+      "age": 30,
+      "ppg": 5.4,
+      "rpg": 1.1,
+      "apg": 0.8,
+      "games": 23,
+      "mpg": 11.1
+    },
+    {
+      "name": "Dalen Terry",
+      "heightInches": 79,
+      "age": 23,
+      "ppg": 3.5,
+      "rpg": 1.9,
+      "apg": 1.3,
+      "games": 34,
+      "mpg": 11.1
+    },
+    {
+      "name": "Yuki Kawamura",
+      "heightInches": 68,
+      "age": 24,
+      "ppg": 3.4,
+      "rpg": 1.8,
+      "apg": 2.6,
+      "games": 18,
+      "mpg": 11.7
+    },
+    {
+      "name": "Emanuel Miller",
+      "heightInches": 79,
+      "age": 25,
+      "ppg": 3,
+      "rpg": 0.6,
+      "apg": 0.8,
+      "games": 5,
+      "mpg": 6.6
+    },
+    {
+      "name": "Julian Phillips",
+      "heightInches": 80,
+      "age": 22,
+      "ppg": 2.8,
+      "rpg": 1.3,
+      "apg": 0.2,
+      "games": 35,
+      "mpg": 9.6
+    },
+    {
+      "name": "Lachlan Olbrich",
+      "heightInches": 82,
+      "age": 22,
+      "ppg": 2.4,
+      "rpg": 3,
+      "apg": 1.1,
+      "games": 37,
+      "mpg": 9.3
+    },
+    {
+      "name": "Trentyn Flowers",
+      "heightInches": 81,
+      "age": 20,
+      "ppg": 2,
+      "rpg": 0.5,
+      "apg": 0.5,
+      "games": 2,
+      "mpg": 2.5
+    },
+    {
+      "name": "Noa Essengue",
+      "heightInches": 81,
+      "age": 19,
+      "ppg": 0,
+      "rpg": 0,
+      "apg": 0,
+      "games": 2,
+      "mpg": 3
+    }
+  ],
+  "Cleveland|Rust": [
+    {
+      "name": "Donovan Mitchell",
+      "heightInches": 75,
+      "age": 29,
+      "ppg": 27.9,
+      "rpg": 4.5,
+      "apg": 5.7,
+      "games": 70,
+      "mpg": 33.4
+    },
+    {
+      "name": "James Harden",
+      "heightInches": 77,
+      "age": 36,
+      "ppg": 20.5,
+      "rpg": 4.8,
+      "apg": 7.7,
+      "games": 26,
+      "mpg": 33.8
+    },
+    {
+      "name": "Evan Mobley",
+      "heightInches": 84,
+      "age": 24,
+      "ppg": 18.2,
+      "rpg": 9,
+      "apg": 3.6,
+      "games": 65,
+      "mpg": 32
+    },
+    {
+      "name": "Darius Garland",
+      "heightInches": 74,
+      "age": 25,
+      "ppg": 18,
+      "rpg": 2.4,
+      "apg": 6.9,
+      "games": 26,
+      "mpg": 30.4
+    },
+    {
+      "name": "Jarrett Allen",
+      "heightInches": 82,
+      "age": 27,
+      "ppg": 15.4,
+      "rpg": 8.5,
+      "apg": 1.8,
+      "games": 56,
+      "mpg": 27.2
+    },
+    {
+      "name": "De'Andre Hunter",
+      "heightInches": 79,
+      "age": 28,
+      "ppg": 14,
+      "rpg": 4.2,
+      "apg": 2.1,
+      "games": 43,
+      "mpg": 26.2
+    },
+    {
+      "name": "Jaylon Tyson",
+      "heightInches": 79,
+      "age": 23,
+      "ppg": 13.2,
+      "rpg": 5.1,
+      "apg": 2.2,
+      "games": 66,
+      "mpg": 27
+    },
+    {
+      "name": "Sam Merrill",
+      "heightInches": 77,
+      "age": 29,
+      "ppg": 12.8,
+      "rpg": 2.6,
+      "apg": 2.4,
+      "games": 52,
+      "mpg": 26.5
+    },
+    {
+      "name": "Max Strus",
+      "heightInches": 78,
+      "age": 29,
+      "ppg": 11.2,
+      "rpg": 5.4,
+      "apg": 2,
+      "games": 12,
+      "mpg": 24
+    },
+    {
+      "name": "Keon Ellis",
+      "heightInches": 78,
+      "age": 25,
+      "ppg": 8.3,
+      "rpg": 2.8,
+      "apg": 1.6,
+      "games": 29,
+      "mpg": 24.9
+    },
+    {
+      "name": "Dennis Schroder",
+      "heightInches": 71,
+      "age": 32,
+      "ppg": 8.2,
+      "rpg": 2.3,
+      "apg": 4.3,
+      "games": 30,
+      "mpg": 21.3
+    },
+    {
+      "name": "Thomas Bryant",
+      "heightInches": 82,
+      "age": 28,
+      "ppg": 6.2,
+      "rpg": 3.4,
+      "apg": 0.6,
+      "games": 60,
+      "mpg": 12.2
+    },
+    {
+      "name": "Nae'qwan Tomlin",
+      "heightInches": 80,
+      "age": 25,
+      "ppg": 5.8,
+      "rpg": 2.9,
+      "apg": 0.8,
+      "games": 64,
+      "mpg": 15.7
+    },
+    {
+      "name": "Dean Wade",
+      "heightInches": 82,
+      "age": 29,
+      "ppg": 5.8,
+      "rpg": 4.2,
+      "apg": 1.5,
+      "games": 59,
+      "mpg": 22.4
+    },
+    {
+      "name": "Tyrese Proctor",
+      "heightInches": 76,
+      "age": 21,
+      "ppg": 5.4,
+      "rpg": 1.3,
+      "apg": 1.5,
+      "games": 50,
+      "mpg": 11
+    },
+    {
+      "name": "Lonzo Ball",
+      "heightInches": 78,
+      "age": 28,
+      "ppg": 4.6,
+      "rpg": 4,
+      "apg": 3.9,
+      "games": 35,
+      "mpg": 20.8
+    },
+    {
+      "name": "Craig Porter",
+      "heightInches": 74,
+      "age": 25,
+      "ppg": 4.5,
+      "rpg": 3.4,
+      "apg": 3.2,
+      "games": 64,
+      "mpg": 17.9
+    },
+    {
+      "name": "Riley Minix",
+      "heightInches": 79,
+      "age": 25,
+      "ppg": 4.3,
+      "rpg": 0.7,
+      "apg": 0.7,
+      "games": 6,
+      "mpg": 8.3
+    },
+    {
+      "name": "Tristan Enaruna",
+      "heightInches": 81,
+      "age": 24,
+      "ppg": 4.1,
+      "rpg": 1.6,
+      "apg": 0.8,
+      "games": 9,
+      "mpg": 9.6
+    },
+    {
+      "name": "Larry Nance",
+      "heightInches": 80,
+      "age": 32,
+      "ppg": 3.7,
+      "rpg": 2.7,
+      "apg": 1,
+      "games": 35,
+      "mpg": 12.9
+    },
+    {
+      "name": "Olivier Sarr",
+      "heightInches": 84,
+      "age": 26,
+      "ppg": 3.5,
+      "rpg": 2.8,
+      "apg": 1.3,
+      "games": 4,
+      "mpg": 9.8
+    },
+    {
+      "name": "Chris Livingston",
+      "heightInches": 78,
+      "age": 22,
+      "ppg": 3,
+      "rpg": 1,
+      "apg": 0.3,
+      "games": 3,
+      "mpg": 5.7
+    },
+    {
+      "name": "Luke Travers",
+      "heightInches": 77,
+      "age": 24,
+      "ppg": 2.3,
+      "rpg": 2,
+      "apg": 0.8,
+      "games": 12,
+      "mpg": 8.8
+    },
+    {
+      "name": "Darius Brown II",
+      "heightInches": 72,
+      "age": 26,
+      "ppg": 0,
+      "rpg": 1,
+      "apg": 0,
+      "games": 1,
+      "mpg": 3
+    }
+  ],
+  "Dallas|Lasso": [
+    {
+      "name": "Cooper Flagg",
+      "heightInches": 79,
+      "age": 19,
+      "ppg": 21,
+      "rpg": 6.7,
+      "apg": 4.5,
+      "games": 70,
+      "mpg": 33.6
+    },
+    {
+      "name": "Anthony Davis",
+      "heightInches": 82,
+      "age": 32,
+      "ppg": 20.4,
+      "rpg": 11.1,
+      "apg": 2.8,
+      "games": 20,
+      "mpg": 31.3
+    },
+    {
+      "name": "Naji Marshall",
+      "heightInches": 79,
+      "age": 27,
+      "ppg": 15.2,
+      "rpg": 4.7,
+      "apg": 3.3,
+      "games": 74,
+      "mpg": 29.5
+    },
+    {
+      "name": "P.J. Washington",
+      "heightInches": 80,
+      "age": 27,
+      "ppg": 14.2,
+      "rpg": 7,
+      "apg": 1.8,
+      "games": 56,
+      "mpg": 30.9
+    },
+    {
+      "name": "Brandon Williams",
+      "heightInches": 74,
+      "age": 26,
+      "ppg": 13,
+      "rpg": 2.9,
+      "apg": 3.9,
+      "games": 66,
+      "mpg": 22.2
+    },
+    {
+      "name": "Max Christie",
+      "heightInches": 76,
+      "age": 22,
+      "ppg": 12.3,
+      "rpg": 3.2,
+      "apg": 2,
+      "games": 77,
+      "mpg": 29.1
+    },
+    {
+      "name": "Klay Thompson",
+      "heightInches": 79,
+      "age": 35,
+      "ppg": 11.7,
+      "rpg": 2.1,
+      "apg": 1.4,
+      "games": 69,
+      "mpg": 21.7
+    },
+    {
+      "name": "Marvin Bagley",
+      "heightInches": 83,
+      "age": 26,
+      "ppg": 11,
+      "rpg": 6.8,
+      "apg": 1.3,
+      "games": 22,
+      "mpg": 21.4
+    },
+    {
+      "name": "D'Angelo Russell",
+      "heightInches": 77,
+      "age": 29,
+      "ppg": 10.2,
+      "rpg": 2.3,
+      "apg": 4,
+      "games": 26,
+      "mpg": 19
+    },
+    {
+      "name": "Khris Middleton",
+      "heightInches": 80,
+      "age": 34,
+      "ppg": 10,
+      "rpg": 3.3,
+      "apg": 2.2,
+      "games": 29,
+      "mpg": 21.1
+    },
+    {
+      "name": "Daniel Gafford",
+      "heightInches": 83,
+      "age": 27,
+      "ppg": 9.5,
+      "rpg": 6.9,
+      "apg": 1.1,
+      "games": 55,
+      "mpg": 21.7
+    },
+    {
+      "name": "John Poulakidas",
+      "heightInches": 77,
+      "age": 22,
+      "ppg": 8.8,
+      "rpg": 2.3,
+      "apg": 0.8,
+      "games": 13,
+      "mpg": 19.5
+    },
+    {
+      "name": "Jaden Hardy",
+      "heightInches": 76,
+      "age": 23,
+      "ppg": 6.9,
+      "rpg": 1.4,
+      "apg": 0.9,
+      "games": 34,
+      "mpg": 12.6
+    },
+    {
+      "name": "Ryan Nembhard",
+      "heightInches": 72,
+      "age": 22,
+      "ppg": 6.6,
+      "rpg": 2.2,
+      "apg": 5.3,
+      "games": 60,
+      "mpg": 19.5
+    },
+    {
+      "name": "Tyler Smith",
+      "heightInches": 83,
+      "age": 21,
+      "ppg": 4.7,
+      "rpg": 2.8,
+      "apg": 0.4,
+      "games": 12,
+      "mpg": 13.9
+    },
+    {
+      "name": "Moussa Cisse",
+      "heightInches": 83,
+      "age": 23,
+      "ppg": 4.5,
+      "rpg": 5.7,
+      "apg": 0.2,
+      "games": 38,
+      "mpg": 14
+    },
+    {
+      "name": "Jeremiah Robinson-Earl",
+      "heightInches": 81,
+      "age": 25,
+      "ppg": 4.4,
+      "rpg": 3,
+      "apg": 0.6,
+      "games": 5,
+      "mpg": 12.4
+    },
+    {
+      "name": "Dereck Lively",
+      "heightInches": 85,
+      "age": 21,
+      "ppg": 4.3,
+      "rpg": 5.3,
+      "apg": 1.9,
+      "games": 7,
+      "mpg": 16.4
+    },
+    {
+      "name": "Caleb Martin",
+      "heightInches": 77,
+      "age": 30,
+      "ppg": 3.9,
+      "rpg": 2.5,
+      "apg": 1.4,
+      "games": 58,
+      "mpg": 14.8
+    },
+    {
+      "name": "AJ Johnson",
+      "heightInches": 77,
+      "age": 21,
+      "ppg": 3.9,
+      "rpg": 1,
+      "apg": 1.1,
+      "games": 23,
+      "mpg": 10.4
+    },
+    {
+      "name": "Tyus Jones",
+      "heightInches": 74,
+      "age": 29,
+      "ppg": 3.9,
+      "rpg": 1.1,
+      "apg": 3.8,
+      "games": 8,
+      "mpg": 16.8
+    },
+    {
+      "name": "Dwight Powell",
+      "heightInches": 82,
+      "age": 34,
+      "ppg": 3.3,
+      "rpg": 4.1,
+      "apg": 1.1,
+      "games": 63,
+      "mpg": 14.4
+    },
+    {
+      "name": "Miles Kelly",
+      "heightInches": 77,
+      "age": 22,
+      "ppg": 3.1,
+      "rpg": 1.7,
+      "apg": 0.9,
+      "games": 14,
+      "mpg": 9.6
+    }
+  ],
+  "Denver|Altitude": [
+    {
+      "name": "Nikola Jokic",
+      "heightInches": 82,
+      "age": 30,
+      "ppg": 27.7,
+      "rpg": 12.9,
+      "apg": 10.7,
+      "games": 65,
+      "mpg": 34.8
+    },
+    {
+      "name": "Jamal Murray",
+      "heightInches": 76,
+      "age": 28,
+      "ppg": 25.4,
+      "rpg": 4.4,
+      "apg": 7.1,
+      "games": 75,
+      "mpg": 35.4
+    },
+    {
+      "name": "Aaron Gordon",
+      "heightInches": 81,
+      "age": 30,
+      "ppg": 16.2,
+      "rpg": 5.8,
+      "apg": 2.7,
+      "games": 36,
+      "mpg": 27.9
+    },
+    {
+      "name": "Peyton Watson",
+      "heightInches": 81,
+      "age": 23,
+      "ppg": 14.6,
+      "rpg": 4.9,
+      "apg": 2.1,
+      "games": 54,
+      "mpg": 29.6
+    },
+    {
+      "name": "Tim Hardaway Jr.",
+      "heightInches": 78,
+      "age": 33,
+      "ppg": 13.5,
+      "rpg": 2.6,
+      "apg": 1.4,
+      "games": 80,
+      "mpg": 26.7
+    },
+    {
+      "name": "Cameron Johnson",
+      "heightInches": 80,
+      "age": 29,
+      "ppg": 12.2,
+      "rpg": 3.8,
+      "apg": 2.4,
+      "games": 54,
+      "mpg": 30.5
+    },
+    {
+      "name": "Christian Braun",
+      "heightInches": 78,
+      "age": 24,
+      "ppg": 12,
+      "rpg": 4.8,
+      "apg": 2.7,
+      "games": 44,
+      "mpg": 31.8
+    },
+    {
+      "name": "Jonas Valanciunas",
+      "heightInches": 83,
+      "age": 33,
+      "ppg": 8.7,
+      "rpg": 5.1,
+      "apg": 1.2,
+      "games": 65,
+      "mpg": 13.4
+    },
+    {
+      "name": "David Roddy",
+      "heightInches": 77,
+      "age": 24,
+      "ppg": 8,
+      "rpg": 4,
+      "apg": 0.8,
+      "games": 5,
+      "mpg": 14.6
+    },
+    {
+      "name": "Bruce Brown",
+      "heightInches": 78,
+      "age": 29,
+      "ppg": 7.9,
+      "rpg": 3.9,
+      "apg": 2.1,
+      "games": 82,
+      "mpg": 24.3
+    },
+    {
+      "name": "Julian Strawther",
+      "heightInches": 79,
+      "age": 23,
+      "ppg": 7.2,
+      "rpg": 2,
+      "apg": 1.1,
+      "games": 57,
+      "mpg": 15.1
+    },
+    {
+      "name": "Spencer Jones",
+      "heightInches": 79,
+      "age": 24,
+      "ppg": 5.5,
+      "rpg": 3.3,
+      "apg": 0.8,
+      "games": 64,
+      "mpg": 22.2
+    },
+    {
+      "name": "Jalen Pickett",
+      "heightInches": 76,
+      "age": 26,
+      "ppg": 5.2,
+      "rpg": 2.3,
+      "apg": 2.3,
+      "games": 50,
+      "mpg": 16.1
+    },
+    {
+      "name": "DaRon Holmes II",
+      "heightInches": 82,
+      "age": 23,
+      "ppg": 3.7,
+      "rpg": 1.4,
+      "apg": 0.6,
+      "games": 25,
+      "mpg": 8.4
+    },
+    {
+      "name": "Zeke Nnaji",
+      "heightInches": 83,
+      "age": 24,
+      "ppg": 3.7,
+      "rpg": 2.6,
+      "apg": 0.6,
+      "games": 52,
+      "mpg": 12.1
+    },
+    {
+      "name": "Curtis Jones",
+      "heightInches": 76,
+      "age": 24,
+      "ppg": 2.9,
+      "rpg": 1.1,
+      "apg": 1,
+      "games": 10,
+      "mpg": 8.7
+    },
+    {
+      "name": "Hunter Tyson",
+      "heightInches": 80,
+      "age": 25,
+      "ppg": 2.2,
+      "rpg": 1.7,
+      "apg": 0.8,
+      "games": 21,
+      "mpg": 7.7
+    },
+    {
+      "name": "Tyus Jones",
+      "heightInches": 74,
+      "age": 29,
+      "ppg": 2.2,
+      "rpg": 1.3,
+      "apg": 1.2,
+      "games": 11,
+      "mpg": 8.4
+    },
+    {
+      "name": "K.J. Simpson",
+      "heightInches": 74,
+      "age": 23,
+      "ppg": 1.2,
+      "rpg": 1.3,
+      "apg": 1.3,
+      "games": 6,
+      "mpg": 5.7
+    }
+  ],
+  "Detroit|Assembly": [
+    {
+      "name": "Cade Cunningham",
+      "heightInches": 80,
+      "age": 24,
+      "ppg": 23.9,
+      "rpg": 5.5,
+      "apg": 9.9,
+      "games": 64,
+      "mpg": 33.9
+    },
+    {
+      "name": "Jalen Duren",
+      "heightInches": 83,
+      "age": 22,
+      "ppg": 19.5,
+      "rpg": 10.5,
+      "apg": 2,
+      "games": 70,
+      "mpg": 28.3
+    },
+    {
+      "name": "Tobias Harris",
+      "heightInches": 81,
+      "age": 33,
+      "ppg": 13.3,
+      "rpg": 5.1,
+      "apg": 2.5,
+      "games": 63,
+      "mpg": 27.8
+    },
+    {
+      "name": "Duncan Robinson",
+      "heightInches": 80,
+      "age": 31,
+      "ppg": 12.2,
+      "rpg": 2.7,
+      "apg": 2.1,
+      "games": 77,
+      "mpg": 27.4
+    },
+    {
+      "name": "Isaiah Stewart",
+      "heightInches": 81,
+      "age": 24,
+      "ppg": 10,
+      "rpg": 5,
+      "apg": 1.1,
+      "games": 58,
+      "mpg": 22.7
+    },
+    {
+      "name": "Ausar Thompson",
+      "heightInches": 79,
+      "age": 22,
+      "ppg": 9.9,
+      "rpg": 5.7,
+      "apg": 3.1,
+      "games": 73,
+      "mpg": 26
+    },
+    {
+      "name": "Daniss Jenkins",
+      "heightInches": 75,
+      "age": 24,
+      "ppg": 9.3,
+      "rpg": 2.3,
+      "apg": 3.9,
+      "games": 72,
+      "mpg": 20.2
+    },
+    {
+      "name": "Kevin Huerter",
+      "heightInches": 79,
+      "age": 27,
+      "ppg": 8.6,
+      "rpg": 2.8,
+      "apg": 2.5,
+      "games": 25,
+      "mpg": 20.5
+    },
+    {
+      "name": "Ronald Holland",
+      "heightInches": 81,
+      "age": 20,
+      "ppg": 8.2,
+      "rpg": 4,
+      "apg": 1.2,
+      "games": 78,
+      "mpg": 19.8
+    },
+    {
+      "name": "Jaden Ivey",
+      "heightInches": 76,
+      "age": 23,
+      "ppg": 8.2,
+      "rpg": 2.2,
+      "apg": 1.6,
+      "games": 33,
+      "mpg": 16.8
+    },
+    {
+      "name": "Paul Reed",
+      "heightInches": 81,
+      "age": 26,
+      "ppg": 7.8,
+      "rpg": 4.5,
+      "apg": 1.2,
+      "games": 65,
+      "mpg": 13.8
+    },
+    {
+      "name": "Caris LeVert",
+      "heightInches": 78,
+      "age": 31,
+      "ppg": 7.4,
+      "rpg": 2,
+      "apg": 2.7,
+      "games": 60,
+      "mpg": 19.2
+    },
+    {
+      "name": "Javonte Green",
+      "heightInches": 76,
+      "age": 32,
+      "ppg": 6.9,
+      "rpg": 2.8,
+      "apg": 0.7,
+      "games": 82,
+      "mpg": 17.6
+    },
+    {
+      "name": "Marcus Sasser",
+      "heightInches": 72,
+      "age": 25,
+      "ppg": 5.2,
+      "rpg": 1,
+      "apg": 2,
+      "games": 38,
+      "mpg": 12.1
+    },
+    {
+      "name": "Tolu Smith",
+      "heightInches": 82,
+      "age": 25,
+      "ppg": 3.7,
+      "rpg": 3.3,
+      "apg": 0.9,
+      "games": 15,
+      "mpg": 9.1
+    },
+    {
+      "name": "Chaz Lanier",
+      "heightInches": 76,
+      "age": 24,
+      "ppg": 2.4,
+      "rpg": 0.7,
+      "apg": 0.5,
+      "games": 34,
+      "mpg": 7.8
+    },
+    {
+      "name": "Colby Jones",
+      "heightInches": 77,
+      "age": 23,
+      "ppg": 2,
+      "rpg": 4,
+      "apg": 2,
+      "games": 1,
+      "mpg": 7
+    },
+    {
+      "name": "Bobi Klintman",
+      "heightInches": 79,
+      "age": 22,
+      "ppg": 1.8,
+      "rpg": 1.6,
+      "apg": 0.5,
+      "games": 12,
+      "mpg": 6.2
+    },
+    {
+      "name": "Wendell Moore",
+      "heightInches": 78,
+      "age": 24,
+      "ppg": 1.7,
+      "rpg": 1,
+      "apg": 0.7,
+      "games": 6,
+      "mpg": 10
+    },
+    {
+      "name": "Isaac Jones",
+      "heightInches": 81,
+      "age": 24,
+      "ppg": 1.5,
+      "rpg": 0.8,
+      "apg": 0,
+      "games": 4,
+      "mpg": 4.8
+    }
+  ],
+  "Golden State|Spectrum": [
+    {
+      "name": "Stephen Curry",
+      "heightInches": 75,
+      "age": 37,
+      "ppg": 26.6,
+      "rpg": 3.6,
+      "apg": 4.7,
+      "games": 43,
+      "mpg": 31
+    },
+    {
+      "name": "Jimmy Butler",
+      "heightInches": 79,
+      "age": 36,
+      "ppg": 20,
+      "rpg": 5.6,
+      "apg": 4.9,
+      "games": 38,
+      "mpg": 31.2
+    },
+    {
+      "name": "Kristaps Porzingis",
+      "heightInches": 86,
+      "age": 30,
+      "ppg": 16.1,
+      "rpg": 5.3,
+      "apg": 2.3,
+      "games": 15,
+      "mpg": 23.8
+    },
+    {
+      "name": "Brandin Podziemski",
+      "heightInches": 77,
+      "age": 22,
+      "ppg": 13.8,
+      "rpg": 5.1,
+      "apg": 3.7,
+      "games": 82,
+      "mpg": 28.5
+    },
+    {
+      "name": "De'Anthony Melton",
+      "heightInches": 76,
+      "age": 27,
+      "ppg": 12.3,
+      "rpg": 3.2,
+      "apg": 2.6,
+      "games": 49,
+      "mpg": 23
+    },
+    {
+      "name": "Moses Moody",
+      "heightInches": 78,
+      "age": 23,
+      "ppg": 12.1,
+      "rpg": 3.3,
+      "apg": 1.6,
+      "games": 60,
+      "mpg": 25.7
+    },
+    {
+      "name": "Jonathan Kuminga",
+      "heightInches": 80,
+      "age": 23,
+      "ppg": 12.1,
+      "rpg": 5.9,
+      "apg": 2.5,
+      "games": 20,
+      "mpg": 23.9
+    },
+    {
+      "name": "Charles Bassey",
+      "heightInches": 83,
+      "age": 25,
+      "ppg": 10.6,
+      "rpg": 7.2,
+      "apg": 1,
+      "games": 5,
+      "mpg": 20.2
+    },
+    {
+      "name": "Gui Santos",
+      "heightInches": 80,
+      "age": 23,
+      "ppg": 9.2,
+      "rpg": 3.9,
+      "apg": 2.3,
+      "games": 68,
+      "mpg": 20.6
+    },
+    {
+      "name": "Draymond Green",
+      "heightInches": 79,
+      "age": 35,
+      "ppg": 8.4,
+      "rpg": 5.5,
+      "apg": 5.5,
+      "games": 68,
+      "mpg": 27.5
+    },
+    {
+      "name": "Al Horford",
+      "heightInches": 80,
+      "age": 39,
+      "ppg": 8.3,
+      "rpg": 4.9,
+      "apg": 2.6,
+      "games": 45,
+      "mpg": 21.6
+    },
+    {
+      "name": "L.J. Cryer",
+      "heightInches": 72,
+      "age": 24,
+      "ppg": 8.2,
+      "rpg": 1.6,
+      "apg": 1,
+      "games": 18,
+      "mpg": 16.2
+    },
+    {
+      "name": "Buddy Hield",
+      "heightInches": 76,
+      "age": 33,
+      "ppg": 8,
+      "rpg": 2.5,
+      "apg": 1.5,
+      "games": 44,
+      "mpg": 17.5
+    },
+    {
+      "name": "Jeenathan Williams",
+      "heightInches": 77,
+      "age": 26,
+      "ppg": 8,
+      "rpg": 2.1,
+      "apg": 1,
+      "games": 14,
+      "mpg": 17.2
+    },
+    {
+      "name": "Quinten Post",
+      "heightInches": 84,
+      "age": 25,
+      "ppg": 7.7,
+      "rpg": 4,
+      "apg": 1.4,
+      "games": 67,
+      "mpg": 17.3
+    },
+    {
+      "name": "Gary Payton II",
+      "heightInches": 75,
+      "age": 33,
+      "ppg": 7.5,
+      "rpg": 3.6,
+      "apg": 1.7,
+      "games": 73,
+      "mpg": 15.6
+    },
+    {
+      "name": "Pat Spencer",
+      "heightInches": 75,
+      "age": 29,
+      "ppg": 7.2,
+      "rpg": 2.4,
+      "apg": 3.5,
+      "games": 66,
+      "mpg": 18.6
+    },
+    {
+      "name": "Seth Curry",
+      "heightInches": 74,
+      "age": 35,
+      "ppg": 7.1,
+      "rpg": 1.2,
+      "apg": 1,
+      "games": 10,
+      "mpg": 13.2
+    },
+    {
+      "name": "Will Richard",
+      "heightInches": 77,
+      "age": 23,
+      "ppg": 6.4,
+      "rpg": 2.5,
+      "apg": 1.3,
+      "games": 69,
+      "mpg": 20
+    },
+    {
+      "name": "Trayce Jackson-Davis",
+      "heightInches": 81,
+      "age": 25,
+      "ppg": 4.2,
+      "rpg": 3.1,
+      "apg": 0.9,
+      "games": 36,
+      "mpg": 11.4
+    },
+    {
+      "name": "Omer Yurtseven",
+      "heightInches": 82,
+      "age": 27,
+      "ppg": 3.8,
+      "rpg": 3.3,
+      "apg": 0.9,
+      "games": 9,
+      "mpg": 11.6
+    },
+    {
+      "name": "Malevy Leons",
+      "heightInches": 81,
+      "age": 26,
+      "ppg": 3.3,
+      "rpg": 2.1,
+      "apg": 0.9,
+      "games": 25,
+      "mpg": 11
+    }
+  ],
+  "Houston|Comets": [
+    {
+      "name": "Kevin Durant",
+      "heightInches": 82,
+      "age": 37,
+      "ppg": 26,
+      "rpg": 5.5,
+      "apg": 4.8,
+      "games": 78,
+      "mpg": 36.4
+    },
+    {
+      "name": "Alperen Sengun",
+      "heightInches": 82,
+      "age": 23,
+      "ppg": 20.4,
+      "rpg": 8.9,
+      "apg": 6.2,
+      "games": 72,
+      "mpg": 33.3
+    },
+    {
+      "name": "Amen Thompson",
+      "heightInches": 79,
+      "age": 22,
+      "ppg": 18.3,
+      "rpg": 7.8,
+      "apg": 5.3,
+      "games": 79,
+      "mpg": 37.4
+    },
+    {
+      "name": "Jabari Smith Jr.",
+      "heightInches": 82,
+      "age": 22,
+      "ppg": 15.8,
+      "rpg": 6.9,
+      "apg": 1.9,
+      "games": 77,
+      "mpg": 35.1
+    },
+    {
+      "name": "Reed Sheppard",
+      "heightInches": 75,
+      "age": 21,
+      "ppg": 13.5,
+      "rpg": 2.9,
+      "apg": 3.4,
+      "games": 82,
+      "mpg": 26.2
+    },
+    {
+      "name": "Tristen Newton",
+      "heightInches": 77,
+      "age": 24,
+      "ppg": 12,
+      "rpg": 3,
+      "apg": 0,
+      "games": 1,
+      "mpg": 12
+    },
+    {
+      "name": "Tari Eason",
+      "heightInches": 79,
+      "age": 24,
+      "ppg": 10.5,
+      "rpg": 6.3,
+      "apg": 1.5,
+      "games": 60,
+      "mpg": 25.9
+    },
+    {
+      "name": "Steven Adams",
+      "heightInches": 85,
+      "age": 32,
+      "ppg": 5.8,
+      "rpg": 8.6,
+      "apg": 1.5,
+      "games": 32,
+      "mpg": 22.8
+    },
+    {
+      "name": "Aaron Holiday",
+      "heightInches": 73,
+      "age": 29,
+      "ppg": 5.5,
+      "rpg": 1,
+      "apg": 1.1,
+      "games": 57,
+      "mpg": 13.7
+    },
+    {
+      "name": "Josh Okogie",
+      "heightInches": 76,
+      "age": 27,
+      "ppg": 4.5,
+      "rpg": 2.6,
+      "apg": 0.9,
+      "games": 78,
+      "mpg": 17.4
+    },
+    {
+      "name": "Clint Capela",
+      "heightInches": 80,
+      "age": 31,
+      "ppg": 3.8,
+      "rpg": 4.6,
+      "apg": 0.7,
+      "games": 75,
+      "mpg": 12.3
+    },
+    {
+      "name": "Dorian Finney-Smith",
+      "heightInches": 80,
+      "age": 32,
+      "ppg": 3.3,
+      "rpg": 2.5,
+      "apg": 1,
+      "games": 37,
+      "mpg": 16.7
+    },
+    {
+      "name": "Jae'Sean Tate",
+      "heightInches": 76,
+      "age": 30,
+      "ppg": 2.8,
+      "rpg": 1.6,
+      "apg": 0.5,
+      "games": 46,
+      "mpg": 8.8
+    },
+    {
+      "name": "JD Davison",
+      "heightInches": 76,
+      "age": 23,
+      "ppg": 2.5,
+      "rpg": 1.2,
+      "apg": 1.3,
+      "games": 28,
+      "mpg": 7.8
+    },
+    {
+      "name": "Jeff Green",
+      "heightInches": 80,
+      "age": 39,
+      "ppg": 2.2,
+      "rpg": 0.8,
+      "apg": 0.3,
+      "games": 30,
+      "mpg": 5.9
+    },
+    {
+      "name": "Isaiah Crawford",
+      "heightInches": 78,
+      "age": 24,
+      "ppg": 2,
+      "rpg": 1.1,
+      "apg": 0.4,
+      "games": 14,
+      "mpg": 6.7
+    }
+  ],
+  "Indiana|Velocity": [
+    {
+      "name": "Pascal Siakam",
+      "heightInches": 81,
+      "age": 31,
+      "ppg": 24,
+      "rpg": 6.6,
+      "apg": 3.8,
+      "games": 62,
+      "mpg": 33.2
+    },
+    {
+      "name": "Bennedict Mathurin",
+      "heightInches": 79,
+      "age": 23,
+      "ppg": 17.8,
+      "rpg": 5.4,
+      "apg": 2.3,
+      "games": 28,
+      "mpg": 31.8
+    },
+    {
+      "name": "Andrew Nembhard",
+      "heightInches": 77,
+      "age": 25,
+      "ppg": 16.9,
+      "rpg": 2.8,
+      "apg": 7.7,
+      "games": 57,
+      "mpg": 31.3
+    },
+    {
+      "name": "Aaron Nesmith",
+      "heightInches": 78,
+      "age": 26,
+      "ppg": 13.8,
+      "rpg": 4.2,
+      "apg": 1.9,
+      "games": 45,
+      "mpg": 29.6
+    },
+    {
+      "name": "Jarace Walker",
+      "heightInches": 79,
+      "age": 22,
+      "ppg": 11.6,
+      "rpg": 5.1,
+      "apg": 2.5,
+      "games": 76,
+      "mpg": 25.7
+    },
+    {
+      "name": "Obi Toppin",
+      "heightInches": 81,
+      "age": 27,
+      "ppg": 11.6,
+      "rpg": 4.4,
+      "apg": 2.3,
+      "games": 24,
+      "mpg": 17.7
+    },
+    {
+      "name": "Ivica Zubac",
+      "heightInches": 83,
+      "age": 28,
+      "ppg": 11.6,
+      "rpg": 7.2,
+      "apg": 1.8,
+      "games": 5,
+      "mpg": 23.6
+    },
+    {
+      "name": "Micah Potter",
+      "heightInches": 81,
+      "age": 27,
+      "ppg": 9.7,
+      "rpg": 5,
+      "apg": 1.5,
+      "games": 47,
+      "mpg": 19.3
+    },
+    {
+      "name": "Jay Huff",
+      "heightInches": 85,
+      "age": 28,
+      "ppg": 9.5,
+      "rpg": 4,
+      "apg": 1.5,
+      "games": 82,
+      "mpg": 21
+    },
+    {
+      "name": "T.J. McConnell",
+      "heightInches": 73,
+      "age": 33,
+      "ppg": 9.4,
+      "rpg": 2.2,
+      "apg": 5.1,
+      "games": 56,
+      "mpg": 17.2
+    },
+    {
+      "name": "Kobe Brown",
+      "heightInches": 79,
+      "age": 24,
+      "ppg": 9.4,
+      "rpg": 4.9,
+      "apg": 2,
+      "games": 27,
+      "mpg": 24.7
+    },
+    {
+      "name": "Quenton Jackson",
+      "heightInches": 77,
+      "age": 24,
+      "ppg": 9.1,
+      "rpg": 2.3,
+      "apg": 2.9,
+      "games": 49,
+      "mpg": 18.3
+    },
+    {
+      "name": "Jalen Slawson",
+      "heightInches": 79,
+      "age": 26,
+      "ppg": 7.3,
+      "rpg": 4.4,
+      "apg": 2.8,
+      "games": 13,
+      "mpg": 23.9
+    },
+    {
+      "name": "Ben Sheppard",
+      "heightInches": 78,
+      "age": 24,
+      "ppg": 7.1,
+      "rpg": 3,
+      "apg": 1.8,
+      "games": 65,
+      "mpg": 21.4
+    },
+    {
+      "name": "Ethan Thompson",
+      "heightInches": 77,
+      "age": 26,
+      "ppg": 7,
+      "rpg": 2.2,
+      "apg": 1.8,
+      "games": 32,
+      "mpg": 20.5
+    },
+    {
+      "name": "Isaiah Jackson",
+      "heightInches": 82,
+      "age": 23,
+      "ppg": 6.4,
+      "rpg": 5.6,
+      "apg": 0.8,
+      "games": 38,
+      "mpg": 16.8
+    },
+    {
+      "name": "Mac McClung",
+      "heightInches": 75,
+      "age": 26,
+      "ppg": 6.3,
+      "rpg": 1.3,
+      "apg": 0.3,
+      "games": 3,
+      "mpg": 11.3
+    },
+    {
+      "name": "Garrison Mathews",
+      "heightInches": 77,
+      "age": 29,
+      "ppg": 5.2,
+      "rpg": 1.1,
+      "apg": 0.7,
+      "games": 15,
+      "mpg": 13.1
+    },
+    {
+      "name": "Johnny Furphy",
+      "heightInches": 81,
+      "age": 21,
+      "ppg": 5.1,
+      "rpg": 4.4,
+      "apg": 1.2,
+      "games": 35,
+      "mpg": 18.3
+    },
+    {
+      "name": "Ray Dennis",
+      "heightInches": 74,
+      "age": 24,
+      "ppg": 4.9,
+      "rpg": 1.6,
+      "apg": 2,
+      "games": 13,
+      "mpg": 12.8
+    },
+    {
+      "name": "Jeremiah Robinson-Earl",
+      "heightInches": 81,
+      "age": 25,
+      "ppg": 4.6,
+      "rpg": 5.2,
+      "apg": 0.7,
+      "games": 17,
+      "mpg": 17.6
+    },
+    {
+      "name": "Taelon Peter",
+      "heightInches": 76,
+      "age": 23,
+      "ppg": 4.5,
+      "rpg": 1.6,
+      "apg": 1.1,
+      "games": 38,
+      "mpg": 12.9
+    },
+    {
+      "name": "Kam Jones",
+      "heightInches": 76,
+      "age": 23,
+      "ppg": 4.4,
+      "rpg": 1.6,
+      "apg": 3.2,
+      "games": 37,
+      "mpg": 16.6
+    },
+    {
+      "name": "Tony Bradley",
+      "heightInches": 82,
+      "age": 27,
+      "ppg": 4.1,
+      "rpg": 2.9,
+      "apg": 0.5,
+      "games": 37,
+      "mpg": 11.3
+    },
+    {
+      "name": "James Wiseman",
+      "heightInches": 85,
+      "age": 24,
+      "ppg": 3.3,
+      "rpg": 2,
+      "apg": 0.8,
+      "games": 4,
+      "mpg": 14.8
+    },
+    {
+      "name": "Monte Morris",
+      "heightInches": 74,
+      "age": 30,
+      "ppg": 3,
+      "rpg": 1.2,
+      "apg": 1.5,
+      "games": 6,
+      "mpg": 10.7
+    },
+    {
+      "name": "Cody Martin",
+      "heightInches": 77,
+      "age": 30,
+      "ppg": 1.8,
+      "rpg": 3.5,
+      "apg": 0.5,
+      "games": 4,
+      "mpg": 13.8
+    }
+  ],
+  "LA|Current": [
+    {
+      "name": "Kawhi Leonard",
+      "heightInches": 80,
+      "age": 34,
+      "ppg": 27.9,
+      "rpg": 6.4,
+      "apg": 3.6,
+      "games": 65,
+      "mpg": 32.1
+    },
+    {
+      "name": "James Harden",
+      "heightInches": 77,
+      "age": 36,
+      "ppg": 25.4,
+      "rpg": 4.8,
+      "apg": 8.1,
+      "games": 44,
+      "mpg": 35.5
+    },
+    {
+      "name": "Darius Garland",
+      "heightInches": 74,
+      "age": 25,
+      "ppg": 19.9,
+      "rpg": 2.3,
+      "apg": 6.4,
+      "games": 19,
+      "mpg": 29.1
+    },
+    {
+      "name": "Bennedict Mathurin",
+      "heightInches": 79,
+      "age": 23,
+      "ppg": 17.4,
+      "rpg": 5.5,
+      "apg": 2.5,
+      "games": 26,
+      "mpg": 28
+    },
+    {
+      "name": "Ivica Zubac",
+      "heightInches": 83,
+      "age": 28,
+      "ppg": 14.4,
+      "rpg": 11,
+      "apg": 2.2,
+      "games": 43,
+      "mpg": 31
+    },
+    {
+      "name": "John Collins",
+      "heightInches": 82,
+      "age": 28,
+      "ppg": 13.6,
+      "rpg": 5.3,
+      "apg": 1,
+      "games": 69,
+      "mpg": 27.1
+    },
+    {
+      "name": "Derrick Jones",
+      "heightInches": 79,
+      "age": 28,
+      "ppg": 10.1,
+      "rpg": 3.5,
+      "apg": 1.4,
+      "games": 50,
+      "mpg": 26.9
+    },
+    {
+      "name": "Jordan Miller",
+      "heightInches": 78,
+      "age": 25,
+      "ppg": 10,
+      "rpg": 3,
+      "apg": 2.3,
+      "games": 60,
+      "mpg": 22
+    },
+    {
+      "name": "Brook Lopez",
+      "heightInches": 84,
+      "age": 37,
+      "ppg": 8.5,
+      "rpg": 3.6,
+      "apg": 1.3,
+      "games": 75,
+      "mpg": 21.8
+    },
+    {
+      "name": "Bradley Beal",
+      "heightInches": 76,
+      "age": 32,
+      "ppg": 8.2,
+      "rpg": 0.8,
+      "apg": 1.7,
+      "games": 6,
+      "mpg": 20.2
+    },
+    {
+      "name": "Isaiah Jackson",
+      "heightInches": 82,
+      "age": 23,
+      "ppg": 7.5,
+      "rpg": 4.6,
+      "apg": 1.2,
+      "games": 17,
+      "mpg": 15.8
+    },
+    {
+      "name": "Bogdan Bogdanovic",
+      "heightInches": 78,
+      "age": 33,
+      "ppg": 7.4,
+      "rpg": 2.6,
+      "apg": 2.2,
+      "games": 23,
+      "mpg": 19.7
+    },
+    {
+      "name": "Kobe Sanders",
+      "heightInches": 80,
+      "age": 23,
+      "ppg": 7.3,
+      "rpg": 2.3,
+      "apg": 1.6,
+      "games": 68,
+      "mpg": 19.9
+    },
+    {
+      "name": "Kris Dunn",
+      "heightInches": 75,
+      "age": 31,
+      "ppg": 7.3,
+      "rpg": 3.3,
+      "apg": 3.6,
+      "games": 82,
+      "mpg": 27.2
+    },
+    {
+      "name": "Patrick Baldwin Jr.",
+      "heightInches": 82,
+      "age": 23,
+      "ppg": 5,
+      "rpg": 0.5,
+      "apg": 0,
+      "games": 2,
+      "mpg": 6
+    },
+    {
+      "name": "Yanic Niederhauser",
+      "heightInches": 82,
+      "age": 22,
+      "ppg": 4.3,
+      "rpg": 2.9,
+      "apg": 0.3,
+      "games": 41,
+      "mpg": 10.4
+    },
+    {
+      "name": "Nicolas Batum",
+      "heightInches": 80,
+      "age": 37,
+      "ppg": 4,
+      "rpg": 2.5,
+      "apg": 0.9,
+      "games": 74,
+      "mpg": 17.5
+    },
+    {
+      "name": "Dalano Banton",
+      "heightInches": 81,
+      "age": 26,
+      "ppg": 3,
+      "rpg": 0.5,
+      "apg": 1,
+      "games": 2,
+      "mpg": 4.5
+    },
+    {
+      "name": "Kobe Brown",
+      "heightInches": 79,
+      "age": 24,
+      "ppg": 2.9,
+      "rpg": 1.6,
+      "apg": 0.8,
+      "games": 34,
+      "mpg": 8.7
+    },
+    {
+      "name": "Chris Paul",
+      "heightInches": 71,
+      "age": 40,
+      "ppg": 2.9,
+      "rpg": 1.8,
+      "apg": 3.3,
+      "games": 16,
+      "mpg": 14.3
+    },
+    {
+      "name": "Cam Christie",
+      "heightInches": 78,
+      "age": 20,
+      "ppg": 2.8,
+      "rpg": 1.4,
+      "apg": 0.6,
+      "games": 55,
+      "mpg": 8.7
+    },
+    {
+      "name": "Norchad Omier",
+      "heightInches": 79,
+      "age": 24,
+      "ppg": 2.8,
+      "rpg": 1.2,
+      "apg": 0.3,
+      "games": 6,
+      "mpg": 3.8
+    },
+    {
+      "name": "Sean Pedulla",
+      "heightInches": 72,
+      "age": 24,
+      "ppg": 1.9,
+      "rpg": 0.4,
+      "apg": 0.7,
+      "games": 7,
+      "mpg": 4.4
+    },
+    {
+      "name": "TyTy Washington",
+      "heightInches": 75,
+      "age": 24,
+      "ppg": 1.3,
+      "rpg": 0.4,
+      "apg": 1.1,
+      "games": 16,
+      "mpg": 5.4
+    },
+    {
+      "name": "Jahmyl Telfort",
+      "heightInches": 79,
+      "age": 24,
+      "ppg": 0.1,
+      "rpg": 0.4,
+      "apg": 0.1,
+      "games": 8,
+      "mpg": 4.3
+    },
+    {
+      "name": "Ray Dennis",
+      "heightInches": 74,
+      "age": 24,
+      "ppg": 0,
+      "rpg": 2,
+      "apg": 0,
+      "games": 1,
+      "mpg": 4
+    }
+  ],
+  "LA|Cosmos": [
+    {
+      "name": "Luka Doncic",
+      "heightInches": 79,
+      "age": 26,
+      "ppg": 33.5,
+      "rpg": 7.7,
+      "apg": 8.3,
+      "games": 64,
+      "mpg": 35.8
+    },
+    {
+      "name": "Austin Reaves",
+      "heightInches": 77,
+      "age": 27,
+      "ppg": 23.3,
+      "rpg": 4.7,
+      "apg": 5.5,
+      "games": 51,
+      "mpg": 34.6
+    },
+    {
+      "name": "LeBron James",
+      "heightInches": 80,
+      "age": 41,
+      "ppg": 20.9,
+      "rpg": 6.1,
+      "apg": 7.2,
+      "games": 60,
+      "mpg": 33.1
+    },
+    {
+      "name": "Deandre Ayton",
+      "heightInches": 82,
+      "age": 27,
+      "ppg": 12.5,
+      "rpg": 8,
+      "apg": 0.8,
+      "games": 72,
+      "mpg": 27.3
+    },
+    {
+      "name": "Rui Hachimura",
+      "heightInches": 80,
+      "age": 27,
+      "ppg": 11.5,
+      "rpg": 3.3,
+      "apg": 0.8,
+      "games": 68,
+      "mpg": 28.3
+    },
+    {
+      "name": "Marcus Smart",
+      "heightInches": 76,
+      "age": 31,
+      "ppg": 9.3,
+      "rpg": 2.8,
+      "apg": 3,
+      "games": 62,
+      "mpg": 28.5
+    },
+    {
+      "name": "Luke Kennard",
+      "heightInches": 77,
+      "age": 29,
+      "ppg": 9,
+      "rpg": 2.6,
+      "apg": 2.4,
+      "games": 32,
+      "mpg": 23
+    },
+    {
+      "name": "Jake LaRavia",
+      "heightInches": 79,
+      "age": 24,
+      "ppg": 8.2,
+      "rpg": 4,
+      "apg": 1.8,
+      "games": 82,
+      "mpg": 25.2
+    },
+    {
+      "name": "Jaxson Hayes",
+      "heightInches": 84,
+      "age": 25,
+      "ppg": 7.5,
+      "rpg": 4.1,
+      "apg": 0.9,
+      "games": 66,
+      "mpg": 18.3
+    },
+    {
+      "name": "Nick Smith",
+      "heightInches": 77,
+      "age": 21,
+      "ppg": 6.2,
+      "rpg": 0.8,
+      "apg": 1,
+      "games": 30,
+      "mpg": 12.5
+    },
+    {
+      "name": "Gabe Vincent",
+      "heightInches": 75,
+      "age": 29,
+      "ppg": 4.8,
+      "rpg": 0.9,
+      "apg": 1.3,
+      "games": 29,
+      "mpg": 19.2
+    },
+    {
+      "name": "Jarred Vanderbilt",
+      "heightInches": 82,
+      "age": 26,
+      "ppg": 4.4,
+      "rpg": 4.5,
+      "apg": 1.3,
+      "games": 65,
+      "mpg": 17.4
+    },
+    {
+      "name": "Dalton Knecht",
+      "heightInches": 78,
+      "age": 24,
+      "ppg": 4.2,
+      "rpg": 1.4,
+      "apg": 0.4,
+      "games": 54,
+      "mpg": 10.2
+    },
+    {
+      "name": "Drew Timme",
+      "heightInches": 81,
+      "age": 25,
+      "ppg": 3.4,
+      "rpg": 1.2,
+      "apg": 0.9,
+      "games": 27,
+      "mpg": 8.8
+    },
+    {
+      "name": "Bronny James",
+      "heightInches": 74,
+      "age": 21,
+      "ppg": 2.9,
+      "rpg": 0.5,
+      "apg": 1.2,
+      "games": 42,
+      "mpg": 9
+    },
+    {
+      "name": "Kobe Bufkin",
+      "heightInches": 76,
+      "age": 22,
+      "ppg": 2.9,
+      "rpg": 0.8,
+      "apg": 0.6,
+      "games": 16,
+      "mpg": 7.4
+    },
+    {
+      "name": "Maximilian Kleber",
+      "heightInches": 82,
+      "age": 33,
+      "ppg": 2,
+      "rpg": 2,
+      "apg": 0.6,
+      "games": 43,
+      "mpg": 10.7
+    },
+    {
+      "name": "Adou Thiero",
+      "heightInches": 78,
+      "age": 21,
+      "ppg": 1.9,
+      "rpg": 1.1,
+      "apg": 0.4,
+      "games": 25,
+      "mpg": 6
+    },
+    {
+      "name": "Chris Manon",
+      "heightInches": 77,
+      "age": 24,
+      "ppg": 0.8,
+      "rpg": 1.1,
+      "apg": 0.3,
+      "games": 9,
+      "mpg": 5.2
+    },
+    {
+      "name": "Christian Koloko",
+      "heightInches": 83,
+      "age": 25,
+      "ppg": 0,
+      "rpg": 0.5,
+      "apg": 0,
+      "games": 2,
+      "mpg": 3
+    }
+  ],
+  "Memphis|Sound": [
+    {
+      "name": "Ty Jerome",
+      "heightInches": 78,
+      "age": 28,
+      "ppg": 19.7,
+      "rpg": 2.8,
+      "apg": 5.7,
+      "games": 15,
+      "mpg": 22.7
+    },
+    {
+      "name": "Ja Morant",
+      "heightInches": 75,
+      "age": 26,
+      "ppg": 19.5,
+      "rpg": 3.3,
+      "apg": 8.1,
+      "games": 20,
+      "mpg": 28.4
+    },
+    {
+      "name": "Jaren Jackson Jr.",
+      "heightInches": 82,
+      "age": 26,
+      "ppg": 19.2,
+      "rpg": 5.8,
+      "apg": 1.9,
+      "games": 45,
+      "mpg": 30.8
+    },
+    {
+      "name": "Dariq Whitehead",
+      "heightInches": 78,
+      "age": 21,
+      "ppg": 16.3,
+      "rpg": 4,
+      "apg": 1.5,
+      "games": 6,
+      "mpg": 30.5
+    },
+    {
+      "name": "Santiago Aldama",
+      "heightInches": 83,
+      "age": 24,
+      "ppg": 14,
+      "rpg": 6.7,
+      "apg": 2.9,
+      "games": 43,
+      "mpg": 27.8
+    },
+    {
+      "name": "Zach Edey",
+      "heightInches": 87,
+      "age": 23,
+      "ppg": 13.6,
+      "rpg": 11.1,
+      "apg": 1.1,
+      "games": 11,
+      "mpg": 25.8
+    },
+    {
+      "name": "Cedric Coward",
+      "heightInches": 81,
+      "age": 25,
+      "ppg": 13.6,
+      "rpg": 5.9,
+      "apg": 2.8,
+      "games": 62,
+      "mpg": 25.8
+    },
+    {
+      "name": "Jaylen Wells",
+      "heightInches": 80,
+      "age": 22,
+      "ppg": 12.5,
+      "rpg": 3.2,
+      "apg": 1.6,
+      "games": 69,
+      "mpg": 26.4
+    },
+    {
+      "name": "Gregory Jackson",
+      "heightInches": 80,
+      "age": 21,
+      "ppg": 12.5,
+      "rpg": 4.3,
+      "apg": 1.5,
+      "games": 55,
+      "mpg": 21.4
+    },
+    {
+      "name": "Rayan Rupert",
+      "heightInches": 78,
+      "age": 21,
+      "ppg": 12.2,
+      "rpg": 6.4,
+      "apg": 2.1,
+      "games": 16,
+      "mpg": 30.9
+    },
+    {
+      "name": "Scotty Pippen Jr.",
+      "heightInches": 72,
+      "age": 25,
+      "ppg": 11.4,
+      "rpg": 2.2,
+      "apg": 4.7,
+      "games": 10,
+      "mpg": 21.2
+    },
+    {
+      "name": "Jock Landale",
+      "heightInches": 84,
+      "age": 30,
+      "ppg": 11.3,
+      "rpg": 6.5,
+      "apg": 1.7,
+      "games": 45,
+      "mpg": 23.6
+    },
+    {
+      "name": "Cam Spencer",
+      "heightInches": 76,
+      "age": 25,
+      "ppg": 11.1,
+      "rpg": 2.5,
+      "apg": 5.6,
+      "games": 72,
+      "mpg": 23.8
+    },
+    {
+      "name": "Tyler Burton",
+      "heightInches": 79,
+      "age": 25,
+      "ppg": 10.8,
+      "rpg": 4.2,
+      "apg": 1,
+      "games": 12,
+      "mpg": 25.5
+    },
+    {
+      "name": "Taylor Hendricks",
+      "heightInches": 81,
+      "age": 22,
+      "ppg": 10.6,
+      "rpg": 4.7,
+      "apg": 1.2,
+      "games": 26,
+      "mpg": 24.2
+    },
+    {
+      "name": "Lucas Williamson",
+      "heightInches": 76,
+      "age": 26,
+      "ppg": 10.4,
+      "rpg": 5.4,
+      "apg": 2.6,
+      "games": 7,
+      "mpg": 32
+    },
+    {
+      "name": "Adama Bal",
+      "heightInches": 79,
+      "age": 22,
+      "ppg": 10.4,
+      "rpg": 3.1,
+      "apg": 2.4,
+      "games": 8,
+      "mpg": 30.1
+    },
+    {
+      "name": "Toby Okani",
+      "heightInches": 79,
+      "age": 24,
+      "ppg": 10,
+      "rpg": 3.5,
+      "apg": 1,
+      "games": 6,
+      "mpg": 36.2
+    },
+    {
+      "name": "Olivier-Maxence Prosper",
+      "heightInches": 80,
+      "age": 23,
+      "ppg": 10,
+      "rpg": 3.5,
+      "apg": 1,
+      "games": 53,
+      "mpg": 18.6
+    },
+    {
+      "name": "Walter Clayton",
+      "heightInches": 74,
+      "age": 22,
+      "ppg": 9.7,
+      "rpg": 2.1,
+      "apg": 5.7,
+      "games": 24,
+      "mpg": 25
+    },
+    {
+      "name": "Javon Small",
+      "heightInches": 74,
+      "age": 23,
+      "ppg": 9.7,
+      "rpg": 3.1,
+      "apg": 3.7,
+      "games": 41,
+      "mpg": 20.3
+    },
+    {
+      "name": "Kyle Anderson",
+      "heightInches": 80,
+      "age": 32,
+      "ppg": 9.3,
+      "rpg": 3.5,
+      "apg": 0.8,
+      "games": 4,
+      "mpg": 22.3
+    },
+    {
+      "name": "Kentavious Caldwell-Pope",
+      "heightInches": 77,
+      "age": 32,
+      "ppg": 8.4,
+      "rpg": 2.5,
+      "apg": 2.7,
+      "games": 51,
+      "mpg": 21.3
+    },
+    {
+      "name": "Vince Williams Jr.",
+      "heightInches": 78,
+      "age": 25,
+      "ppg": 8,
+      "rpg": 4,
+      "apg": 4.4,
+      "games": 34,
+      "mpg": 21.7
+    },
+    {
+      "name": "DeJon Jarreau",
+      "heightInches": 77,
+      "age": 27,
+      "ppg": 8,
+      "rpg": 4.6,
+      "apg": 3.3,
+      "games": 11,
+      "mpg": 20.9
+    },
+    {
+      "name": "Lawson Lovering",
+      "heightInches": 84,
+      "age": 22,
+      "ppg": 7,
+      "rpg": 7.5,
+      "apg": 1.5,
+      "games": 2,
+      "mpg": 25
+    },
+    {
+      "name": "Jahmai Mashack",
+      "heightInches": 76,
+      "age": 23,
+      "ppg": 6.2,
+      "rpg": 2.6,
+      "apg": 2.2,
+      "games": 31,
+      "mpg": 21.6
+    },
+    {
+      "name": "Brandon Clarke",
+      "heightInches": 80,
+      "age": 29,
+      "ppg": 4,
+      "rpg": 3,
+      "apg": 0.5,
+      "games": 2,
+      "mpg": 10.5
+    },
+    {
+      "name": "Charles Bassey",
+      "heightInches": 83,
+      "age": 25,
+      "ppg": 3.5,
+      "rpg": 7.5,
+      "apg": 1,
+      "games": 2,
+      "mpg": 15
+    },
+    {
+      "name": "Taj Gibson",
+      "heightInches": 81,
+      "age": 40,
+      "ppg": 3.4,
+      "rpg": 2.7,
+      "apg": 0.6,
+      "games": 10,
+      "mpg": 9.7
+    },
+    {
+      "name": "John Konchar",
+      "heightInches": 77,
+      "age": 29,
+      "ppg": 3.2,
+      "rpg": 3.1,
+      "apg": 1.3,
+      "games": 30,
+      "mpg": 14.6
+    },
+    {
+      "name": "Christian Koloko",
+      "heightInches": 83,
+      "age": 25,
+      "ppg": 2.6,
+      "rpg": 4,
+      "apg": 0.9,
+      "games": 11,
+      "mpg": 17.7
+    },
+    {
+      "name": "P.J. Hall",
+      "heightInches": 81,
+      "age": 23,
+      "ppg": 1.9,
+      "rpg": 1.3,
+      "apg": 0.3,
+      "games": 7,
+      "mpg": 4
+    }
+  ],
+  "Miami|Surge": [
+    {
+      "name": "Norman Powell",
+      "heightInches": 76,
+      "age": 32,
+      "ppg": 21.7,
+      "rpg": 3.5,
+      "apg": 2.5,
+      "games": 58,
+      "mpg": 29.6
+    },
+    {
+      "name": "Tyler Herro",
+      "heightInches": 77,
+      "age": 25,
+      "ppg": 20.5,
+      "rpg": 4.8,
+      "apg": 4.1,
+      "games": 33,
+      "mpg": 31.2
+    },
+    {
+      "name": "Bam Adebayo",
+      "heightInches": 82,
+      "age": 28,
+      "ppg": 20.1,
+      "rpg": 10,
+      "apg": 3.2,
+      "games": 73,
+      "mpg": 32.4
+    },
+    {
+      "name": "Andrew Wiggins",
+      "heightInches": 78,
+      "age": 30,
+      "ppg": 15.4,
+      "rpg": 4.8,
+      "apg": 2.7,
+      "games": 68,
+      "mpg": 30.4
+    },
+    {
+      "name": "Jaime Jaquez",
+      "heightInches": 78,
+      "age": 24,
+      "ppg": 15.4,
+      "rpg": 5,
+      "apg": 4.7,
+      "games": 75,
+      "mpg": 28.3
+    },
+    {
+      "name": "Pelle Larsson",
+      "heightInches": 76,
+      "age": 24,
+      "ppg": 11.4,
+      "rpg": 3.5,
+      "apg": 3.4,
+      "games": 70,
+      "mpg": 26.5
+    },
+    {
+      "name": "Kel'el Ware",
+      "heightInches": 84,
+      "age": 21,
+      "ppg": 11.1,
+      "rpg": 9,
+      "apg": 0.7,
+      "games": 77,
+      "mpg": 22.2
+    },
+    {
+      "name": "Davion Mitchell",
+      "heightInches": 74,
+      "age": 27,
+      "ppg": 9.3,
+      "rpg": 2.7,
+      "apg": 6.5,
+      "games": 70,
+      "mpg": 28.6
+    },
+    {
+      "name": "Simone Fontecchio",
+      "heightInches": 80,
+      "age": 30,
+      "ppg": 8.5,
+      "rpg": 3,
+      "apg": 1.4,
+      "games": 70,
+      "mpg": 16.8
+    },
+    {
+      "name": "Nikola Jovic",
+      "heightInches": 82,
+      "age": 22,
+      "ppg": 7.3,
+      "rpg": 3.3,
+      "apg": 2.2,
+      "games": 47,
+      "mpg": 17.3
+    },
+    {
+      "name": "Kasparas Jakucionis",
+      "heightInches": 78,
+      "age": 19,
+      "ppg": 6.2,
+      "rpg": 2.6,
+      "apg": 2.6,
+      "games": 53,
+      "mpg": 17.9
+    },
+    {
+      "name": "Dru Smith",
+      "heightInches": 75,
+      "age": 28,
+      "ppg": 5.6,
+      "rpg": 2.5,
+      "apg": 2.6,
+      "games": 70,
+      "mpg": 16.4
+    },
+    {
+      "name": "Keshad Johnson",
+      "heightInches": 79,
+      "age": 24,
+      "ppg": 4.3,
+      "rpg": 1.9,
+      "apg": 0.3,
+      "games": 32,
+      "mpg": 8.7
+    },
+    {
+      "name": "Myron Gardner",
+      "heightInches": 78,
+      "age": 24,
+      "ppg": 3.6,
+      "rpg": 2.7,
+      "apg": 1,
+      "games": 45,
+      "mpg": 9.2
+    },
+    {
+      "name": "Jahmir Young",
+      "heightInches": 72,
+      "age": 25,
+      "ppg": 1.8,
+      "rpg": 0.3,
+      "apg": 0.6,
+      "games": 14,
+      "mpg": 4.2
+    },
+    {
+      "name": "Trevor Keels",
+      "heightInches": 76,
+      "age": 22,
+      "ppg": 1,
+      "rpg": 0.3,
+      "apg": 0,
+      "games": 8,
+      "mpg": 1.9
+    },
+    {
+      "name": "Vladislav Goldin",
+      "heightInches": 83,
+      "age": 24,
+      "ppg": 0.8,
+      "rpg": 1,
+      "apg": 0.3,
+      "games": 9,
+      "mpg": 2.6
+    }
+  ],
+  "Milwaukee|Hops": [
+    {
+      "name": "Giannis Antetokounmpo",
+      "heightInches": 83,
+      "age": 31,
+      "ppg": 27.6,
+      "rpg": 9.8,
+      "apg": 5.4,
+      "games": 36,
+      "mpg": 28.9
+    },
+    {
+      "name": "Kevin Porter",
+      "heightInches": 76,
+      "age": 25,
+      "ppg": 17.4,
+      "rpg": 5.2,
+      "apg": 7.4,
+      "games": 38,
+      "mpg": 33.2
+    },
+    {
+      "name": "Ryan Rollins",
+      "heightInches": 76,
+      "age": 23,
+      "ppg": 17.3,
+      "rpg": 4.6,
+      "apg": 5.6,
+      "games": 74,
+      "mpg": 32.1
+    },
+    {
+      "name": "Cormac Ryan",
+      "heightInches": 77,
+      "age": 27,
+      "ppg": 14.3,
+      "rpg": 2.5,
+      "apg": 1.7,
+      "games": 11,
+      "mpg": 24.5
+    },
+    {
+      "name": "Bobby Portis",
+      "heightInches": 81,
+      "age": 30,
+      "ppg": 13.7,
+      "rpg": 6.4,
+      "apg": 1.6,
+      "games": 67,
+      "mpg": 24.1
+    },
+    {
+      "name": "Kyle Kuzma",
+      "heightInches": 81,
+      "age": 30,
+      "ppg": 13,
+      "rpg": 4.5,
+      "apg": 2.7,
+      "games": 69,
+      "mpg": 26.2
+    },
+    {
+      "name": "Myles Turner",
+      "heightInches": 83,
+      "age": 29,
+      "ppg": 11.9,
+      "rpg": 5.3,
+      "apg": 1.5,
+      "games": 71,
+      "mpg": 26.9
+    },
+    {
+      "name": "Ousmane Dieng",
+      "heightInches": 81,
+      "age": 22,
+      "ppg": 11,
+      "rpg": 4.6,
+      "apg": 3.6,
+      "games": 30,
+      "mpg": 26.9
+    },
+    {
+      "name": "Cam Thomas",
+      "heightInches": 76,
+      "age": 24,
+      "ppg": 10.7,
+      "rpg": 1.6,
+      "apg": 1.9,
+      "games": 18,
+      "mpg": 16.6
+    },
+    {
+      "name": "A.J. Green",
+      "heightInches": 76,
+      "age": 26,
+      "ppg": 10.4,
+      "rpg": 2.7,
+      "apg": 1.9,
+      "games": 78,
+      "mpg": 29.1
+    },
+    {
+      "name": "Taurean Prince",
+      "heightInches": 79,
+      "age": 31,
+      "ppg": 9.2,
+      "rpg": 3.1,
+      "apg": 1.8,
+      "games": 26,
+      "mpg": 23.6
+    },
+    {
+      "name": "Gary Trent Jr.",
+      "heightInches": 77,
+      "age": 26,
+      "ppg": 8.1,
+      "rpg": 1,
+      "apg": 1.2,
+      "games": 65,
+      "mpg": 21.2
+    },
+    {
+      "name": "Cole Anthony",
+      "heightInches": 75,
+      "age": 25,
+      "ppg": 6.7,
+      "rpg": 2.5,
+      "apg": 3.5,
+      "games": 35,
+      "mpg": 15.1
+    },
+    {
+      "name": "Pete Nance",
+      "heightInches": 81,
+      "age": 25,
+      "ppg": 5.4,
+      "rpg": 2.7,
+      "apg": 1,
+      "games": 47,
+      "mpg": 15.6
+    },
+    {
+      "name": "Jericho Sims",
+      "heightInches": 81,
+      "age": 27,
+      "ppg": 5,
+      "rpg": 5.5,
+      "apg": 1.6,
+      "games": 67,
+      "mpg": 19.7
+    },
+    {
+      "name": "Alex Antetokounmpo",
+      "heightInches": 80,
+      "age": 24,
+      "ppg": 3.2,
+      "rpg": 1,
+      "apg": 0.2,
+      "games": 6,
+      "mpg": 3.3
+    },
+    {
+      "name": "Mark Sears",
+      "heightInches": 72,
+      "age": 23,
+      "ppg": 3.1,
+      "rpg": 0.3,
+      "apg": 0.3,
+      "games": 7,
+      "mpg": 3.9
+    },
+    {
+      "name": "Gary Harris",
+      "heightInches": 76,
+      "age": 31,
+      "ppg": 2.7,
+      "rpg": 1.3,
+      "apg": 1.1,
+      "games": 48,
+      "mpg": 13.8
+    },
+    {
+      "name": "Amir Coffey",
+      "heightInches": 80,
+      "age": 28,
+      "ppg": 2.4,
+      "rpg": 0.9,
+      "apg": 0.4,
+      "games": 30,
+      "mpg": 8.8
+    },
+    {
+      "name": "Andre Jackson Jr.",
+      "heightInches": 78,
+      "age": 24,
+      "ppg": 2.4,
+      "rpg": 1.5,
+      "apg": 0.9,
+      "games": 48,
+      "mpg": 8.5
+    },
+    {
+      "name": "Thanasis Antetokounmpo",
+      "heightInches": 79,
+      "age": 33,
+      "ppg": 1.4,
+      "rpg": 0.9,
+      "apg": 0.4,
+      "games": 34,
+      "mpg": 4.4
+    }
+  ],
+  "Minnesota|Northstar": [
+    {
+      "name": "Anthony Edwards",
+      "heightInches": 77,
+      "age": 24,
+      "ppg": 28.8,
+      "rpg": 5,
+      "apg": 3.7,
+      "games": 61,
+      "mpg": 35
+    },
+    {
+      "name": "Julius Randle",
+      "heightInches": 80,
+      "age": 31,
+      "ppg": 21.1,
+      "rpg": 6.7,
+      "apg": 5,
+      "games": 79,
+      "mpg": 33.1
+    },
+    {
+      "name": "Jaden McDaniels",
+      "heightInches": 81,
+      "age": 25,
+      "ppg": 14.8,
+      "rpg": 4.2,
+      "apg": 2.7,
+      "games": 73,
+      "mpg": 31.7
+    },
+    {
+      "name": "Ayo Dosunmu",
+      "heightInches": 77,
+      "age": 25,
+      "ppg": 14.4,
+      "rpg": 4.2,
+      "apg": 3.5,
+      "games": 24,
+      "mpg": 28.9
+    },
+    {
+      "name": "Naz Reid",
+      "heightInches": 82,
+      "age": 26,
+      "ppg": 13.6,
+      "rpg": 6.2,
+      "apg": 2.2,
+      "games": 77,
+      "mpg": 26.1
+    },
+    {
+      "name": "Donte DiVincenzo",
+      "heightInches": 76,
+      "age": 28,
+      "ppg": 12.2,
+      "rpg": 4.1,
+      "apg": 3.8,
+      "games": 82,
+      "mpg": 30.5
+    },
+    {
+      "name": "Rudy Gobert",
+      "heightInches": 85,
+      "age": 33,
+      "ppg": 10.9,
+      "rpg": 11.5,
+      "apg": 1.7,
+      "games": 76,
+      "mpg": 31.3
+    },
+    {
+      "name": "Bones Hyland",
+      "heightInches": 75,
+      "age": 25,
+      "ppg": 8.5,
+      "rpg": 1.8,
+      "apg": 2.6,
+      "games": 71,
+      "mpg": 16.6
+    },
+    {
+      "name": "Terrence Shannon",
+      "heightInches": 78,
+      "age": 25,
+      "ppg": 5.6,
+      "rpg": 1.1,
+      "apg": 0.9,
+      "games": 43,
+      "mpg": 12.4
+    },
+    {
+      "name": "Zyon Pullin",
+      "heightInches": 76,
+      "age": 24,
+      "ppg": 4.6,
+      "rpg": 0.6,
+      "apg": 1.8,
+      "games": 5,
+      "mpg": 8.4
+    },
+    {
+      "name": "Kyle Anderson",
+      "heightInches": 80,
+      "age": 32,
+      "ppg": 4.6,
+      "rpg": 3.7,
+      "apg": 3.3,
+      "games": 19,
+      "mpg": 19.2
+    },
+    {
+      "name": "Mike Conley",
+      "heightInches": 73,
+      "age": 38,
+      "ppg": 4.5,
+      "rpg": 1.7,
+      "apg": 2.9,
+      "games": 54,
+      "mpg": 18.4
+    },
+    {
+      "name": "Jaylen Clark",
+      "heightInches": 77,
+      "age": 24,
+      "ppg": 4,
+      "rpg": 1.8,
+      "apg": 0.6,
+      "games": 68,
+      "mpg": 13.1
+    },
+    {
+      "name": "Joan Beringer",
+      "heightInches": 81,
+      "age": 19,
+      "ppg": 3.9,
+      "rpg": 2.3,
+      "apg": 0.3,
+      "games": 40,
+      "mpg": 7.9
+    },
+    {
+      "name": "Rob Dillingham",
+      "heightInches": 75,
+      "age": 20,
+      "ppg": 3.5,
+      "rpg": 1.2,
+      "apg": 1.7,
+      "games": 35,
+      "mpg": 9.3
+    },
+    {
+      "name": "Enrique Freeman",
+      "heightInches": 79,
+      "age": 25,
+      "ppg": 3.3,
+      "rpg": 2.5,
+      "apg": 0.5,
+      "games": 4,
+      "mpg": 9.3
+    },
+    {
+      "name": "Julian Phillips",
+      "heightInches": 80,
+      "age": 22,
+      "ppg": 3.2,
+      "rpg": 0.4,
+      "apg": 0.2,
+      "games": 13,
+      "mpg": 7.2
+    },
+    {
+      "name": "Rocco Zikarsky",
+      "heightInches": 85,
+      "age": 19,
+      "ppg": 2.8,
+      "rpg": 2.8,
+      "apg": 0.4,
+      "games": 5,
+      "mpg": 7.4
+    },
+    {
+      "name": "Leonard Miller",
+      "heightInches": 77,
+      "age": 22,
+      "ppg": 2.3,
+      "rpg": 1.3,
+      "apg": 0.3,
+      "games": 19,
+      "mpg": 5.1
+    },
+    {
+      "name": "Johnny Juzang",
+      "heightInches": 78,
+      "age": 24,
+      "ppg": 2,
+      "rpg": 0.8,
+      "apg": 0.3,
+      "games": 21,
+      "mpg": 4.2
+    },
+    {
+      "name": "Joe Ingles",
+      "heightInches": 80,
+      "age": 38,
+      "ppg": 1.5,
+      "rpg": 0.7,
+      "apg": 1.3,
+      "games": 27,
+      "mpg": 5.8
+    }
+  ],
+  "New Orleans|Bayou": [
+    {
+      "name": "Trey Murphy III",
+      "heightInches": 81,
+      "age": 25,
+      "ppg": 21.5,
+      "rpg": 5.7,
+      "apg": 3.8,
+      "games": 66,
+      "mpg": 35.5
+    },
+    {
+      "name": "Zion Williamson",
+      "heightInches": 79,
+      "age": 25,
+      "ppg": 21,
+      "rpg": 5.7,
+      "apg": 3.2,
+      "games": 62,
+      "mpg": 29.7
+    },
+    {
+      "name": "Saddiq Bey",
+      "heightInches": 79,
+      "age": 26,
+      "ppg": 17.7,
+      "rpg": 5.6,
+      "apg": 2.5,
+      "games": 72,
+      "mpg": 31.2
+    },
+    {
+      "name": "Dejounte Murray",
+      "heightInches": 77,
+      "age": 29,
+      "ppg": 16.7,
+      "rpg": 5.4,
+      "apg": 6.4,
+      "games": 14,
+      "mpg": 27.9
+    },
+    {
+      "name": "Jeremiah Fears",
+      "heightInches": 74,
+      "age": 19,
+      "ppg": 14.3,
+      "rpg": 3.7,
+      "apg": 3.4,
+      "games": 82,
+      "mpg": 25.7
+    },
+    {
+      "name": "Jordan Poole",
+      "heightInches": 76,
+      "age": 26,
+      "ppg": 13.4,
+      "rpg": 2,
+      "apg": 3.1,
+      "games": 39,
+      "mpg": 24
+    },
+    {
+      "name": "Derik Queen",
+      "heightInches": 82,
+      "age": 21,
+      "ppg": 11.7,
+      "rpg": 7.1,
+      "apg": 3.7,
+      "games": 81,
+      "mpg": 25
+    },
+    {
+      "name": "Herb Jones",
+      "heightInches": 80,
+      "age": 27,
+      "ppg": 8.9,
+      "rpg": 3.4,
+      "apg": 2.8,
+      "games": 56,
+      "mpg": 28.4
+    },
+    {
+      "name": "Josh Oduro",
+      "heightInches": 81,
+      "age": 25,
+      "ppg": 8.3,
+      "rpg": 7.7,
+      "apg": 1.3,
+      "games": 3,
+      "mpg": 27
+    },
+    {
+      "name": "Bryce McGowens",
+      "heightInches": 79,
+      "age": 23,
+      "ppg": 8.1,
+      "rpg": 2.1,
+      "apg": 1.5,
+      "games": 42,
+      "mpg": 21
+    },
+    {
+      "name": "Jose Alvarado",
+      "heightInches": 72,
+      "age": 27,
+      "ppg": 7.9,
+      "rpg": 2.8,
+      "apg": 3.1,
+      "games": 41,
+      "mpg": 21.9
+    },
+    {
+      "name": "Yves Missi",
+      "heightInches": 83,
+      "age": 21,
+      "ppg": 5.7,
+      "rpg": 5.8,
+      "apg": 1.3,
+      "games": 66,
+      "mpg": 19.6
+    },
+    {
+      "name": "Karlo Matkovic",
+      "heightInches": 81,
+      "age": 24,
+      "ppg": 5.7,
+      "rpg": 3.7,
+      "apg": 0.8,
+      "games": 62,
+      "mpg": 14.7
+    },
+    {
+      "name": "Trey Alexander",
+      "heightInches": 77,
+      "age": 22,
+      "ppg": 5.2,
+      "rpg": 1.2,
+      "apg": 1,
+      "games": 9,
+      "mpg": 12.3
+    },
+    {
+      "name": "Jordan Hawkins",
+      "heightInches": 76,
+      "age": 23,
+      "ppg": 5.1,
+      "rpg": 1.7,
+      "apg": 0.8,
+      "games": 51,
+      "mpg": 13.5
+    },
+    {
+      "name": "DeAndre Jordan",
+      "heightInches": 84,
+      "age": 37,
+      "ppg": 4.4,
+      "rpg": 6.3,
+      "apg": 0.9,
+      "games": 12,
+      "mpg": 16.5
+    },
+    {
+      "name": "Micah Peavy",
+      "heightInches": 79,
+      "age": 24,
+      "ppg": 4.3,
+      "rpg": 1.9,
+      "apg": 1,
+      "games": 61,
+      "mpg": 15
+    },
+    {
+      "name": "Kevon Looney",
+      "heightInches": 81,
+      "age": 29,
+      "ppg": 2.8,
+      "rpg": 5.6,
+      "apg": 1.6,
+      "games": 21,
+      "mpg": 14.6
+    },
+    {
+      "name": "Hunter Dickinson",
+      "heightInches": 86,
+      "age": 25,
+      "ppg": 2.4,
+      "rpg": 1,
+      "apg": 0.4,
+      "games": 5,
+      "mpg": 8.6
+    }
+  ],
+  "New York|Skyline": [
+    {
+      "name": "Jalen Brunson",
+      "heightInches": 74,
+      "age": 29,
+      "ppg": 26,
+      "rpg": 3.3,
+      "apg": 6.8,
+      "games": 74,
+      "mpg": 35.1
+    },
+    {
+      "name": "Karl-Anthony Towns",
+      "heightInches": 83,
+      "age": 30,
+      "ppg": 20.1,
+      "rpg": 11.9,
+      "apg": 3,
+      "games": 75,
+      "mpg": 30.9
+    },
+    {
+      "name": "Ogugua Anunoby",
+      "heightInches": 80,
+      "age": 28,
+      "ppg": 16.7,
+      "rpg": 5.2,
+      "apg": 2.2,
+      "games": 67,
+      "mpg": 33.2
+    },
+    {
+      "name": "Mikal Bridges",
+      "heightInches": 79,
+      "age": 29,
+      "ppg": 14.4,
+      "rpg": 3.8,
+      "apg": 3.7,
+      "games": 82,
+      "mpg": 32.9
+    },
+    {
+      "name": "Josh Hart",
+      "heightInches": 77,
+      "age": 30,
+      "ppg": 12,
+      "rpg": 7.4,
+      "apg": 4.8,
+      "games": 66,
+      "mpg": 30.2
+    },
+    {
+      "name": "Miles McBride",
+      "heightInches": 74,
+      "age": 25,
+      "ppg": 12,
+      "rpg": 2.4,
+      "apg": 2.6,
+      "games": 41,
+      "mpg": 26.3
+    },
+    {
+      "name": "Landry Shamet",
+      "heightInches": 76,
+      "age": 28,
+      "ppg": 9.3,
+      "rpg": 1.8,
+      "apg": 1.4,
+      "games": 51,
+      "mpg": 23
+    },
+    {
+      "name": "Jordan Clarkson",
+      "heightInches": 78,
+      "age": 33,
+      "ppg": 8.6,
+      "rpg": 1.8,
+      "apg": 1.3,
+      "games": 72,
+      "mpg": 17.8
+    },
+    {
+      "name": "Jose Alvarado",
+      "heightInches": 72,
+      "age": 27,
+      "ppg": 6.6,
+      "rpg": 2,
+      "apg": 3.8,
+      "games": 28,
+      "mpg": 16.9
+    },
+    {
+      "name": "Mitchell Robinson",
+      "heightInches": 85,
+      "age": 27,
+      "ppg": 5.7,
+      "rpg": 8.8,
+      "apg": 0.9,
+      "games": 60,
+      "mpg": 19.6
+    },
+    {
+      "name": "Tyler Kolek",
+      "heightInches": 75,
+      "age": 24,
+      "ppg": 4.4,
+      "rpg": 1.6,
+      "apg": 2.7,
+      "games": 62,
+      "mpg": 11.8
+    },
+    {
+      "name": "Mohamed Diawara",
+      "heightInches": 80,
+      "age": 20,
+      "ppg": 3.6,
+      "rpg": 1.4,
+      "apg": 0.8,
+      "games": 69,
+      "mpg": 9.2
+    },
+    {
+      "name": "Jeremy Sochan",
+      "heightInches": 81,
+      "age": 22,
+      "ppg": 2.8,
+      "rpg": 2.1,
+      "apg": 0.8,
+      "games": 16,
+      "mpg": 6.9
+    },
+    {
+      "name": "Guerschon Yabusele",
+      "heightInches": 78,
+      "age": 30,
+      "ppg": 2.7,
+      "rpg": 2.1,
+      "apg": 0.4,
+      "games": 41,
+      "mpg": 8.9
+    },
+    {
+      "name": "Kevin McCullar",
+      "heightInches": 78,
+      "age": 24,
+      "ppg": 2.4,
+      "rpg": 1.3,
+      "apg": 1,
+      "games": 21,
+      "mpg": 7.5
+    },
+    {
+      "name": "Ariel Hukporti",
+      "heightInches": 84,
+      "age": 23,
+      "ppg": 2.2,
+      "rpg": 2.9,
+      "apg": 0.5,
+      "games": 54,
+      "mpg": 9.3
+    },
+    {
+      "name": "Pacome Dadiet",
+      "heightInches": 79,
+      "age": 20,
+      "ppg": 1.7,
+      "rpg": 0.9,
+      "apg": 0.4,
+      "games": 29,
+      "mpg": 4.8
+    },
+    {
+      "name": "Dillon Jones",
+      "heightInches": 78,
+      "age": 24,
+      "ppg": 1.3,
+      "rpg": 1,
+      "apg": 0.6,
+      "games": 7,
+      "mpg": 5.6
+    },
+    {
+      "name": "Trey Jemison",
+      "heightInches": 83,
+      "age": 26,
+      "ppg": 1,
+      "rpg": 1.4,
+      "apg": 0.4,
+      "games": 13,
+      "mpg": 6.4
+    },
+    {
+      "name": "Tosan Evbuomwan",
+      "heightInches": 79,
+      "age": 24,
+      "ppg": 0,
+      "rpg": 0.4,
+      "apg": 0,
+      "games": 5,
+      "mpg": 1.6
+    }
+  ],
+  "Oklahoma City|Voltage": [
+    {
+      "name": "Shai Gilgeous-Alexander",
+      "heightInches": 78,
+      "age": 27,
+      "ppg": 31.1,
+      "rpg": 4.3,
+      "apg": 6.6,
+      "games": 68,
+      "mpg": 33.3
+    },
+    {
+      "name": "Chet Holmgren",
+      "heightInches": 85,
+      "age": 23,
+      "ppg": 17.1,
+      "rpg": 8.9,
+      "apg": 1.7,
+      "games": 69,
+      "mpg": 29
+    },
+    {
+      "name": "Jalen Williams",
+      "heightInches": 78,
+      "age": 24,
+      "ppg": 17.1,
+      "rpg": 4.6,
+      "apg": 5.5,
+      "games": 33,
+      "mpg": 28.4
+    },
+    {
+      "name": "Ajay Mitchell",
+      "heightInches": 76,
+      "age": 23,
+      "ppg": 13.6,
+      "rpg": 3.3,
+      "apg": 3.6,
+      "games": 57,
+      "mpg": 25.8
+    },
+    {
+      "name": "Isaiah Joe",
+      "heightInches": 77,
+      "age": 26,
+      "ppg": 11.1,
+      "rpg": 2.5,
+      "apg": 1.3,
+      "games": 71,
+      "mpg": 21.2
+    },
+    {
+      "name": "Jared McCain",
+      "heightInches": 75,
+      "age": 21,
+      "ppg": 10.4,
+      "rpg": 2.1,
+      "apg": 0.9,
+      "games": 30,
+      "mpg": 18
+    },
+    {
+      "name": "Aaron Wiggins",
+      "heightInches": 76,
+      "age": 26,
+      "ppg": 9.4,
+      "rpg": 3.1,
+      "apg": 1.7,
+      "games": 65,
+      "mpg": 21.8
+    },
+    {
+      "name": "Isaiah Hartenstein",
+      "heightInches": 84,
+      "age": 27,
+      "ppg": 9.2,
+      "rpg": 9.4,
+      "apg": 3.5,
+      "games": 47,
+      "mpg": 24.3
+    },
+    {
+      "name": "Payton Sandfort",
+      "heightInches": 79,
+      "age": 23,
+      "ppg": 8.8,
+      "rpg": 2.5,
+      "apg": 0,
+      "games": 4,
+      "mpg": 15.8
+    },
+    {
+      "name": "Cason Wallace",
+      "heightInches": 76,
+      "age": 22,
+      "ppg": 8.6,
+      "rpg": 3.1,
+      "apg": 2.6,
+      "games": 77,
+      "mpg": 26.6
+    },
+    {
+      "name": "Luguentz Dort",
+      "heightInches": 76,
+      "age": 26,
+      "ppg": 8.3,
+      "rpg": 3.6,
+      "apg": 1.2,
+      "games": 69,
+      "mpg": 26.8
+    },
+    {
+      "name": "Jaylin Williams",
+      "heightInches": 82,
+      "age": 23,
+      "ppg": 7.2,
+      "rpg": 5.5,
+      "apg": 2.4,
+      "games": 65,
+      "mpg": 19.7
+    },
+    {
+      "name": "Kenrich Williams",
+      "heightInches": 79,
+      "age": 31,
+      "ppg": 6.5,
+      "rpg": 3.3,
+      "apg": 1.4,
+      "games": 56,
+      "mpg": 15.3
+    },
+    {
+      "name": "Alex Caruso",
+      "heightInches": 77,
+      "age": 31,
+      "ppg": 6.2,
+      "rpg": 2.8,
+      "apg": 2,
+      "games": 56,
+      "mpg": 18.3
+    },
+    {
+      "name": "Branden Carlson",
+      "heightInches": 83,
+      "age": 26,
+      "ppg": 5.8,
+      "rpg": 3,
+      "apg": 0.7,
+      "games": 42,
+      "mpg": 11.7
+    },
+    {
+      "name": "Nikola Topic",
+      "heightInches": 77,
+      "age": 20,
+      "ppg": 5.2,
+      "rpg": 1.9,
+      "apg": 4.4,
+      "games": 10,
+      "mpg": 16.1
+    },
+    {
+      "name": "Ousmane Dieng",
+      "heightInches": 81,
+      "age": 22,
+      "ppg": 3.7,
+      "rpg": 1.6,
+      "apg": 1,
+      "games": 27,
+      "mpg": 11
+    },
+    {
+      "name": "Chris Youngblood",
+      "heightInches": 76,
+      "age": 23,
+      "ppg": 2,
+      "rpg": 0.9,
+      "apg": 0.3,
+      "games": 32,
+      "mpg": 5.6
+    },
+    {
+      "name": "Brooks Barnhizer",
+      "heightInches": 78,
+      "age": 23,
+      "ppg": 1.7,
+      "rpg": 2,
+      "apg": 0.6,
+      "games": 40,
+      "mpg": 8.7
+    },
+    {
+      "name": "Buddy Boeheim",
+      "heightInches": 77,
+      "age": 26,
+      "ppg": 1.5,
+      "rpg": 0,
+      "apg": 0,
+      "games": 4,
+      "mpg": 4
+    }
+  ],
+  "Orlando|Aurora": [
+    {
+      "name": "Paolo Banchero",
+      "heightInches": 82,
+      "age": 23,
+      "ppg": 22.2,
+      "rpg": 8.4,
+      "apg": 5.2,
+      "games": 72,
+      "mpg": 34.7
+    },
+    {
+      "name": "Franz Wagner",
+      "heightInches": 81,
+      "age": 24,
+      "ppg": 20.6,
+      "rpg": 5.2,
+      "apg": 3.3,
+      "games": 34,
+      "mpg": 30
+    },
+    {
+      "name": "Desmond Bane",
+      "heightInches": 77,
+      "age": 27,
+      "ppg": 20.1,
+      "rpg": 4.1,
+      "apg": 4.1,
+      "games": 82,
+      "mpg": 33.6
+    },
+    {
+      "name": "Anthony Black",
+      "heightInches": 79,
+      "age": 21,
+      "ppg": 15,
+      "rpg": 3.8,
+      "apg": 3.7,
+      "games": 64,
+      "mpg": 29.9
+    },
+    {
+      "name": "Jalen Suggs",
+      "heightInches": 76,
+      "age": 24,
+      "ppg": 13.8,
+      "rpg": 3.9,
+      "apg": 5.5,
+      "games": 57,
+      "mpg": 27.5
+    },
+    {
+      "name": "Wendell Carter",
+      "heightInches": 82,
+      "age": 26,
+      "ppg": 11.8,
+      "rpg": 7.4,
+      "apg": 2,
+      "games": 78,
+      "mpg": 29.4
+    },
+    {
+      "name": "Tristan Da Silva",
+      "heightInches": 80,
+      "age": 24,
+      "ppg": 9.9,
+      "rpg": 3.7,
+      "apg": 1.6,
+      "games": 77,
+      "mpg": 24.7
+    },
+    {
+      "name": "Jevon Carter",
+      "heightInches": 74,
+      "age": 30,
+      "ppg": 7.2,
+      "rpg": 2.1,
+      "apg": 2.3,
+      "games": 30,
+      "mpg": 20.4
+    },
+    {
+      "name": "Moritz Wagner",
+      "heightInches": 83,
+      "age": 28,
+      "ppg": 6.9,
+      "rpg": 3.2,
+      "apg": 0.8,
+      "games": 36,
+      "mpg": 11.9
+    },
+    {
+      "name": "Goga Bitadze",
+      "heightInches": 83,
+      "age": 26,
+      "ppg": 5.9,
+      "rpg": 5,
+      "apg": 1.3,
+      "games": 64,
+      "mpg": 15.2
+    },
+    {
+      "name": "Jett Howard",
+      "heightInches": 79,
+      "age": 22,
+      "ppg": 5.5,
+      "rpg": 1.6,
+      "apg": 0.8,
+      "games": 55,
+      "mpg": 12.7
+    },
+    {
+      "name": "Jamal Cain",
+      "heightInches": 79,
+      "age": 26,
+      "ppg": 5.4,
+      "rpg": 2,
+      "apg": 0.7,
+      "games": 40,
+      "mpg": 12.2
+    },
+    {
+      "name": "Jase Richardson",
+      "heightInches": 74,
+      "age": 20,
+      "ppg": 4.4,
+      "rpg": 1.2,
+      "apg": 1.1,
+      "games": 54,
+      "mpg": 10.9
+    },
+    {
+      "name": "Noah Penda",
+      "heightInches": 78,
+      "age": 20,
+      "ppg": 3.8,
+      "rpg": 3.2,
+      "apg": 1.2,
+      "games": 59,
+      "mpg": 12.9
+    },
+    {
+      "name": "Tyus Jones",
+      "heightInches": 74,
+      "age": 29,
+      "ppg": 3,
+      "rpg": 1.1,
+      "apg": 2.4,
+      "games": 48,
+      "mpg": 15.7
+    },
+    {
+      "name": "Jonathan Isaac",
+      "heightInches": 81,
+      "age": 28,
+      "ppg": 2.6,
+      "rpg": 2.5,
+      "apg": 0.4,
+      "games": 52,
+      "mpg": 10
+    },
+    {
+      "name": "Alex Morales",
+      "heightInches": 78,
+      "age": 28,
+      "ppg": 2,
+      "rpg": 0.8,
+      "apg": 1,
+      "games": 4,
+      "mpg": 6
+    },
+    {
+      "name": "Orlando Robinson",
+      "heightInches": 84,
+      "age": 25,
+      "ppg": 1.8,
+      "rpg": 1,
+      "apg": 0.8,
+      "games": 4,
+      "mpg": 6.3
+    },
+    {
+      "name": "Colin Castleton",
+      "heightInches": 83,
+      "age": 25,
+      "ppg": 1.3,
+      "rpg": 2,
+      "apg": 0.3,
+      "games": 4,
+      "mpg": 5.3
+    }
+  ],
+  "Philadelphia|Colonials": [
+    {
+      "name": "Tyrese Maxey",
+      "heightInches": 75,
+      "age": 25,
+      "ppg": 28.3,
+      "rpg": 4.1,
+      "apg": 6.6,
+      "games": 70,
+      "mpg": 38
+    },
+    {
+      "name": "Joel Embiid",
+      "heightInches": 84,
+      "age": 31,
+      "ppg": 26.9,
+      "rpg": 7.7,
+      "apg": 3.9,
+      "games": 38,
+      "mpg": 31.5
+    },
+    {
+      "name": "Paul George",
+      "heightInches": 80,
+      "age": 35,
+      "ppg": 17.3,
+      "rpg": 5.3,
+      "apg": 3.6,
+      "games": 37,
+      "mpg": 30.6
+    },
+    {
+      "name": "VJ Edgecombe",
+      "heightInches": 77,
+      "age": 20,
+      "ppg": 16,
+      "rpg": 5.6,
+      "apg": 4.2,
+      "games": 75,
+      "mpg": 35
+    },
+    {
+      "name": "Kelly Oubre",
+      "heightInches": 79,
+      "age": 30,
+      "ppg": 14.1,
+      "rpg": 5,
+      "apg": 1.6,
+      "games": 50,
+      "mpg": 31.5
+    },
+    {
+      "name": "Quentin Grimes",
+      "heightInches": 78,
+      "age": 25,
+      "ppg": 13.4,
+      "rpg": 3.6,
+      "apg": 3.3,
+      "games": 75,
+      "mpg": 29.5
+    },
+    {
+      "name": "Dominick Barlow",
+      "heightInches": 81,
+      "age": 22,
+      "ppg": 7.7,
+      "rpg": 4.8,
+      "apg": 1.2,
+      "games": 71,
+      "mpg": 23.7
+    },
+    {
+      "name": "Cameron Payne",
+      "heightInches": 74,
+      "age": 31,
+      "ppg": 7.4,
+      "rpg": 2,
+      "apg": 2.6,
+      "games": 22,
+      "mpg": 17
+    },
+    {
+      "name": "MarJon Beauchamp",
+      "heightInches": 78,
+      "age": 25,
+      "ppg": 6.8,
+      "rpg": 2.3,
+      "apg": 1.1,
+      "games": 14,
+      "mpg": 14
+    },
+    {
+      "name": "Jared McCain",
+      "heightInches": 75,
+      "age": 21,
+      "ppg": 6.6,
+      "rpg": 2,
+      "apg": 1.7,
+      "games": 37,
+      "mpg": 16.8
+    },
+    {
+      "name": "Trendon Watford",
+      "heightInches": 81,
+      "age": 25,
+      "ppg": 6.5,
+      "rpg": 3.3,
+      "apg": 2.5,
+      "games": 53,
+      "mpg": 16.3
+    },
+    {
+      "name": "Andre Drummond",
+      "heightInches": 82,
+      "age": 32,
+      "ppg": 6.4,
+      "rpg": 8.4,
+      "apg": 1.3,
+      "games": 63,
+      "mpg": 19.6
+    },
+    {
+      "name": "Justin Edwards",
+      "heightInches": 80,
+      "age": 24,
+      "ppg": 6,
+      "rpg": 1.5,
+      "apg": 1.3,
+      "games": 64,
+      "mpg": 15.3
+    },
+    {
+      "name": "Eric Gordon",
+      "heightInches": 76,
+      "age": 37,
+      "ppg": 5.5,
+      "rpg": 0.3,
+      "apg": 0.5,
+      "games": 6,
+      "mpg": 12.3
+    },
+    {
+      "name": "Adem Bona",
+      "heightInches": 81,
+      "age": 22,
+      "ppg": 4.8,
+      "rpg": 4.3,
+      "apg": 0.5,
+      "games": 71,
+      "mpg": 17.4
+    },
+    {
+      "name": "Jabari Walker",
+      "heightInches": 80,
+      "age": 23,
+      "ppg": 4.3,
+      "rpg": 3,
+      "apg": 0.5,
+      "games": 64,
+      "mpg": 11.8
+    },
+    {
+      "name": "Dalen Terry",
+      "heightInches": 79,
+      "age": 23,
+      "ppg": 4.1,
+      "rpg": 1.6,
+      "apg": 1.6,
+      "games": 14,
+      "mpg": 12.4
+    },
+    {
+      "name": "Tyrese Martin",
+      "heightInches": 78,
+      "age": 26,
+      "ppg": 2.2,
+      "rpg": 1.1,
+      "apg": 1,
+      "games": 9,
+      "mpg": 8.9
+    },
+    {
+      "name": "Charles Bassey",
+      "heightInches": 83,
+      "age": 25,
+      "ppg": 2,
+      "rpg": 0,
+      "apg": 0,
+      "games": 1,
+      "mpg": 5
+    },
+    {
+      "name": "Kyle Lowry",
+      "heightInches": 73,
+      "age": 39,
+      "ppg": 1.2,
+      "rpg": 0.6,
+      "apg": 0.8,
+      "games": 14,
+      "mpg": 8.4
+    },
+    {
+      "name": "Hunter Sallis",
+      "heightInches": 78,
+      "age": 22,
+      "ppg": 1,
+      "rpg": 0.1,
+      "apg": 0.6,
+      "games": 7,
+      "mpg": 3.6
+    },
+    {
+      "name": "Johni Broome",
+      "heightInches": 81,
+      "age": 23,
+      "ppg": 0.9,
+      "rpg": 1.5,
+      "apg": 0.4,
+      "games": 11,
+      "mpg": 5
+    },
+    {
+      "name": "Patrick Baldwin Jr.",
+      "heightInches": 82,
+      "age": 23,
+      "ppg": 0,
+      "rpg": 1,
+      "apg": 0,
+      "games": 1,
+      "mpg": 2
+    }
+  ],
+  "Phoenix|Sol": [
+    {
+      "name": "Devin Booker",
+      "heightInches": 78,
+      "age": 29,
+      "ppg": 26.1,
+      "rpg": 3.9,
+      "apg": 6,
+      "games": 64,
+      "mpg": 33.6
+    },
+    {
+      "name": "Dillon Brooks",
+      "heightInches": 77,
+      "age": 29,
+      "ppg": 20.2,
+      "rpg": 3.6,
+      "apg": 1.8,
+      "games": 56,
+      "mpg": 30.4
+    },
+    {
+      "name": "Jalen Green",
+      "heightInches": 78,
+      "age": 23,
+      "ppg": 17.8,
+      "rpg": 3.6,
+      "apg": 2.8,
+      "games": 32,
+      "mpg": 25.9
+    },
+    {
+      "name": "Grayson Allen",
+      "heightInches": 76,
+      "age": 30,
+      "ppg": 16.5,
+      "rpg": 3,
+      "apg": 3.8,
+      "games": 51,
+      "mpg": 28.8
+    },
+    {
+      "name": "Collin Gillespie",
+      "heightInches": 75,
+      "age": 26,
+      "ppg": 12.7,
+      "rpg": 4.1,
+      "apg": 4.6,
+      "games": 80,
+      "mpg": 28.5
+    },
+    {
+      "name": "Mark Williams",
+      "heightInches": 83,
+      "age": 24,
+      "ppg": 11.7,
+      "rpg": 8,
+      "apg": 1,
+      "games": 60,
+      "mpg": 23.6
+    },
+    {
+      "name": "Royce O'Neale",
+      "heightInches": 78,
+      "age": 32,
+      "ppg": 9.8,
+      "rpg": 4.8,
+      "apg": 2.7,
+      "games": 78,
+      "mpg": 28.4
+    },
+    {
+      "name": "Jordan Goodwin",
+      "heightInches": 75,
+      "age": 27,
+      "ppg": 8.7,
+      "rpg": 4.9,
+      "apg": 2.2,
+      "games": 70,
+      "mpg": 22.5
+    },
+    {
+      "name": "Oso Ighodaro",
+      "heightInches": 81,
+      "age": 23,
+      "ppg": 6.5,
+      "rpg": 5.1,
+      "apg": 2.3,
+      "games": 82,
+      "mpg": 22.1
+    },
+    {
+      "name": "Ryan Dunn",
+      "heightInches": 79,
+      "age": 22,
+      "ppg": 5.8,
+      "rpg": 4.2,
+      "apg": 1.5,
+      "games": 70,
+      "mpg": 19.4
+    },
+    {
+      "name": "Jamaree Bouyea",
+      "heightInches": 74,
+      "age": 24,
+      "ppg": 5.7,
+      "rpg": 1.8,
+      "apg": 1.8,
+      "games": 46,
+      "mpg": 14
+    },
+    {
+      "name": "Haywood Highsmith",
+      "heightInches": 77,
+      "age": 29,
+      "ppg": 5.4,
+      "rpg": 1.9,
+      "apg": 1,
+      "games": 7,
+      "mpg": 13.1
+    },
+    {
+      "name": "Amir Coffey",
+      "heightInches": 80,
+      "age": 28,
+      "ppg": 4.8,
+      "rpg": 1.9,
+      "apg": 1,
+      "games": 16,
+      "mpg": 14.1
+    },
+    {
+      "name": "Rasheer Fleming",
+      "heightInches": 81,
+      "age": 21,
+      "ppg": 4.3,
+      "rpg": 2.3,
+      "apg": 0.3,
+      "games": 55,
+      "mpg": 12.3
+    },
+    {
+      "name": "Koby Brea",
+      "heightInches": 78,
+      "age": 23,
+      "ppg": 3.8,
+      "rpg": 0.7,
+      "apg": 0.8,
+      "games": 12,
+      "mpg": 7.1
+    },
+    {
+      "name": "Nick Richards",
+      "heightInches": 83,
+      "age": 28,
+      "ppg": 3.2,
+      "rpg": 3.3,
+      "apg": 0.3,
+      "games": 28,
+      "mpg": 9.2
+    },
+    {
+      "name": "Khaman Maluach",
+      "heightInches": 84,
+      "age": 19,
+      "ppg": 3,
+      "rpg": 2.9,
+      "apg": 0.1,
+      "games": 46,
+      "mpg": 8.9
+    },
+    {
+      "name": "C.J. Huntley",
+      "heightInches": 81,
+      "age": 23,
+      "ppg": 3,
+      "rpg": 1.3,
+      "apg": 0.5,
+      "games": 4,
+      "mpg": 10
+    },
+    {
+      "name": "Isaiah Livers",
+      "heightInches": 79,
+      "age": 27,
+      "ppg": 1.8,
+      "rpg": 1.7,
+      "apg": 0.6,
+      "games": 36,
+      "mpg": 9.7
+    },
+    {
+      "name": "Nigel Hayes",
+      "heightInches": 80,
+      "age": 31,
+      "ppg": 1.3,
+      "rpg": 1.2,
+      "apg": 0.3,
+      "games": 27,
+      "mpg": 7.2
+    }
+  ],
+  "Portland|Rose": [
+    {
+      "name": "Deni Avdija",
+      "heightInches": 81,
+      "age": 24,
+      "ppg": 24.2,
+      "rpg": 6.9,
+      "apg": 6.7,
+      "games": 66,
+      "mpg": 33.4
+    },
+    {
+      "name": "Shaedon Sharpe",
+      "heightInches": 78,
+      "age": 22,
+      "ppg": 20.8,
+      "rpg": 4.3,
+      "apg": 2.6,
+      "games": 50,
+      "mpg": 29.4
+    },
+    {
+      "name": "Jerami Grant",
+      "heightInches": 80,
+      "age": 31,
+      "ppg": 18.6,
+      "rpg": 3.5,
+      "apg": 2.1,
+      "games": 57,
+      "mpg": 29.8
+    },
+    {
+      "name": "Jrue Holiday",
+      "heightInches": 75,
+      "age": 35,
+      "ppg": 16.3,
+      "rpg": 4.6,
+      "apg": 6.1,
+      "games": 53,
+      "mpg": 29.4
+    },
+    {
+      "name": "Scoot Henderson",
+      "heightInches": 76,
+      "age": 21,
+      "ppg": 14.2,
+      "rpg": 2.7,
+      "apg": 3.7,
+      "games": 30,
+      "mpg": 24.9
+    },
+    {
+      "name": "Toumani Camara",
+      "heightInches": 76,
+      "age": 25,
+      "ppg": 13.4,
+      "rpg": 5.1,
+      "apg": 2.5,
+      "games": 82,
+      "mpg": 33.3
+    },
+    {
+      "name": "Donovan Clingan",
+      "heightInches": 85,
+      "age": 21,
+      "ppg": 12.1,
+      "rpg": 11.6,
+      "apg": 2.1,
+      "games": 77,
+      "mpg": 27.2
+    },
+    {
+      "name": "Caleb Love",
+      "heightInches": 76,
+      "age": 24,
+      "ppg": 10.4,
+      "rpg": 2.3,
+      "apg": 2.5,
+      "games": 49,
+      "mpg": 20.7
+    },
+    {
+      "name": "Vit Krejci",
+      "heightInches": 80,
+      "age": 25,
+      "ppg": 7.2,
+      "rpg": 2.7,
+      "apg": 1.7,
+      "games": 19,
+      "mpg": 19.2
+    },
+    {
+      "name": "Robert Williams",
+      "heightInches": 82,
+      "age": 28,
+      "ppg": 6.7,
+      "rpg": 7,
+      "apg": 1,
+      "games": 59,
+      "mpg": 17.1
+    },
+    {
+      "name": "Kris Murray",
+      "heightInches": 80,
+      "age": 25,
+      "ppg": 5.8,
+      "rpg": 3.6,
+      "apg": 1.4,
+      "games": 57,
+      "mpg": 23.5
+    },
+    {
+      "name": "Matisse Thybulle",
+      "heightInches": 78,
+      "age": 28,
+      "ppg": 5.8,
+      "rpg": 2,
+      "apg": 0.9,
+      "games": 30,
+      "mpg": 16
+    },
+    {
+      "name": "Sidy Cissoko",
+      "heightInches": 78,
+      "age": 21,
+      "ppg": 5.1,
+      "rpg": 2.2,
+      "apg": 1.5,
+      "games": 75,
+      "mpg": 19.1
+    },
+    {
+      "name": "Blake Wesley",
+      "heightInches": 77,
+      "age": 22,
+      "ppg": 4.8,
+      "rpg": 1.3,
+      "apg": 2,
+      "games": 31,
+      "mpg": 11.7
+    },
+    {
+      "name": "Chris Youngblood",
+      "heightInches": 76,
+      "age": 23,
+      "ppg": 3,
+      "rpg": 0,
+      "apg": 0.5,
+      "games": 2,
+      "mpg": 5.5
+    },
+    {
+      "name": "Duop Reath",
+      "heightInches": 83,
+      "age": 29,
+      "ppg": 2.9,
+      "rpg": 1.2,
+      "apg": 0.3,
+      "games": 32,
+      "mpg": 8
+    },
+    {
+      "name": "Rayan Rupert",
+      "heightInches": 78,
+      "age": 21,
+      "ppg": 2.9,
+      "rpg": 1.8,
+      "apg": 0.7,
+      "games": 48,
+      "mpg": 12
+    },
+    {
+      "name": "Hansen Yang",
+      "heightInches": 85,
+      "age": 20,
+      "ppg": 2.2,
+      "rpg": 1.5,
+      "apg": 0.5,
+      "games": 43,
+      "mpg": 7
+    },
+    {
+      "name": "Jayson Kent",
+      "heightInches": 79,
+      "age": 23,
+      "ppg": 2,
+      "rpg": 1,
+      "apg": 0,
+      "games": 5,
+      "mpg": 4.6
+    },
+    {
+      "name": "Javonte Cooke",
+      "heightInches": 76,
+      "age": 26,
+      "ppg": 1.2,
+      "rpg": 1,
+      "apg": 0.4,
+      "games": 19,
+      "mpg": 5
+    }
+  ],
+  "Sacramento|Republic": [
+    {
+      "name": "Zach LaVine",
+      "heightInches": 77,
+      "age": 30,
+      "ppg": 19.2,
+      "rpg": 2.8,
+      "apg": 2.3,
+      "games": 39,
+      "mpg": 31.4
+    },
+    {
+      "name": "DeMar Derozan",
+      "heightInches": 79,
+      "age": 36,
+      "ppg": 18.4,
+      "rpg": 2.9,
+      "apg": 4.1,
+      "games": 77,
+      "mpg": 31.3
+    },
+    {
+      "name": "Domantas Sabonis",
+      "heightInches": 82,
+      "age": 29,
+      "ppg": 15.8,
+      "rpg": 11.4,
+      "apg": 4.1,
+      "games": 19,
+      "mpg": 29.7
+    },
+    {
+      "name": "Russell Westbrook",
+      "heightInches": 74,
+      "age": 37,
+      "ppg": 15.2,
+      "rpg": 5.4,
+      "apg": 6.7,
+      "games": 64,
+      "mpg": 29
+    },
+    {
+      "name": "Keegan Murray",
+      "heightInches": 80,
+      "age": 25,
+      "ppg": 14,
+      "rpg": 5.7,
+      "apg": 1.7,
+      "games": 23,
+      "mpg": 34.6
+    },
+    {
+      "name": "Dennis Schroder",
+      "heightInches": 71,
+      "age": 32,
+      "ppg": 12.8,
+      "rpg": 3.1,
+      "apg": 5.3,
+      "games": 40,
+      "mpg": 26.4
+    },
+    {
+      "name": "Maxime Raynaud",
+      "heightInches": 84,
+      "age": 22,
+      "ppg": 12.5,
+      "rpg": 7.5,
+      "apg": 1.4,
+      "games": 74,
+      "mpg": 26.6
+    },
+    {
+      "name": "Malik Monk",
+      "heightInches": 75,
+      "age": 27,
+      "ppg": 12.5,
+      "rpg": 1.9,
+      "apg": 3,
+      "games": 62,
+      "mpg": 22
+    },
+    {
+      "name": "Daeqwon Plowden",
+      "heightInches": 78,
+      "age": 27,
+      "ppg": 10.8,
+      "rpg": 3,
+      "apg": 1.3,
+      "games": 32,
+      "mpg": 26.3
+    },
+    {
+      "name": "Daquan Jeffries",
+      "heightInches": 77,
+      "age": 28,
+      "ppg": 10.3,
+      "rpg": 1.7,
+      "apg": 0.3,
+      "games": 3,
+      "mpg": 20
+    },
+    {
+      "name": "Precious Achiuwa",
+      "heightInches": 81,
+      "age": 26,
+      "ppg": 10.1,
+      "rpg": 6.7,
+      "apg": 1.4,
+      "games": 73,
+      "mpg": 24
+    },
+    {
+      "name": "Devin Carter",
+      "heightInches": 75,
+      "age": 23,
+      "ppg": 8.9,
+      "rpg": 3.3,
+      "apg": 2.7,
+      "games": 38,
+      "mpg": 18.4
+    },
+    {
+      "name": "Nique Clifford",
+      "heightInches": 77,
+      "age": 23,
+      "ppg": 8.6,
+      "rpg": 3.8,
+      "apg": 2.4,
+      "games": 75,
+      "mpg": 25.1
+    },
+    {
+      "name": "De'Andre Hunter",
+      "heightInches": 79,
+      "age": 28,
+      "ppg": 7.5,
+      "rpg": 1.5,
+      "apg": 0.5,
+      "games": 2,
+      "mpg": 25.5
+    },
+    {
+      "name": "Doug McDermott",
+      "heightInches": 79,
+      "age": 33,
+      "ppg": 5.7,
+      "rpg": 1.3,
+      "apg": 0.8,
+      "games": 29,
+      "mpg": 15.1
+    },
+    {
+      "name": "Keon Ellis",
+      "heightInches": 78,
+      "age": 25,
+      "ppg": 5.6,
+      "rpg": 1.3,
+      "apg": 0.6,
+      "games": 43,
+      "mpg": 17.6
+    },
+    {
+      "name": "Killian Hayes",
+      "heightInches": 76,
+      "age": 24,
+      "ppg": 5.5,
+      "rpg": 2.3,
+      "apg": 3.5,
+      "games": 23,
+      "mpg": 17.6
+    },
+    {
+      "name": "Dylan Cardwell",
+      "heightInches": 82,
+      "age": 24,
+      "ppg": 5.4,
+      "rpg": 7.5,
+      "apg": 1.4,
+      "games": 44,
+      "mpg": 20.7
+    },
+    {
+      "name": "Drew Eubanks",
+      "heightInches": 82,
+      "age": 28,
+      "ppg": 5.2,
+      "rpg": 3,
+      "apg": 0.5,
+      "games": 42,
+      "mpg": 13.2
+    },
+    {
+      "name": "Patrick Baldwin Jr.",
+      "heightInches": 82,
+      "age": 23,
+      "ppg": 3.8,
+      "rpg": 3.5,
+      "apg": 0.8,
+      "games": 6,
+      "mpg": 14.8
+    },
+    {
+      "name": "Isaiah Stevens",
+      "heightInches": 72,
+      "age": 25,
+      "ppg": 3.3,
+      "rpg": 1,
+      "apg": 3.3,
+      "games": 3,
+      "mpg": 14.3
+    },
+    {
+      "name": "Isaac Jones",
+      "heightInches": 81,
+      "age": 24,
+      "ppg": 1,
+      "rpg": 0.7,
+      "apg": 0.3,
+      "games": 3,
+      "mpg": 5.7
+    },
+    {
+      "name": "Dario Saric",
+      "heightInches": 81,
+      "age": 31,
+      "ppg": 1,
+      "rpg": 1.2,
+      "apg": 0.4,
+      "games": 5,
+      "mpg": 8
+    }
+  ],
+  "San Antonio|Mission": [
+    {
+      "name": "Victor Wembanyama",
+      "heightInches": 89,
+      "age": 21,
+      "ppg": 25,
+      "rpg": 11.5,
+      "apg": 3.1,
+      "games": 64,
+      "mpg": 29.2
+    },
+    {
+      "name": "De'Aaron Fox",
+      "heightInches": 75,
+      "age": 28,
+      "ppg": 18.6,
+      "rpg": 3.8,
+      "apg": 6.2,
+      "games": 72,
+      "mpg": 31
+    },
+    {
+      "name": "Stephon Castle",
+      "heightInches": 78,
+      "age": 21,
+      "ppg": 16.7,
+      "rpg": 5.3,
+      "apg": 7.4,
+      "games": 68,
+      "mpg": 30
+    },
+    {
+      "name": "Devin Vassell",
+      "heightInches": 78,
+      "age": 25,
+      "ppg": 13.9,
+      "rpg": 4,
+      "apg": 2.5,
+      "games": 67,
+      "mpg": 30.5
+    },
+    {
+      "name": "Keldon Johnson",
+      "heightInches": 78,
+      "age": 26,
+      "ppg": 13.2,
+      "rpg": 5.4,
+      "apg": 1.4,
+      "games": 82,
+      "mpg": 23.3
+    },
+    {
+      "name": "Dylan Harper",
+      "heightInches": 76,
+      "age": 19,
+      "ppg": 11.8,
+      "rpg": 3.4,
+      "apg": 3.9,
+      "games": 69,
+      "mpg": 22.6
+    },
+    {
+      "name": "Julian Champagnie",
+      "heightInches": 79,
+      "age": 24,
+      "ppg": 11.1,
+      "rpg": 5.8,
+      "apg": 1.5,
+      "games": 82,
+      "mpg": 27.6
+    },
+    {
+      "name": "Harrison Barnes",
+      "heightInches": 81,
+      "age": 33,
+      "ppg": 9.9,
+      "rpg": 2.8,
+      "apg": 1.9,
+      "games": 77,
+      "mpg": 25.8
+    },
+    {
+      "name": "Luke Kornet",
+      "heightInches": 86,
+      "age": 30,
+      "ppg": 6.5,
+      "rpg": 6.1,
+      "apg": 1.9,
+      "games": 68,
+      "mpg": 21
+    },
+    {
+      "name": "Carter Bryant",
+      "heightInches": 80,
+      "age": 20,
+      "ppg": 4.2,
+      "rpg": 2.5,
+      "apg": 0.7,
+      "games": 71,
+      "mpg": 11.5
+    },
+    {
+      "name": "Jeremy Sochan",
+      "heightInches": 81,
+      "age": 22,
+      "ppg": 4.1,
+      "rpg": 2.6,
+      "apg": 1,
+      "games": 28,
+      "mpg": 12.8
+    },
+    {
+      "name": "Kelly Olynyk",
+      "heightInches": 84,
+      "age": 34,
+      "ppg": 3.2,
+      "rpg": 1.9,
+      "apg": 1.2,
+      "games": 41,
+      "mpg": 8.8
+    },
+    {
+      "name": "Riley Minix",
+      "heightInches": 79,
+      "age": 25,
+      "ppg": 3,
+      "rpg": 0.7,
+      "apg": 0.3,
+      "games": 3,
+      "mpg": 3
+    },
+    {
+      "name": "David Jones-Garcia",
+      "heightInches": 77,
+      "age": 24,
+      "ppg": 2.9,
+      "rpg": 1.2,
+      "apg": 1.6,
+      "games": 11,
+      "mpg": 6.4
+    },
+    {
+      "name": "Lindy Waters",
+      "heightInches": 78,
+      "age": 28,
+      "ppg": 2.4,
+      "rpg": 0.7,
+      "apg": 0.5,
+      "games": 40,
+      "mpg": 7.2
+    },
+    {
+      "name": "Jordan McLaughlin",
+      "heightInches": 73,
+      "age": 29,
+      "ppg": 2,
+      "rpg": 0.7,
+      "apg": 0.9,
+      "games": 44,
+      "mpg": 6.4
+    },
+    {
+      "name": "Harrison Ingram",
+      "heightInches": 80,
+      "age": 23,
+      "ppg": 1.6,
+      "rpg": 0.4,
+      "apg": 0.1,
+      "games": 7,
+      "mpg": 3.7
+    },
+    {
+      "name": "Stanley Umude",
+      "heightInches": 78,
+      "age": 24,
+      "ppg": 1,
+      "rpg": 0,
+      "apg": 0.5,
+      "games": 2,
+      "mpg": 3
+    },
+    {
+      "name": "Bismack Biyombo",
+      "heightInches": 80,
+      "age": 33,
+      "ppg": 0.9,
+      "rpg": 1,
+      "apg": 0.2,
+      "games": 25,
+      "mpg": 5.8
+    },
+    {
+      "name": "Mason Plumlee",
+      "heightInches": 83,
+      "age": 35,
+      "ppg": 0.8,
+      "rpg": 2.2,
+      "apg": 0.7,
+      "games": 6,
+      "mpg": 8
+    }
+  ],
+  "Toronto|Sentinel": [
+    {
+      "name": "Brandon Ingram",
+      "heightInches": 80,
+      "age": 28,
+      "ppg": 21.5,
+      "rpg": 5.6,
+      "apg": 3.7,
+      "games": 77,
+      "mpg": 33.8
+    },
+    {
+      "name": "R.J. Barrett",
+      "heightInches": 80,
+      "age": 25,
+      "ppg": 19.3,
+      "rpg": 5.3,
+      "apg": 3.3,
+      "games": 57,
+      "mpg": 30.2
+    },
+    {
+      "name": "Scottie Barnes",
+      "heightInches": 81,
+      "age": 24,
+      "ppg": 18.1,
+      "rpg": 7.5,
+      "apg": 5.9,
+      "games": 80,
+      "mpg": 33.5
+    },
+    {
+      "name": "Immanuel Quickley",
+      "heightInches": 76,
+      "age": 26,
+      "ppg": 16.4,
+      "rpg": 4,
+      "apg": 5.9,
+      "games": 70,
+      "mpg": 32
+    },
+    {
+      "name": "Sandro Mamukelashvili",
+      "heightInches": 83,
+      "age": 26,
+      "ppg": 11.2,
+      "rpg": 4.9,
+      "apg": 1.9,
+      "games": 80,
+      "mpg": 21.9
+    },
+    {
+      "name": "Jakob Poeltl",
+      "heightInches": 84,
+      "age": 30,
+      "ppg": 10.7,
+      "rpg": 7,
+      "apg": 2,
+      "games": 46,
+      "mpg": 25
+    },
+    {
+      "name": "Collin Murray-Boyles",
+      "heightInches": 79,
+      "age": 20,
+      "ppg": 8.5,
+      "rpg": 5,
+      "apg": 1.9,
+      "games": 57,
+      "mpg": 21.8
+    },
+    {
+      "name": "Ja’Kobe Walter",
+      "heightInches": 77,
+      "age": 21,
+      "ppg": 7.5,
+      "rpg": 2.6,
+      "apg": 1.2,
+      "games": 72,
+      "mpg": 20.4
+    },
+    {
+      "name": "Jamal Shead",
+      "heightInches": 72,
+      "age": 23,
+      "ppg": 6.6,
+      "rpg": 1.7,
+      "apg": 5.4,
+      "games": 82,
+      "mpg": 22.5
+    },
+    {
+      "name": "Gradey Dick",
+      "heightInches": 80,
+      "age": 22,
+      "ppg": 6,
+      "rpg": 1.9,
+      "apg": 0.7,
+      "games": 76,
+      "mpg": 14
+    },
+    {
+      "name": "Ochai Agbaji",
+      "heightInches": 77,
+      "age": 25,
+      "ppg": 4.3,
+      "rpg": 2.3,
+      "apg": 0.7,
+      "games": 42,
+      "mpg": 15.5
+    },
+    {
+      "name": "A.J. Lawson",
+      "heightInches": 79,
+      "age": 25,
+      "ppg": 4.2,
+      "rpg": 1.8,
+      "apg": 0.3,
+      "games": 24,
+      "mpg": 9.5
+    },
+    {
+      "name": "Jamison Battle",
+      "heightInches": 79,
+      "age": 24,
+      "ppg": 3.1,
+      "rpg": 1.5,
+      "apg": 0.4,
+      "games": 61,
+      "mpg": 8.5
+    },
+    {
+      "name": "Alijah Martin",
+      "heightInches": 74,
+      "age": 24,
+      "ppg": 2.2,
+      "rpg": 0.9,
+      "apg": 0.5,
+      "games": 23,
+      "mpg": 6.3
+    },
+    {
+      "name": "Trayce Jackson-Davis",
+      "heightInches": 81,
+      "age": 25,
+      "ppg": 1.8,
+      "rpg": 1.9,
+      "apg": 0.4,
+      "games": 17,
+      "mpg": 5.2
+    },
+    {
+      "name": "Jonathan Mogbo",
+      "heightInches": 80,
+      "age": 24,
+      "ppg": 1.5,
+      "rpg": 1.7,
+      "apg": 0.6,
+      "games": 40,
+      "mpg": 6.3
+    },
+    {
+      "name": "Markelle Fultz",
+      "heightInches": 76,
+      "age": 27,
+      "ppg": 0.8,
+      "rpg": 0.2,
+      "apg": 1.6,
+      "games": 5,
+      "mpg": 7
+    },
+    {
+      "name": "Garrett Temple",
+      "heightInches": 77,
+      "age": 39,
+      "ppg": 0.8,
+      "rpg": 0.4,
+      "apg": 0.4,
+      "games": 22,
+      "mpg": 3.3
+    },
+    {
+      "name": "Chucky Hepburn",
+      "heightInches": 73,
+      "age": 22,
+      "ppg": 0,
+      "rpg": 0.5,
+      "apg": 1,
+      "games": 2,
+      "mpg": 6.5
+    },
+    {
+      "name": "Mohamed Bamba",
+      "heightInches": 83,
+      "age": 27,
+      "ppg": 0,
+      "rpg": 1,
+      "apg": 0,
+      "games": 2,
+      "mpg": 3
+    }
+  ],
+  "Utah|Mesa": [
+    {
+      "name": "Lauri Markkanen",
+      "heightInches": 84,
+      "age": 28,
+      "ppg": 26.7,
+      "rpg": 6.9,
+      "apg": 2.1,
+      "games": 42,
+      "mpg": 34.4
+    },
+    {
+      "name": "Keyonte George",
+      "heightInches": 76,
+      "age": 22,
+      "ppg": 23.6,
+      "rpg": 3.7,
+      "apg": 6.1,
+      "games": 54,
+      "mpg": 33.1
+    },
+    {
+      "name": "Jaren Jackson Jr.",
+      "heightInches": 82,
+      "age": 26,
+      "ppg": 22.3,
+      "rpg": 4.3,
+      "apg": 2.7,
+      "games": 3,
+      "mpg": 24
+    },
+    {
+      "name": "Kennedy Chandler",
+      "heightInches": 73,
+      "age": 23,
+      "ppg": 15,
+      "rpg": 3.4,
+      "apg": 6.7,
+      "games": 11,
+      "mpg": 32.2
+    },
+    {
+      "name": "Brice Sensabaugh",
+      "heightInches": 78,
+      "age": 22,
+      "ppg": 14.9,
+      "rpg": 3.1,
+      "apg": 1.9,
+      "games": 75,
+      "mpg": 23.5
+    },
+    {
+      "name": "Walker Kessler",
+      "heightInches": 84,
+      "age": 24,
+      "ppg": 14.4,
+      "rpg": 10.8,
+      "apg": 3,
+      "games": 5,
+      "mpg": 31
+    },
+    {
+      "name": "Ace Bailey",
+      "heightInches": 83,
+      "age": 19,
+      "ppg": 13.8,
+      "rpg": 4.2,
+      "apg": 1.8,
+      "games": 72,
+      "mpg": 27.6
+    },
+    {
+      "name": "Blake Hinson",
+      "heightInches": 80,
+      "age": 26,
+      "ppg": 11.9,
+      "rpg": 2.4,
+      "apg": 1.1,
+      "games": 14,
+      "mpg": 20.4
+    },
+    {
+      "name": "Isaiah Collier",
+      "heightInches": 76,
+      "age": 21,
+      "ppg": 11.7,
+      "rpg": 2.5,
+      "apg": 7.2,
+      "games": 59,
+      "mpg": 25.7
+    },
+    {
+      "name": "Kyle Filipowski",
+      "heightInches": 83,
+      "age": 22,
+      "ppg": 11.4,
+      "rpg": 7.2,
+      "apg": 2.6,
+      "games": 77,
+      "mpg": 23.4
+    },
+    {
+      "name": "Jusuf Nurkic",
+      "heightInches": 83,
+      "age": 31,
+      "ppg": 10.9,
+      "rpg": 10.4,
+      "apg": 4.8,
+      "games": 41,
+      "mpg": 26.4
+    },
+    {
+      "name": "Sviatoslav Mykhailiuk",
+      "heightInches": 77,
+      "age": 28,
+      "ppg": 9.4,
+      "rpg": 2.5,
+      "apg": 1.9,
+      "games": 50,
+      "mpg": 23.1
+    },
+    {
+      "name": "Cody Williams",
+      "heightInches": 80,
+      "age": 21,
+      "ppg": 8.8,
+      "rpg": 3,
+      "apg": 2,
+      "games": 67,
+      "mpg": 24.3
+    },
+    {
+      "name": "Bez Mbeng",
+      "heightInches": 76,
+      "age": 22,
+      "ppg": 8.1,
+      "rpg": 3.8,
+      "apg": 4.1,
+      "games": 15,
+      "mpg": 32.9
+    },
+    {
+      "name": "Oscar Tshiebwe",
+      "heightInches": 81,
+      "age": 26,
+      "ppg": 7.8,
+      "rpg": 6.6,
+      "apg": 1.2,
+      "games": 27,
+      "mpg": 16.6
+    },
+    {
+      "name": "Kyle Anderson",
+      "heightInches": 80,
+      "age": 32,
+      "ppg": 7.1,
+      "rpg": 3.3,
+      "apg": 3.1,
+      "games": 20,
+      "mpg": 20.1
+    },
+    {
+      "name": "Elijah Harkless",
+      "heightInches": 75,
+      "age": 25,
+      "ppg": 6.8,
+      "rpg": 2,
+      "apg": 2.9,
+      "games": 26,
+      "mpg": 21
+    },
+    {
+      "name": "Walter Clayton",
+      "heightInches": 74,
+      "age": 22,
+      "ppg": 6.8,
+      "rpg": 2,
+      "apg": 3.2,
+      "games": 45,
+      "mpg": 18
+    },
+    {
+      "name": "Kevin Love",
+      "heightInches": 82,
+      "age": 37,
+      "ppg": 6.7,
+      "rpg": 5.8,
+      "apg": 1.8,
+      "games": 37,
+      "mpg": 16.5
+    },
+    {
+      "name": "Hayden Gray",
+      "heightInches": 76,
+      "age": 22,
+      "ppg": 6,
+      "rpg": 0,
+      "apg": 1,
+      "games": 1,
+      "mpg": 25
+    },
+    {
+      "name": "John Konchar",
+      "heightInches": 77,
+      "age": 29,
+      "ppg": 5.9,
+      "rpg": 5.7,
+      "apg": 3,
+      "games": 26,
+      "mpg": 26.1
+    },
+    {
+      "name": "Andersson Garcia",
+      "heightInches": 79,
+      "age": 25,
+      "ppg": 5.2,
+      "rpg": 8.4,
+      "apg": 2.8,
+      "games": 5,
+      "mpg": 33.8
+    },
+    {
+      "name": "Mohamed Bamba",
+      "heightInches": 83,
+      "age": 27,
+      "ppg": 5,
+      "rpg": 10,
+      "apg": 0.5,
+      "games": 2,
+      "mpg": 19
+    },
+    {
+      "name": "Taylor Hendricks",
+      "heightInches": 81,
+      "age": 22,
+      "ppg": 4.9,
+      "rpg": 3,
+      "apg": 0.7,
+      "games": 33,
+      "mpg": 15
+    },
+    {
+      "name": "Vince Williams Jr.",
+      "heightInches": 78,
+      "age": 25,
+      "ppg": 4.7,
+      "rpg": 3.2,
+      "apg": 2.7,
+      "games": 6,
+      "mpg": 13.8
+    }
+  ],
+  "Washington|Monument": [
+    {
+      "name": "C.J. McCollum",
+      "heightInches": 76,
+      "age": 34,
+      "ppg": 18.8,
+      "rpg": 3.5,
+      "apg": 3.6,
+      "games": 35,
+      "mpg": 30.9
+    },
+    {
+      "name": "Alexandre Sarr",
+      "heightInches": 84,
+      "age": 20,
+      "ppg": 16.3,
+      "rpg": 7.4,
+      "apg": 2.7,
+      "games": 48,
+      "mpg": 27.2
+    },
+    {
+      "name": "Trae Young",
+      "heightInches": 74,
+      "age": 27,
+      "ppg": 15.2,
+      "rpg": 3,
+      "apg": 6.2,
+      "games": 5,
+      "mpg": 20.6
+    },
+    {
+      "name": "Kyshawn George",
+      "heightInches": 80,
+      "age": 22,
+      "ppg": 14.8,
+      "rpg": 5.1,
+      "apg": 4.5,
+      "games": 48,
+      "mpg": 28.9
+    },
+    {
+      "name": "Jaden Hardy",
+      "heightInches": 76,
+      "age": 23,
+      "ppg": 12.6,
+      "rpg": 1.7,
+      "apg": 1.3,
+      "games": 23,
+      "mpg": 20.5
+    },
+    {
+      "name": "Tre Johnson",
+      "heightInches": 80,
+      "age": 19,
+      "ppg": 12.2,
+      "rpg": 2.8,
+      "apg": 2,
+      "games": 60,
+      "mpg": 24
+    },
+    {
+      "name": "Julian Reese",
+      "heightInches": 81,
+      "age": 22,
+      "ppg": 11.8,
+      "rpg": 10.5,
+      "apg": 1.8,
+      "games": 13,
+      "mpg": 30.9
+    },
+    {
+      "name": "Bilal Coulibaly",
+      "heightInches": 78,
+      "age": 21,
+      "ppg": 11.7,
+      "rpg": 4.3,
+      "apg": 2.6,
+      "games": 56,
+      "mpg": 26.2
+    },
+    {
+      "name": "Alondes Williams",
+      "heightInches": 77,
+      "age": 26,
+      "ppg": 11,
+      "rpg": 6.3,
+      "apg": 3,
+      "games": 4,
+      "mpg": 25
+    },
+    {
+      "name": "Carlton Carrington",
+      "heightInches": 77,
+      "age": 20,
+      "ppg": 10.7,
+      "rpg": 3.4,
+      "apg": 4.6,
+      "games": 82,
+      "mpg": 27.7
+    },
+    {
+      "name": "Will Riley",
+      "heightInches": 80,
+      "age": 19,
+      "ppg": 10.3,
+      "rpg": 2.9,
+      "apg": 2,
+      "games": 74,
+      "mpg": 22
+    },
+    {
+      "name": "Khris Middleton",
+      "heightInches": 80,
+      "age": 34,
+      "ppg": 10.3,
+      "rpg": 3.9,
+      "apg": 3.3,
+      "games": 34,
+      "mpg": 24.3
+    },
+    {
+      "name": "Marvin Bagley",
+      "heightInches": 83,
+      "age": 26,
+      "ppg": 10.1,
+      "rpg": 5.7,
+      "apg": 1.5,
+      "games": 38,
+      "mpg": 19.3
+    },
+    {
+      "name": "Cam Whitmore",
+      "heightInches": 78,
+      "age": 21,
+      "ppg": 9.2,
+      "rpg": 2.8,
+      "apg": 0.7,
+      "games": 21,
+      "mpg": 16.9
+    },
+    {
+      "name": "Corey Kispert",
+      "heightInches": 79,
+      "age": 26,
+      "ppg": 9.2,
+      "rpg": 2.3,
+      "apg": 1.7,
+      "games": 19,
+      "mpg": 19.5
+    },
+    {
+      "name": "Tristan Vukcevic",
+      "heightInches": 82,
+      "age": 22,
+      "ppg": 9,
+      "rpg": 3,
+      "apg": 1.1,
+      "games": 49,
+      "mpg": 13.7
+    },
+    {
+      "name": "Justin Champagnie",
+      "heightInches": 78,
+      "age": 24,
+      "ppg": 8.7,
+      "rpg": 5.6,
+      "apg": 1.2,
+      "games": 69,
+      "mpg": 20
+    },
+    {
+      "name": "Kadary Richmond",
+      "heightInches": 77,
+      "age": 24,
+      "ppg": 8.3,
+      "rpg": 3.3,
+      "apg": 2.7,
+      "games": 3,
+      "mpg": 22
+    },
+    {
+      "name": "Sharife Cooper",
+      "heightInches": 73,
+      "age": 24,
+      "ppg": 8.1,
+      "rpg": 2.1,
+      "apg": 3,
+      "games": 41,
+      "mpg": 17.1
+    },
+    {
+      "name": "Jamir Watkins",
+      "heightInches": 79,
+      "age": 24,
+      "ppg": 7.4,
+      "rpg": 3.9,
+      "apg": 1.3,
+      "games": 50,
+      "mpg": 20.6
+    },
+    {
+      "name": "Leaky Black",
+      "heightInches": 79,
+      "age": 26,
+      "ppg": 7.1,
+      "rpg": 5,
+      "apg": 1.5,
+      "games": 15,
+      "mpg": 28.8
+    },
+    {
+      "name": "Anthony Gill",
+      "heightInches": 80,
+      "age": 33,
+      "ppg": 5.8,
+      "rpg": 2.9,
+      "apg": 1.3,
+      "games": 55,
+      "mpg": 17.3
+    },
+    {
+      "name": "Malaki Branham",
+      "heightInches": 77,
+      "age": 22,
+      "ppg": 4.6,
+      "rpg": 1.6,
+      "apg": 0.8,
+      "games": 28,
+      "mpg": 9.9
+    },
+    {
+      "name": "Skal Labissiere",
+      "heightInches": 83,
+      "age": 29,
+      "ppg": 4.3,
+      "rpg": 3,
+      "apg": 1,
+      "games": 3,
+      "mpg": 12.7
+    },
+    {
+      "name": "AJ Johnson",
+      "heightInches": 77,
+      "age": 21,
+      "ppg": 2.8,
+      "rpg": 1.2,
+      "apg": 0.9,
+      "games": 25,
+      "mpg": 8.6
+    },
+    {
+      "name": "Keshon Gilbert",
+      "heightInches": 76,
+      "age": 22,
+      "ppg": 2,
+      "rpg": 1.7,
+      "apg": 1,
+      "games": 3,
+      "mpg": 16
+    }
+  ]
+}

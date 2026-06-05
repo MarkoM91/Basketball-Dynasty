@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "include": ["/*"],
+  "exclude": [
+    "/assets/*",
+    "/icon.svg",
+    "/court-lines.svg",
+    "/robots.txt",
+    "/sitemap.xml",
+    "/ads.txt",
+    "/manifest.webmanifest",
+    "/sw.js",
+    "/workbox-*.js"
+  ]
+}
