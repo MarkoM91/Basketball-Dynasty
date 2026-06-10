@@ -31,7 +31,7 @@ export function PlayerAvatar({
           width: size,
           height: size,
           borderColor: ring,
-          boxShadow: `0 0 0 1px ${POSITION_COLORS[player.position]}33`,
+          boxShadow: `0 0 0 1px ${(POSITION_COLORS[player.position] ?? '#666')}33`,
         }}
       >
         <img

@@ -8,10 +8,11 @@ import type {
   WindowStatus,
 } from '../types/game';
 import { fillRosterTo18 } from './rosterBuilder';
-import { takeTeamRosterName } from './names';
 import { marketSalary } from '../engine/salaries';
 import { buildTeamCoach } from '../engine/coaches';
 import { LEAGUE_CALENDAR_YEAR } from './leagueWorld';
+import { PROBALLERS_RATINGS } from './proballersRatings';
+import { buildPlayerFromSlot, teamStrengthFromRatings } from '../engine/proballersPlayer';
 
 let idCounter = 0;
 export function uid(prefix = 'p'): string {
@@ -82,11 +83,19 @@ function baseCap(payroll: number): CapOutlook {
     inLuxuryTax,
     inSecondApron: payroll > secondApron,
     projectedRoom: Math.max(0, capLimit - payroll),
+    effectiveRoom: Math.max(0, capLimit - payroll),
+    rosterSalary: payroll,
+    capSheetPayroll: payroll,
+    incompleteRosterCharge: 0,
+    capHoldsTotal: 0,
+    capHolds: [],
     deadMoney: payroll > 155_000_000 ? 2_400_000 : 0,
     taxBill: inLuxuryTax ? Math.round((payroll - luxuryTaxLine) * 1.75) : 0,
     mleAvailable: inLuxuryTax ? 5_000_000 : 12_800_000,
+    mleUsed: false,
     roomAvailable: Math.max(0, capLimit - payroll),
     baeAvailable: inLuxuryTax ? 0 : 4_700_000,
+    baeUsed: false,
     hardCapped: payroll > secondApron,
     warnings: inLuxuryTax
       ? ['Luxury tax active. Ownership expects deep playoff run to justify cost.']
@@ -120,8 +129,11 @@ function scenarioFranchise(
   roster: Player[],
   extras: Partial<Franchise>,
 ): Omit<Franchise, 'id'> {
-  const payroll = roster.reduce((s, p) => s + p.contract.annualSalary, 0);
-  const { window, coreAge } = windowFromRoster(roster);
+  const fullRoster = fillRosterTo18(roster, { city, name });
+  const derived = windowFromRoster(fullRoster);
+  const window = extras.window ?? derived.window;
+  const coreAge = extras.coreAge ?? derived.coreAge;
+  const payroll = fullRoster.reduce((s, p) => s + p.contract.annualSalary, 0);
   return {
     leagueTeamId: '',
     city,
@@ -131,11 +143,15 @@ function scenarioFranchise(
     season: extras.season ?? 3,
     week: extras.week ?? 1,
     phase: extras.phase ?? 'regular_season',
-    roster: fillRosterTo18(roster),
+    roster: fullRoster,
     draftPicks: extras.draftPicks ?? [
+      { year: LEAGUE_CALENDAR_YEAR + 1, round: 1, originalTeam: name },
       { year: LEAGUE_CALENDAR_YEAR + 2, round: 1, originalTeam: name, protections: 'Top-8 protected' },
       { year: LEAGUE_CALENDAR_YEAR + 3, round: 1, originalTeam: name },
+      { year: LEAGUE_CALENDAR_YEAR, round: 2, originalTeam: name },
       { year: LEAGUE_CALENDAR_YEAR + 1, round: 2, originalTeam: name },
+      { year: LEAGUE_CALENDAR_YEAR + 2, round: 2, originalTeam: name },
+      { year: LEAGUE_CALENDAR_YEAR + 3, round: 2, originalTeam: name },
     ],
     coach: extras.coach ?? buildTeamCoach(city, name),
     ownership: extras.ownership ?? {
@@ -177,39 +193,54 @@ function scenarioFranchise(
   };
 }
 
+function scenarioCorePlayers(
+  city: string,
+  name: string,
+  slots: Array<{ slot: number; overrides?: Partial<Player> }>,
+): Player[] {
+  const usedNames = new Set<string>();
+  return slots.map(({ slot, overrides }) =>
+    buildPlayerFromSlot(city, name, slot, usedNames, slot * 31 + 7, undefined, overrides),
+  );
+}
+
 export function buildCustomFranchise(
   city: string,
   name: string,
   market: 'Small' | 'Mid' | 'Large',
 ): Omit<Franchise, 'id'> {
-  const strength = 72 + Math.floor(Math.random() * 12);
+  const teamKey = `${city}|${name}`;
+  const rated = PROBALLERS_RATINGS[teamKey];
+  const fallbackStrength = 72 + Math.floor(Math.random() * 12);
   const wins = 0;
   const losses = 0;
-  const positions: Player['position'][] = ['PG', 'SG', 'SF', 'PF', 'C'];
-  const usedNames = new Set<string>();
-  const core = positions.map((position, index) => {
-    const overall = strength + (index === 2 ? 5 : index === 4 ? 3 : index === 0 ? 2 : 0);
-    const potential = Math.min(94, overall + 6 + (index === 2 ? 4 : 0));
-    const named = takeTeamRosterName(city, name, index, usedNames, index * 19);
-    const isStar = index === 2;
-    return makePlayer({
-      firstName: named.firstName,
-      lastName: named.lastName,
-      position: named.position ?? position,
-      age: 23 + index,
-      overall,
-      potential,
-      isStar,
-      role: isStar ? 'Star' : 'Starter',
-      contract: {
-        yearsRemaining: 2 + (index % 2),
-        annualSalary: marketSalary(overall, 24 + index),
-        isMax: false,
-        isExpiring: index === 1,
+
+  const core = scenarioCorePlayers(
+    city,
+    name,
+    [0, 1, 2, 3, 4].map((slot) => ({
+      slot,
+      overrides: {
+        role: slot === 2 ? ('Star' as const) : ('Starter' as const),
+        isStar: slot === 2,
+        contract: {
+          yearsRemaining: 2 + (slot % 2),
+          annualSalary: marketSalary(
+            rated?.[slot]?.overall ?? fallbackStrength + (slot === 2 ? 5 : slot === 4 ? 3 : slot === 0 ? 2 : 0),
+            rated?.[slot]?.age ?? 23 + slot,
+          ),
+          isMax: false,
+          isExpiring: slot === 1,
+        },
+        gmNote:
+          slot === 2
+            ? 'Best player on the roster — build around him or trade the timeline.'
+            : 'Core rotation piece.',
       },
-      gmNote: isStar ? 'Best player on the roster — build around him or trade the timeline.' : 'Core rotation piece.',
-    });
-  });
+    })),
+  );
+
+  const strength = rated && rated.length >= 8 ? teamStrengthFromRatings(rated) : fallbackStrength;
 
   return scenarioFranchise(city, name, core, {
     market,
@@ -242,41 +273,60 @@ export const SCENARIOS: Record<ScenarioId, Scenario> = {
     hook: 'Star in his prime. Expensive roster. Title now.',
     briefing: 'Limited picks, heavy payroll, every move under a microscope.',
     firstDecision: 'Trade future assets for win-now defense, or protect flexibility and risk the star walking?',
-    franchise: scenarioFranchise('Chicago', 'Gale', [
-      makePlayer({
-        firstName: 'Derek', lastName: 'Derozann', position: 'SF', age: 31, overall: 91, potential: 91,
-        role: 'Franchise Player', isStar: true, contract: { yearsRemaining: 2, annualSalary: 42_000_000, isMax: true, isExpiring: false },
-        morale: 'Concerned', gmNote: 'Wants veteran help before the deadline. Extension talks loom.',
-        minutesPerGame: 34, systemFit: 'Excellent', devTrend: 'Stable',
-      }),
-      makePlayer({
-        firstName: 'Marcus', lastName: 'Ellis', position: 'PF', age: 29, overall: 82, potential: 84,
-        role: 'Starter', contract: { yearsRemaining: 3, annualSalary: 28_000_000, isMax: false, isExpiring: false },
-        gmNote: 'Reliable two-way starter. Trade value high if you pivot.',
-      }),
-      makePlayer({
-        firstName: 'Kai', lastName: 'Reed', position: 'C', age: 33, overall: 79, potential: 79,
-        role: 'Starter', contract: { yearsRemaining: 1, annualSalary: 18_000_000, isMax: false, isExpiring: true },
-        injuryRisk: 'High', gmNote: 'Rim protection eroding. Expiring deal could be trade chip.',
-      }),
-      makePlayer({
-        firstName: 'Tyrese', lastName: 'Walker', position: 'PG', age: 27, overall: 77, potential: 80,
-        role: 'Starter', contract: { yearsRemaining: 2, annualSalary: 14_000_000, isMax: false, isExpiring: false },
-        gmNote: 'Floor general, limited creation in clutch moments.',
-      }),
-      makePlayer({
-        firstName: 'Brandon', lastName: 'Hayes', position: 'SF', age: 26, overall: 74, potential: 78,
-        role: 'Rotation', contract: { yearsRemaining: 2, annualSalary: 8_000_000, isMax: false, isExpiring: false },
-        gmNote: '3-and-D wing. Good trade filler.',
-      }),
-      makePlayer({
-        firstName: 'Noah', lastName: 'Murphy', position: 'SG', age: 24, overall: 71, potential: 82,
-        role: 'Sixth Man', contract: { yearsRemaining: 3, annualSalary: 4_200_000, isMax: false, isExpiring: false },
-        devTrend: 'Up', gmNote: 'Breakout candidate if minutes stabilize.',
-      }),
-    ], {
+    franchise: scenarioFranchise('Golden State', 'Spectrum', scenarioCorePlayers('Golden State', 'Spectrum', [
+      {
+        slot: 0,
+        overrides: {
+          role: 'Franchise Player', isStar: true,
+          contract: { yearsRemaining: 2, annualSalary: 42_000_000, isMax: true, isExpiring: false },
+          morale: 'Concerned', gmNote: 'Wants veteran help before the deadline. Extension talks loom.',
+          systemFit: 'Excellent', devTrend: 'Stable',
+        },
+      },
+      {
+        slot: 1,
+        overrides: {
+          role: 'Starter',
+          contract: { yearsRemaining: 3, annualSalary: 28_000_000, isMax: false, isExpiring: false },
+          gmNote: 'Reliable two-way starter. Trade value high if you pivot.',
+        },
+      },
+      {
+        slot: 2,
+        overrides: {
+          role: 'Starter',
+          contract: { yearsRemaining: 1, annualSalary: 18_000_000, isMax: false, isExpiring: true },
+          injuryRisk: 'High', gmNote: 'Rim protection eroding. Expiring deal could be trade chip.',
+        },
+      },
+      {
+        slot: 3,
+        overrides: {
+          role: 'Starter',
+          contract: { yearsRemaining: 2, annualSalary: 14_000_000, isMax: false, isExpiring: false },
+          gmNote: 'Floor general, limited creation in clutch moments.',
+        },
+      },
+      {
+        slot: 4,
+        overrides: {
+          role: 'Rotation',
+          contract: { yearsRemaining: 2, annualSalary: 8_000_000, isMax: false, isExpiring: false },
+          gmNote: '3-and-D wing. Good trade filler.',
+        },
+      },
+      {
+        slot: 5,
+        overrides: {
+          role: 'Sixth Man',
+          contract: { yearsRemaining: 3, annualSalary: 4_200_000, isMax: false, isExpiring: false },
+          devTrend: 'Up', gmNote: 'Breakout candidate if minutes stabilize.',
+        },
+      },
+    ]), {
       record: { wins: 24, losses: 18 },
       week: 12,
+      window: 'Aging Contender',
       strategyIdentity: 'Win now — title window closing',
       ownership: {
         goal: 'Win a championship within 2 seasons',
@@ -300,38 +350,53 @@ export const SCENARIOS: Record<ScenarioId, Scenario> = {
     hook: 'No. 2 pick. Young, raw roster.',
     briefing: 'Fans are patient — for now. This draft defines the decade.',
     firstDecision: 'Draft the explosive guard with bust risk, or the safe defensive anchor?',
-    franchise: scenarioFranchise('Portland', 'Rose', [
-      makePlayer({
-        firstName: 'Jalen', lastName: 'Brooks', position: 'SG', age: 21, overall: 74, potential: 90,
-        role: 'Star', isStar: true, contract: { yearsRemaining: 1, annualSalary: 9_500_000, isMax: false, isExpiring: true, isRestricted: true, birdYears: 3 },
-        devTrend: 'Up', gmNote: 'Franchise cornerstone. Needs defensive growth and a better supporting cast.',
-        minutesPerGame: 32,
-      }),
-      makePlayer({
-        firstName: 'Mateo', lastName: 'King', position: 'SF', age: 20, overall: 68, potential: 86,
-        role: 'Prospect', contract: { yearsRemaining: 3, annualSalary: 5_100_000, isMax: false, isExpiring: false },
-        devTrend: 'Up', gmNote: 'Athletic wing. Jumper is the swing skill.',
-      }),
-      makePlayer({
-        firstName: 'Chris', lastName: 'Davis', position: 'PF', age: 22, overall: 70, potential: 82,
-        role: 'Starter', contract: { yearsRemaining: 2, annualSalary: 3_800_000, isMax: false, isExpiring: false },
-        gmNote: 'Energy big. Fouls too much.',
-      }),
-      makePlayer({
-        firstName: 'Andre', lastName: 'Williams', position: 'PG', age: 23, overall: 69, potential: 80,
-        role: 'Rotation', contract: { yearsRemaining: 1, annualSalary: 2_100_000, isMax: false, isExpiring: false },
-        gmNote: 'Backup guard with creation flashes.',
-      }),
-      makePlayer({
-        firstName: 'Malik', lastName: 'Johnson', position: 'C', age: 25, overall: 72, potential: 76,
-        role: 'Starter', contract: { yearsRemaining: 2, annualSalary: 11_000_000, isMax: false, isExpiring: false },
-        gmNote: 'Veteran anchor on a bad contract. Trade candidate.',
-        tradeValue: 'Medium',
-      }),
-    ], {
+    franchise: scenarioFranchise('Chicago', 'Gale', scenarioCorePlayers('Chicago', 'Gale', [
+      {
+        slot: 0,
+        overrides: {
+          role: 'Star', isStar: true,
+          contract: { yearsRemaining: 1, annualSalary: 9_500_000, isMax: false, isExpiring: true, isRestricted: true, birdYears: 3 },
+          devTrend: 'Up', gmNote: 'Franchise cornerstone. Needs defensive growth and a better supporting cast.',
+        },
+      },
+      {
+        slot: 1,
+        overrides: {
+          role: 'Prospect',
+          contract: { yearsRemaining: 3, annualSalary: 5_100_000, isMax: false, isExpiring: false },
+          devTrend: 'Up', gmNote: 'Athletic wing. Jumper is the swing skill.',
+        },
+      },
+      {
+        slot: 2,
+        overrides: {
+          role: 'Starter',
+          contract: { yearsRemaining: 2, annualSalary: 3_800_000, isMax: false, isExpiring: false },
+          gmNote: 'Energy big. Fouls too much.',
+        },
+      },
+      {
+        slot: 3,
+        overrides: {
+          role: 'Rotation',
+          contract: { yearsRemaining: 1, annualSalary: 2_100_000, isMax: false, isExpiring: false },
+          gmNote: 'Backup guard with creation flashes.',
+        },
+      },
+      {
+        slot: 4,
+        overrides: {
+          role: 'Starter',
+          contract: { yearsRemaining: 2, annualSalary: 11_000_000, isMax: false, isExpiring: false },
+          gmNote: 'Veteran anchor on a bad contract. Trade candidate.',
+          tradeValue: 'Medium',
+        },
+      },
+    ]), {
       record: { wins: 18, losses: 28 },
       week: 1,
       phase: 'draft_scouting',
+      window: 'Deep Rebuild',
       draftPickNumber: 2,
       strategyIdentity: 'Rebuild — accumulate young talent',
       ownership: {
@@ -345,7 +410,7 @@ export const SCENARIOS: Record<ScenarioId, Scenario> = {
       playoffOdds: 8,
       titleOdds: 0,
       jobSecurity: 75,
-      market: 'Small',
+      market: 'Large',
       draftBoard: [
         makeProspect({ firstName: 'Ray', lastName: 'Donovan', position: 'C', archetype: 'Defensive Anchor', scoutedOverall: [68, 72], potential: [78, 84], bustRisk: 'Low', scoutNote: 'High floor defensive center. Limited offensive upside.', workoutGrade: 'Elite defensive drills' }),
         makeProspect({ firstName: 'Vincent', lastName: 'Wembanyamma', position: 'C', archetype: 'Explosive Creator', scoutedOverall: [66, 74], potential: [86, 94], bustRisk: 'High', scoutNote: 'Unlimited upside. Decision-making and defense are major concerns.', personality: 'Confident, streaky', medicalFlag: 'Minor ankle history' }),
@@ -360,33 +425,49 @@ export const SCENARIOS: Record<ScenarioId, Scenario> = {
     hook: '38–44 every year. No cap room, no star, no lottery luck.',
     briefing: 'Ownership wants the play-in. The fan base wants a reset.',
     firstDecision: 'Sell veterans at the deadline, or chase the play-in and stay mediocre?',
-    franchise: scenarioFranchise('Charlotte', 'Mint', [
-      makePlayer({
-        firstName: 'Devin', lastName: 'Carter', position: 'SG', age: 28, overall: 80, potential: 82,
-        role: 'Star', isStar: true, contract: { yearsRemaining: 3, annualSalary: 31_000_000, isMax: false, isExpiring: false },
-        morale: 'Frustrated', gmNote: 'Good player, not a true franchise star. Wants clearer direction.',
-      }),
-      makePlayer({
-        firstName: 'Jordan', lastName: 'Thompson', position: 'PF', age: 30, overall: 76, potential: 76,
-        role: 'Starter', contract: { yearsRemaining: 2, annualSalary: 19_000_000, isMax: false, isExpiring: false },
-        gmNote: 'Solid starter on an expiring-ish timeline.',
-      }),
-      makePlayer({
-        firstName: 'Isaiah', lastName: 'Murphy', position: 'SF', age: 26, overall: 74, potential: 78,
-        role: 'Starter', contract: { yearsRemaining: 3, annualSalary: 14_000_000, isMax: false, isExpiring: false },
-      }),
-      makePlayer({
-        firstName: 'Cam', lastName: 'Reed', position: 'PG', age: 24, overall: 72, potential: 81,
-        role: 'Rotation', devTrend: 'Up', gmNote: 'Best trade asset if you commit to rebuild.',
-      }),
-      makePlayer({
-        firstName: 'Elijah', lastName: 'Hayes', position: 'C', age: 29, overall: 73, potential: 73,
-        role: 'Starter', contract: { yearsRemaining: 1, annualSalary: 12_000_000, isMax: false, isExpiring: true },
-      }),
-    ], {
+    franchise: scenarioFranchise('Sacramento', 'Republic', scenarioCorePlayers('Sacramento', 'Republic', [
+      {
+        slot: 0,
+        overrides: {
+          role: 'Star', isStar: true,
+          contract: { yearsRemaining: 3, annualSalary: 31_000_000, isMax: false, isExpiring: false },
+          morale: 'Frustrated', gmNote: 'Good player, not a true franchise star. Wants clearer direction.',
+        },
+      },
+      {
+        slot: 1,
+        overrides: {
+          role: 'Starter',
+          contract: { yearsRemaining: 2, annualSalary: 19_000_000, isMax: false, isExpiring: false },
+          gmNote: 'Solid starter on an expiring-ish timeline.',
+        },
+      },
+      {
+        slot: 2,
+        overrides: {
+          role: 'Starter',
+          contract: { yearsRemaining: 3, annualSalary: 14_000_000, isMax: false, isExpiring: false },
+        },
+      },
+      {
+        slot: 3,
+        overrides: {
+          role: 'Rotation', devTrend: 'Up',
+          gmNote: 'Best trade asset if you commit to rebuild.',
+        },
+      },
+      {
+        slot: 4,
+        overrides: {
+          role: 'Starter',
+          contract: { yearsRemaining: 1, annualSalary: 12_000_000, isMax: false, isExpiring: true },
+        },
+      },
+    ]), {
       record: { wins: 22, losses: 22 },
       week: 18,
       phase: 'trade_deadline',
+      window: 'Expensive Mediocrity',
       strategyIdentity: 'Mediocrity trap — choose a direction',
       ownership: { goal: 'Make playoffs this season', evaluation: 'Frustrated with annual play-in losses.', risk: 'Another .500 season may cost your job.', confidence: 45, patience: 40 },
       fanMood: 'Frustrated',
@@ -404,34 +485,50 @@ export const SCENARIOS: Record<ScenarioId, Scenario> = {
     hook: '24-year-old star hits free agency. Prove you can contend.',
     briefing: 'One season to sell him on the franchise — or trade him.',
     firstDecision: 'Max him now and build around the contract, or trade him before he walks for nothing?',
-    franchise: scenarioFranchise('Milwaukee', 'Hops', [
-      makePlayer({
-        firstName: 'Gideon', lastName: 'Antetokounmppo', position: 'PF', age: 24, overall: 88, potential: 93,
-        role: 'Franchise Player', isStar: true, contract: { yearsRemaining: 1, annualSalary: 12_800_000, isMax: false, isExpiring: true },
-        morale: 'Concerned', gmNote: 'Extension eligible. Wants proof of contention before committing long-term.',
-        tradeValue: 'Premium',
-      }),
-      makePlayer({
-        firstName: 'Marcus', lastName: 'King', position: 'PG', age: 26, overall: 76, potential: 80,
-        role: 'Starter', contract: { yearsRemaining: 2, annualSalary: 16_000_000, isMax: false, isExpiring: false },
-        gmNote: 'Secondary creator. Needs a defensive wing beside him.',
-      }),
-      makePlayer({
-        firstName: 'Tyrese', lastName: 'Brooks', position: 'SG', age: 22, overall: 71, potential: 85,
-        role: 'Prospect', devTrend: 'Up', contract: { yearsRemaining: 3, annualSalary: 3_200_000, isMax: false, isExpiring: false },
-        gmNote: 'Shooter with star potential if defense catches up.',
-      }),
-      makePlayer({
-        firstName: 'Darius', lastName: 'Mason', position: 'C', age: 27, overall: 75, potential: 77,
-        role: 'Starter', contract: { yearsRemaining: 2, annualSalary: 13_500_000, isMax: false, isExpiring: false },
-      }),
-      makePlayer({
-        firstName: 'Brandon', lastName: 'Walker', position: 'SF', age: 25, overall: 72, potential: 78,
-        role: 'Rotation', contract: { yearsRemaining: 1, annualSalary: 5_500_000, isMax: false, isExpiring: true },
-      }),
-    ], {
+    franchise: scenarioFranchise('Milwaukee', 'Hops', scenarioCorePlayers('Milwaukee', 'Hops', [
+      {
+        slot: 0,
+        overrides: {
+          role: 'Franchise Player', isStar: true,
+          contract: { yearsRemaining: 1, annualSalary: 12_800_000, isMax: false, isExpiring: true },
+          morale: 'Concerned', gmNote: 'Extension eligible. Wants proof of contention before committing long-term.',
+          tradeValue: 'Premium',
+        },
+      },
+      {
+        slot: 1,
+        overrides: {
+          role: 'Starter',
+          contract: { yearsRemaining: 2, annualSalary: 16_000_000, isMax: false, isExpiring: false },
+          gmNote: 'Secondary creator. Needs a defensive wing beside him.',
+        },
+      },
+      {
+        slot: 2,
+        overrides: {
+          role: 'Prospect', devTrend: 'Up',
+          contract: { yearsRemaining: 3, annualSalary: 3_200_000, isMax: false, isExpiring: false },
+          gmNote: 'Shooter with star potential if defense catches up.',
+        },
+      },
+      {
+        slot: 3,
+        overrides: {
+          role: 'Starter',
+          contract: { yearsRemaining: 2, annualSalary: 13_500_000, isMax: false, isExpiring: false },
+        },
+      },
+      {
+        slot: 4,
+        overrides: {
+          role: 'Rotation',
+          contract: { yearsRemaining: 1, annualSalary: 5_500_000, isMax: false, isExpiring: true },
+        },
+      },
+    ]), {
       record: { wins: 26, losses: 16 },
       week: 10,
+      window: 'Rising Contender',
       strategyIdentity: 'Prove-it season — retain the star',
       starHappiness: 'Concerned',
       starHappinessReason: 'Waiting on roster moves before extension talks.',

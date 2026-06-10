@@ -1,4 +1,5 @@
 import type { Contract, Franchise, LeagueTeam, Player } from '../types/game';
+import { maxAnnualSalary } from './salaries';
 
 export const CAP_LIMIT = 140_000_000;
 export const LUXURY_TAX_LINE = 170_000_000;
@@ -7,10 +8,16 @@ export const NON_TAXPAYER_MLE = 12_800_000;
 export const TAXPAYER_MLE = 5_000_000;
 export const BAE = 4_700_000;
 export const MIN_SALARY = 1_100_000;
+/** Standard roster spots counted on the offseason cap sheet (NBA ~14). */
+export const MIN_CAP_ROSTER = 14;
 
-export function computePayroll(franchise: Franchise): number {
-  const rosterSalary = franchise.roster.reduce((s, p) => s + p.contract.annualSalary, 0);
-  return rosterSalary + franchise.cap.deadMoney;
+export function computeRosterSalary(franchise: Franchise): number {
+  return (franchise.roster ?? []).reduce((s, p) => s + (p.contract?.annualSalary ?? 0), 0);
+}
+
+/** True during the renewal / FA window when unsigned players sit on holds. */
+export function isOffseasonCapWindow(phase: Franchise['phase']): boolean {
+  return phase === 'contract_renewals' || phase === 'free_agency';
 }
 
 export function birdRightsLabel(years: number): string {
@@ -37,54 +44,198 @@ export function estimateTaxBill(payroll: number): number {
   return Math.round(bill);
 }
 
+export function capHoldAmount(player: Player): number {
+  if (player.contract.yearsRemaining > 0) return 0;
+  const years = player.contract.birdYears ?? 0;
+  const prior = player.contract.annualSalary;
+
+  if (player.contract.isRestricted && years >= 2) {
+    return Math.round(Math.max(prior * 1.09, MIN_SALARY * 2));
+  }
+  if (years >= 4) return Math.min(Math.max(prior * 1.2, CAP_LIMIT * 0.25), CAP_LIMIT * 0.35);
+  if (years >= 3) return Math.round(prior * 1.3);
+  if (years >= 2) return Math.round(prior * 0.9);
+  return 0;
+}
+
+export function computeCapHolds(franchise: Franchise): Franchise['cap']['capHolds'] {
+  if (!isOffseasonCapWindow(franchise.phase)) return [];
+  return (franchise.roster ?? [])
+    .filter((p) => (p.contract?.yearsRemaining ?? 0) === 0)
+    .map((p) => ({
+      playerId: p.id,
+      name: `${p.firstName} ${p.lastName}`,
+      amount: capHoldAmount(p),
+    }))
+    .filter((h) => h.amount > 0);
+}
+
+export function computeIncompleteRosterCharge(franchise: Franchise): number {
+  if (!isOffseasonCapWindow(franchise.phase)) return 0;
+  const signed = (franchise.roster ?? []).filter((p) => (p.contract?.yearsRemaining ?? 0) > 0).length;
+  const gap = Math.max(0, MIN_CAP_ROSTER - signed);
+  return gap * MIN_SALARY;
+}
+
+/** Payroll counted against the salary cap (NBA cap sheet). */
+export function computeCapSheetPayroll(franchise: Franchise): number {
+  const dead = franchise.cap?.deadMoney ?? 0;
+  const offseason = isOffseasonCapWindow(franchise.phase);
+
+  let salary = dead;
+  for (const p of franchise.roster ?? []) {
+    if (offseason && (p.contract?.yearsRemaining ?? 0) === 0) continue;
+    salary += p.contract?.annualSalary ?? 0;
+  }
+
+  return salary + computeIncompleteRosterCharge(franchise);
+}
+
+export function computePayroll(franchise: Franchise): number {
+  return computeCapSheetPayroll(franchise);
+}
+
+export function canRenewWithBirdRights(
+  franchise: Franchise,
+  player: Player,
+  newSalary: number,
+): { ok: boolean; reason: string } {
+  const birds = player.contract.birdYears ?? 0;
+  const prior = player.contract.annualSalary;
+  if (birds >= 4 && newSalary <= maxAnnualSalary(player.overall)) {
+    return { ok: true, reason: 'Full Bird — re-sign over the cap.' };
+  }
+  if (birds >= 3 && newSalary <= Math.round(prior * 1.75)) {
+    return { ok: true, reason: 'Early Bird raise allowed.' };
+  }
+  if (birds >= 2 && newSalary <= Math.round(prior * 1.2)) {
+    return { ok: true, reason: 'Non-Bird limited raise.' };
+  }
+  const room = franchise.cap.effectiveRoom ?? franchise.cap.projectedRoom;
+  if (room >= newSalary) {
+    return { ok: true, reason: 'Fits in usable cap room.' };
+  }
+  return { ok: false, reason: 'Need Bird rights or cap room for this deal.' };
+}
+
+export function applySigningToCap(
+  cap: Franchise['cap'],
+  salary: number,
+  useException?: string,
+): Franchise['cap'] {
+  const payroll = cap.payroll + salary;
+  const mleUsed = cap.mleUsed || useException === 'MLE';
+  const baeUsed = cap.baeUsed || useException === 'BAE';
+  return {
+    ...cap,
+    payroll,
+    mleUsed,
+    baeUsed,
+  };
+}
+
 export function computeCapOutlook(franchise: Franchise): Franchise['cap'] {
-  const payroll = computePayroll(franchise);
-  const inLuxuryTax = payroll > LUXURY_TAX_LINE;
-  const inSecondApron = payroll > SECOND_APRON;
-  const projectedRoom = Math.max(0, CAP_LIMIT - payroll);
-  const mleAvailable = inLuxuryTax ? TAXPAYER_MLE : NON_TAXPAYER_MLE;
-  const roomAvailable = projectedRoom;
-  const baeAvailable = inLuxuryTax ? 0 : BAE;
-  const taxBill = estimateTaxBill(payroll);
+  const rosterSalary = computeRosterSalary(franchise);
+  const capSheetPayroll = computeCapSheetPayroll(franchise);
+  const incompleteRosterCharge = computeIncompleteRosterCharge(franchise);
+  const inLuxuryTax = capSheetPayroll > LUXURY_TAX_LINE;
+  const inSecondApron = capSheetPayroll > SECOND_APRON;
+  const projectedRoom = Math.max(0, CAP_LIMIT - capSheetPayroll);
+  const capHolds = computeCapHolds(franchise);
+  const capHoldsTotal = capHolds.reduce((s, h) => s + h.amount, 0);
+  const effectiveRoom = inSecondApron || capSheetPayroll >= CAP_LIMIT
+    ? 0
+    : Math.max(0, projectedRoom - capHoldsTotal);
+  const mleUsed = franchise.cap?.mleUsed ?? false;
+  const baeUsed = franchise.cap?.baeUsed ?? false;
+  const mleAvailable = mleUsed ? 0 : inLuxuryTax ? TAXPAYER_MLE : NON_TAXPAYER_MLE;
+  const roomAvailable = effectiveRoom;
+  const baeAvailable = inLuxuryTax || baeUsed ? 0 : BAE;
+  const taxBill = estimateTaxBill(capSheetPayroll);
   const warnings: string[] = [];
+
+  if (capHoldsTotal > 0 && isOffseasonCapWindow(franchise.phase)) {
+    warnings.push(
+      `${capHolds.length} unsigned player${capHolds.length === 1 ? '' : 's'} reserve ${formatCap(capHoldsTotal)} — re-sign or renounce to clear room.`,
+    );
+  }
+
+  if (incompleteRosterCharge > 0) {
+    warnings.push(
+      `Incomplete roster charge: ${formatCap(incompleteRosterCharge)} (${MIN_CAP_ROSTER} spots required on the cap sheet).`,
+    );
+  }
+
+  if (capSheetPayroll >= CAP_LIMIT && !inSecondApron) {
+    warnings.push('Over the salary cap — signings require Bird rights or a trade exception (MLE / minimum).');
+  }
 
   if (inSecondApron) {
     warnings.push('Second apron: hard-capped. Cannot use MLE, BAE, or take back more salary in trades.');
   } else if (inLuxuryTax) {
     warnings.push(`Luxury tax active — projected bill ${formatCap(taxBill)}. Ownership expects deep playoff run.`);
-  } else if (payroll > CAP_LIMIT * 0.95) {
+  } else if (capSheetPayroll > CAP_LIMIT * 0.95) {
     warnings.push('Approaching cap ceiling. Room exceptions shrink with every signing.');
   }
 
   const star = franchise.roster.find((p) => p.isStar);
-  if (star && star.contract.yearsRemaining <= 1) {
+  if (star && (star.contract?.yearsRemaining ?? 0) <= 1) {
     const maxEst = maxExtensionEstimate(star);
     warnings.push(
-      `Extending ${star.firstName} ${star.lastName} (~${formatCap(maxEst)}/yr) uses ${birdRightsLabel(star.contract.birdYears ?? 0)}.`,
+      `Extending ${star.firstName} ${star.lastName} (~${formatCap(maxEst)}/yr) uses ${birdRightsLabel(star.contract?.birdYears ?? 0)}.`,
     );
   }
 
-  const badContracts = franchise.roster.filter((p) => p.contract.annualSalary > 18_000_000 && p.overall < 76);
+  const badContracts = (franchise.roster ?? []).filter(
+    (p) => (p.contract?.annualSalary ?? 0) > 18_000_000 && p.overall < 76,
+  );
   if (badContracts.length) {
     warnings.push(`${badContracts[0].firstName} ${badContracts[0].lastName} on an albatross deal — limits trade flexibility.`);
   }
 
   return {
-    payroll,
+    payroll: capSheetPayroll,
+    rosterSalary,
+    capSheetPayroll,
+    incompleteRosterCharge,
     capLimit: CAP_LIMIT,
     luxuryTaxLine: LUXURY_TAX_LINE,
     secondApron: SECOND_APRON,
     inLuxuryTax,
     inSecondApron,
     projectedRoom,
-    deadMoney: franchise.cap.deadMoney,
+    effectiveRoom,
+    capHoldsTotal,
+    capHolds,
+    deadMoney: franchise.cap?.deadMoney ?? 0,
     taxBill,
     mleAvailable,
+    mleUsed,
     roomAvailable,
     baeAvailable,
+    baeUsed,
     hardCapped: inSecondApron,
     warnings,
   };
+}
+
+/** AI team cap check — simplified payroll estimate. */
+export function canSignFreeAgentAtPayroll(
+  payroll: number,
+  salary: number,
+  taxAverse: boolean,
+): { ok: boolean; reason: string; useException?: string } {
+  const room = Math.max(0, CAP_LIMIT - payroll);
+  if (room >= salary) return { ok: true, reason: 'Cap room', useException: 'Room' };
+  if (taxAverse && payroll + salary > LUXURY_TAX_LINE) {
+    return { ok: false, reason: 'Tax averse' };
+  }
+  if (payroll <= LUXURY_TAX_LINE && salary <= NON_TAXPAYER_MLE) {
+    return { ok: true, reason: 'MLE', useException: 'MLE' };
+  }
+  if (salary <= TAXPAYER_MLE) return { ok: true, reason: 'Tax MLE', useException: 'MLE' };
+  if (salary <= MIN_SALARY * 1.5) return { ok: true, reason: 'Minimum', useException: 'Minimum' };
+  return { ok: false, reason: 'No room' };
 }
 
 export function canSignFreeAgent(
@@ -102,15 +253,19 @@ export function canSignFreeAgent(
     return { ok: true, reason: 'Two-way / minimum slot.', useException: 'Minimum' };
   }
 
-  if (cap.projectedRoom >= salary) {
-    return { ok: true, reason: `Fits in ${formatCap(cap.projectedRoom)} cap room.`, useException: 'Room' };
+  if (cap.effectiveRoom >= salary) {
+    return { ok: true, reason: `Fits in ${formatCap(cap.effectiveRoom)} usable room.`, useException: 'Room' };
   }
 
-  if (!cap.inLuxuryTax && salary <= cap.mleAvailable) {
+  if (cap.mleUsed) {
+    // MLE already consumed — skip MLE paths below
+  } else if (!cap.inLuxuryTax && salary <= cap.mleAvailable) {
     return { ok: true, reason: `Non-taxpayer MLE (${formatCap(cap.mleAvailable)}).`, useException: 'MLE' };
   }
 
-  if (cap.inLuxuryTax && !cap.inSecondApron && salary <= TAXPAYER_MLE) {
+  if (cap.mleUsed) {
+    // skip
+  } else if (cap.inLuxuryTax && !cap.inSecondApron && salary <= TAXPAYER_MLE) {
     return { ok: true, reason: `Taxpayer MLE (${formatCap(TAXPAYER_MLE)}).`, useException: 'MLE' };
   }
 
@@ -120,7 +275,7 @@ export function canSignFreeAgent(
 
   return {
     ok: false,
-    reason: `Need ${formatCap(salary - cap.projectedRoom)} more room or an exception. MLE may not cover this ask.`,
+    reason: `Need ${formatCap(Math.max(0, salary - cap.effectiveRoom))} more usable room or an exception. MLE may not cover this ask.`,
   };
 }
 
@@ -129,58 +284,104 @@ export function validateTradeSalaryMatchAtPayroll(
   hardCapped: boolean,
   incomingSalary: number,
   outgoingSalary: number,
-): { ok: boolean; message: string; allowedIncoming: number; projectedPayroll: number; inLuxuryTax: boolean } {
+): {
+  ok: boolean;
+  message: string;
+  allowedIncoming: number;
+  maxIncoming: number;
+  projectedPayroll: number;
+  inLuxuryTax: boolean;
+  matchingBasis: 'under_cap' | 'over_cap' | 'second_apron';
+} {
   const delta = incomingSalary - outgoingSalary;
   const projectedPayroll = payroll + delta;
   const inLuxuryTax = projectedPayroll > LUXURY_TAX_LINE;
+  const atSecondApron = hardCapped || payroll >= SECOND_APRON;
 
-  if (hardCapped && projectedPayroll > SECOND_APRON) {
-    return {
-      ok: false,
-      message: 'Trade would exceed second apron hard cap.',
-      allowedIncoming: outgoingSalary,
-      projectedPayroll,
-      inLuxuryTax,
-    };
-  }
-
-  if (payroll < CAP_LIMIT) {
-    const allowed = outgoingSalary * 1.25 + 100_000;
-    if (incomingSalary <= allowed + CAP_LIMIT - payroll) {
+  if (atSecondApron) {
+    const maxIncoming = outgoingSalary;
+    if (incomingSalary <= maxIncoming && projectedPayroll <= SECOND_APRON) {
       return {
         ok: true,
-        message: 'Salary matching valid — team under cap.',
-        allowedIncoming: allowed,
+        message: 'Second apron — 1-for-1 salary match valid.',
+        allowedIncoming: maxIncoming,
+        maxIncoming,
         projectedPayroll,
-        inLuxuryTax,
+        inLuxuryTax: true,
+        matchingBasis: 'second_apron',
+      };
+    }
+    if (incomingSalary > outgoingSalary) {
+      return {
+        ok: false,
+        message: `Second apron teams cannot take back more than they send (max ${formatCap(outgoingSalary)}).`,
+        allowedIncoming: maxIncoming,
+        maxIncoming,
+        projectedPayroll,
+        inLuxuryTax: true,
+        matchingBasis: 'second_apron',
       };
     }
     return {
       ok: false,
-      message: `Incoming salary exceeds 125% + $100K matching (max ${formatCap(allowed)}).`,
-      allowedIncoming: allowed,
+      message: 'Trade would exceed second apron hard cap.',
+      allowedIncoming: maxIncoming,
+      maxIncoming,
       projectedPayroll,
-      inLuxuryTax,
+      inLuxuryTax: true,
+      matchingBasis: 'second_apron',
     };
   }
 
-  const allowed = outgoingSalary * 1.25 + 100_000;
-  if (incomingSalary <= allowed) {
+  if (payroll < CAP_LIMIT) {
+    const room = CAP_LIMIT - payroll;
+    const matchAllowance = outgoingSalary * 1.25 + 100_000;
+    const maxIncoming = matchAllowance + room;
+    if (incomingSalary <= maxIncoming) {
+      return {
+        ok: true,
+        message: room > 0
+          ? `Under cap — ${formatCap(room)} room plus matching covers this deal.`
+          : 'Salary matching valid — team under cap.',
+        allowedIncoming: matchAllowance,
+        maxIncoming,
+        projectedPayroll,
+        inLuxuryTax,
+        matchingBasis: 'under_cap',
+      };
+    }
     return {
-      ok: true,
-      message: 'Salary matching valid for over-cap team.',
-      allowedIncoming: allowed,
+      ok: false,
+      message: `Max incoming ${formatCap(maxIncoming)} (${formatCap(room)} cap room + ${formatCap(matchAllowance)} from matching). You're ${formatCap(incomingSalary - maxIncoming)} over.`,
+      allowedIncoming: matchAllowance,
+      maxIncoming,
       projectedPayroll,
       inLuxuryTax,
+      matchingBasis: 'under_cap',
+    };
+  }
+
+  const maxIncoming = outgoingSalary * 1.25 + 100_000;
+  if (incomingSalary <= maxIncoming) {
+    return {
+      ok: true,
+      message: 'Over-cap — 125% + $100K matching satisfied.',
+      allowedIncoming: maxIncoming,
+      maxIncoming,
+      projectedPayroll,
+      inLuxuryTax,
+      matchingBasis: 'over_cap',
     };
   }
 
   return {
     ok: false,
-    message: `Over-cap teams must match within 125% + $100K. Max incoming: ${formatCap(allowed)}.`,
-    allowedIncoming: allowed,
+    message: `125% + $100K rule — max incoming ${formatCap(maxIncoming)} with current outgoing salary.`,
+    allowedIncoming: maxIncoming,
+    maxIncoming,
     projectedPayroll,
     inLuxuryTax,
+    matchingBasis: 'over_cap',
   };
 }
 
@@ -331,6 +532,26 @@ export function formatCapBar(payroll: number, capLimit: number): string {
   return `${compact(payroll)} / ${compact(capLimit)}`;
 }
 
-export function pickKey(pick: { year: number; round: number }): string {
-  return `${pick.year}-R${pick.round}`;
+/** Primary label for usable cap room in UI. */
+export function formatUsableCapRoom(cap: Pick<Franchise['cap'], 'effectiveRoom' | 'payroll' | 'capLimit' | 'inSecondApron'>): string {
+  if (cap.payroll >= cap.capLimit || cap.inSecondApron) {
+    return cap.effectiveRoom > 0 ? formatCap(cap.effectiveRoom) : '$0 · over cap';
+  }
+  return formatCap(cap.effectiveRoom);
+}
+
+/** One-line cap sheet breakdown for renewals / FA screens. */
+export function capRoomBreakdown(cap: Franchise['cap']): string {
+  const parts = [`Cap sheet ${formatCapBar(cap.payroll, cap.capLimit)}`];
+  if (cap.capHoldsTotal > 0) parts.push(`${formatCap(cap.capHoldsTotal)} in holds`);
+  if ((cap.incompleteRosterCharge ?? 0) > 0) {
+    parts.push(`${formatCap(cap.incompleteRosterCharge!)} roster charge`);
+  }
+  return parts.join(' · ');
+}
+
+export function pickKey(pick: { year: number; round: number; originalTeam?: string }): string {
+  // originalTeam is part of identity so the user can own two same-year/round picks
+  // from different teams (e.g. their own 2027 1st + an incoming 2027 1st from Boston).
+  return `${pick.year}-R${pick.round}-${pick.originalTeam ?? ''}`;
 }

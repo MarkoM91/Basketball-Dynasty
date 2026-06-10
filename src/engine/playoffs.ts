@@ -2,21 +2,45 @@ import type { Franchise, League, PlayoffGameResult, PlayoffRound, PlayoffSeries,
 import { getStandings, getTeamById } from '../data/league';
 import { uid } from '../data/scenarios';
 import { autoStartingFive, lineupStrength } from './simulation';
+import { adjustSeasonReview as applyCareerSeasonReview } from './careerMode';
+import { effectiveGameStrength } from './leagueWorld';
+import { simulateTeamGameScores, NBA_HOME_EDGE } from './stats';
 
+/** Top 16 = standard playoff field. */
 export const PLAYOFF_TEAM_COUNT = 16;
 function simGame(
   home: { id: string; strength: number; name: string },
   away: { id: string; strength: number; name: string },
   franchise?: Franchise,
+  _league?: League,
   playoff = true,
 ): PlayoffGameResult {
-  const homeAdv = playoff ? 3 : 2.5;
-  const variance = (Math.random() - 0.5) * 10;
-  const diff = home.strength + homeAdv - away.strength + variance;
-  const base = 102 + Math.random() * 10;
-  const homeScore = Math.round(base + diff * 0.38);
-  const awayScore = Math.round(base - diff * 0.38 + (Math.random() - 0.5) * 6);
-  const winnerId = homeScore > awayScore ? home.id : away.id;
+  const isUserHome = franchise?.leagueTeamId === home.id;
+  const isUserAway = franchise?.leagueTeamId === away.id;
+  const homeAdv = NBA_HOME_EDGE + (playoff ? 0.5 : 0);
+  let homeScore: number;
+  let awayScore: number;
+  let homeWon: boolean;
+
+  if (isUserAway) {
+    const result = simulateTeamGameScores(away.strength, home.strength, homeAdv, {
+      isUserTeam: true,
+      isPlayoffs: playoff,
+    });
+    homeScore = result.oppScore;
+    awayScore = result.teamScore;
+    homeWon = !result.won;
+  } else {
+    const result = simulateTeamGameScores(home.strength, away.strength, homeAdv, {
+      isUserTeam: isUserHome,
+      isPlayoffs: playoff,
+    });
+    homeScore = result.teamScore;
+    awayScore = result.oppScore;
+    homeWon = result.won;
+  }
+
+  const winnerId = homeWon ? home.id : away.id;
   const star = franchise?.roster.find((p) => p.isStar);
 
   const playByPlay = generatePlayByPlay(home, away, homeScore, awayScore, star, franchise);
@@ -81,7 +105,7 @@ function makeSeries(
   };
 }
 
-export function initPlayoffs(league: League, userTeamId: string): PlayoffState {
+export function initPlayoffs(league: League, userTeamId: string, userQualified = true): PlayoffState {
   const standings = getStandings(league).slice(0, PLAYOFF_TEAM_COUNT);
   const seeded = standings.map((t, i) => ({ teamId: t.id, seed: i + 1 }));
 
@@ -95,7 +119,8 @@ export function initPlayoffs(league: League, userTeamId: string): PlayoffState {
     round: 'First Round',
     series,
     bracketHistory: [],
-    userEliminated: false,
+    userEliminated: !userQualified,
+    userResult: userQualified ? undefined : 'Missed playoffs',
   };
 }
 
@@ -145,7 +170,7 @@ function teamStrength(league: League, teamId: string, franchise?: Franchise): nu
       franchise.startingFive?.length === 5 ? franchise.startingFive : autoStartingFive(franchise);
     return lineupStrength(franchise, starters);
   }
-  return team.strength + (Math.random() * 4 - 2);
+  return effectiveGameStrength(league, teamId, franchise) + (Math.random() * 3 - 1.5);
 }
 function advanceSeriesGame(series: PlayoffSeries, league: League, franchise?: Franchise): PlayoffSeries {
   if (series.complete) return series;
@@ -155,7 +180,7 @@ function advanceSeriesGame(series: PlayoffSeries, league: League, franchise?: Fr
 
   const home = { id: homeId, strength: teamStrength(league, homeId, franchise), name: getTeamById(league, homeId)?.fullName ?? 'Home' };
   const away = { id: awayId, strength: teamStrength(league, awayId, franchise), name: getTeamById(league, awayId)?.fullName ?? 'Away' };
-  const game = simGame(home, away, franchise, true);
+  const game = simGame(home, away, franchise, league, true);
 
   let higherWins = series.higherWins;
   let lowerWins = series.lowerWins;
@@ -336,58 +361,67 @@ export function buildSeasonReview(franchise: Franchise, playoffState?: PlayoffSt
   const result = playoffState?.userResult ?? 'Missed Playoffs';
   const winPct = franchise.record.wins / Math.max(1, franchise.record.wins + franchise.record.losses);
 
+  let review: import('../types/game').SeasonReview;
+
   if (result === 'Champions') {
-    return {
+    review = {
       grade: 'A',
       ownershipVerdict: 'Ownership ecstatic. Job security at maximum.',
       offseasonPriority: 'Retain core, add veteran depth without breaking cap.',
     };
-  }
-  if (result === 'Finals loss') {
-    return {
+  } else if (result === 'Finals loss') {
+    review = {
       grade: 'B+',
       ownershipVerdict: 'Deep run validates direction, but title window pressure rises.',
       primaryIssue: 'Late-game shot creation',
       offseasonPriority: 'Secondary creator or offensive-minded coaching tweak.',
     };
-  }
-  if (result?.includes('Quarterfinals')) {
-    return {
+  } else if (result?.includes('Quarterfinals')) {
+    review = {
       grade: 'B-',
       ownershipVerdict: 'Second-round exit — close, but not close enough for this payroll.',
       primaryIssue: 'Closing games vs elite teams',
       offseasonPriority: 'Add a two-way wing or upgrade half-court creation.',
     };
-  }
-  if (result?.includes('Semifinals')) {
-    return {
+  } else if (result?.includes('Semifinals')) {
+    review = {
       grade: 'B',
       ownershipVerdict: 'Solid season, but expected more from this payroll.',
       primaryIssue: 'Half-court offense vs elite defenses',
       offseasonPriority: 'Star help or schematic upgrade.',
     };
-  }
-  if (result?.includes('First Round')) {
-    return {
+  } else if (result?.includes('First Round')) {
+    review = {
       grade: 'C+',
       ownershipVerdict: 'Early exit raises questions about roster construction.',
       primaryIssue: 'Rotation depth',
       offseasonPriority: 'Trade, draft, or coaching change — choose a path.',
     };
-  }
-  if (franchise.window.includes('Rebuild') && winPct < 0.45) {
-    return {
+  } else if (result === 'Missed playoffs' || result === 'Missed Playoffs') {
+    review = {
+      grade: winPct >= 0.42 ? 'C' : 'D',
+      ownershipVerdict: playoffState?.championName
+        ? `Missed the top 16 (${franchise.record.wins}–${franchise.record.losses}). ${playoffState.championName} won the title.`
+        : `Missing playoffs with this roster is unacceptable.`,
+      primaryIssue: 'No clear identity',
+      offseasonPriority: 'Rebuild or win-now — stop living in the middle.',
+    };
+  } else if (franchise.window.includes('Rebuild') && winPct < 0.45) {
+    review = {
       grade: 'B-',
       ownershipVerdict: 'Losses acceptable if young core develops.',
       offseasonPriority: 'Hit on draft pick, avoid bad veteran contracts.',
     };
+  } else {
+    review = {
+      grade: 'D',
+      ownershipVerdict: 'Missing playoffs with this roster is unacceptable.',
+      primaryIssue: 'No clear identity',
+      offseasonPriority: 'Rebuild or win-now — stop living in the middle.',
+    };
   }
-  return {
-    grade: 'D',
-    ownershipVerdict: 'Missing playoffs with this roster is unacceptable.',
-    primaryIssue: 'No clear identity',
-    offseasonPriority: 'Rebuild or win-now — stop living in the middle.',
-  };
+
+  return applyCareerSeasonReview(franchise, review, result);
 }
 
 export function roundLabel(round: PlayoffRound): string {

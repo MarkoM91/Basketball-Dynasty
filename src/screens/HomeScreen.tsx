@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { phaseLabel, statusFromRecord, GAMES_PER_WEEK } from '../engine/simulation';
 import { franchiseRegularSeasonRecord } from '../engine/regularSeasonRecord';
 import { userPlayoffGamePending } from '../engine/playoffs';
@@ -8,21 +9,31 @@ import { GameResultCard } from '../components/GameResultCard';
 import { CourtBackdrop } from '../components/CourtBackdrop';
 import { TeamLogo } from '../components/TeamLogo';
 import { PlayMenu } from '../components/PlayMenu';
+import { TrainingCampCard } from '../components/TrainingCampCard';
 import { StandingsTable } from '../components/StandingsTable';
 import { useViewTeamRoster } from '../hooks/useViewTeamRoster';
 import { useGameStore } from '../store/gameStore';
 import { MoraleChip, Panel, ProgressBar } from '../components/UI';
+import { remainingUserDraftSlots } from '../engine/draftPickTrade';
 
-function primaryCta(phase: string, userPlayoffPending: boolean, draftOnClock: boolean): string {
+function primaryCta(
+  phase: string,
+  userPlayoffPending: boolean,
+  draftOnClock: boolean,
+  hasPlayoffBracket: boolean,
+  noPicksLeft: boolean,
+): string {
   switch (phase) {
     case 'playoffs':
       return userPlayoffPending ? 'Set starting five & play' : 'Sim league playoff games';
     case 'free_agency': return 'Advance free agency market';
     case 'contract_renewals': return 'Review contract renewals';
-    case 'season_review': return 'Enter offseason (draft first)';
+    case 'season_review':
+      return hasPlayoffBracket ? 'Enter offseason' : 'Follow league playoffs';
     case 'training_camp': return 'Open regular season';
     case 'draft_scouting':
     case 'draft_night':
+      if (noPicksLeft) return 'End draft';
       return draftOnClock ? 'Make your pick' : 'Run to my pick';
     default: return 'Advance Week';
   }
@@ -35,13 +46,24 @@ export function HomeScreen() {
     leagueHeadlines,
     advanceWeek,
     advanceToPlayoffs,
+    watchPlayoffs,
     lastWeekSummary,
     setScreen,
     resolvePendingEvent,
     startDraftNight,
     runToUserPick,
+    finishDraft,
+    releasePlayerContract,
   } = useGameStore();
   const viewTeamRoster = useViewTeamRoster();
+  const seasonReviewRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (franchise?.phase === 'season_review' && seasonReviewRef.current) {
+      setTimeout(() => seasonReviewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    }
+  }, [franchise?.phase]);
+
   if (!franchise) return null;
 
   const record = franchiseRegularSeasonRecord(franchise, league ?? undefined);
@@ -63,6 +85,9 @@ export function HomeScreen() {
   const nextGame = league ? nextScheduledGame(franchise, league) : undefined;
 
   const draftOnClock = Boolean(franchise.draftNight?.active && franchise.draftNight.onClock);
+  const draftNoPicksLeft = Boolean(
+    franchise.draftNight?.active && remainingUserDraftSlots(franchise).length === 0,
+  );
 
   const playPrimary = () => {
     if (userPlayoffPending) {
@@ -76,6 +101,11 @@ export function HomeScreen() {
       return;
     }
     if (franchise.phase === 'draft_scouting' || franchise.phase === 'draft_night') {
+      // No picks left (all drafted or traded away) — finish the draft, don't navigate.
+      if (franchise.draftNight?.active && draftNoPicksLeft) {
+        finishDraft();
+        return;
+      }
       if (!franchise.draftNight?.active) {
         startDraftNight();
       } else if (!franchise.draftNight.onClock) {
@@ -98,6 +128,10 @@ export function HomeScreen() {
       setScreen('playoffs');
       return;
     }
+    if (franchise.phase === 'season_review' && !franchise.playoffs) {
+      watchPlayoffs();
+      return;
+    }
     advanceWeek();
   };
 
@@ -107,7 +141,13 @@ export function HomeScreen() {
       ? (franchise.gamesThisWeek ?? 0) < GAMES_PER_WEEK
         ? 'Play next game'
         : 'Advance week'
-      : primaryCta(franchise.phase, userPlayoffPending, draftOnClock);
+      : primaryCta(
+          franchise.phase,
+          userPlayoffPending,
+          draftOnClock,
+          franchise.playoffs?.round === 'Complete',
+          draftNoPicksLeft,
+        );
 
   return (
     <div className="page page-court">
@@ -129,18 +169,28 @@ export function HomeScreen() {
         </div>
       </CourtBackdrop>
 
-      <PlayMenu
-        phase={franchise.phase}
-        gamesThisWeek={franchise.gamesThisWeek ?? 0}
-        gamesPerWeek={GAMES_PER_WEEK}
-        primaryLabel={playLabel}
-        onPrimary={playPrimary}
-        secondaryActions={[
-          { label: 'Schedule', onClick: () => setScreen('schedule') },
-          { label: 'Finances', onClick: () => setScreen('finances') },
-          { label: 'League', onClick: () => setScreen('league') },
-        ]}
-      />
+      {franchise.phase === 'training_camp' ? (
+        <TrainingCampCard
+          franchise={franchise}
+          onWaive={releasePlayerContract}
+          onOpenSeason={playPrimary}
+          onOpenRoster={() => setScreen('roster')}
+          onOpenTrades={() => setScreen('trade')}
+        />
+      ) : (
+        <PlayMenu
+          phase={franchise.phase}
+          gamesThisWeek={franchise.gamesThisWeek ?? 0}
+          gamesPerWeek={GAMES_PER_WEEK}
+          primaryLabel={playLabel}
+          onPrimary={playPrimary}
+          secondaryActions={[
+            { label: 'Schedule', onClick: () => setScreen('schedule') },
+            { label: 'Finances', onClick: () => setScreen('finances') },
+            { label: 'League', onClick: () => setScreen('league') },
+          ]}
+        />
+      )}
 
       {(nextGame || league) && (
         <Panel accent className="animate-slide-up">
@@ -226,7 +276,7 @@ export function HomeScreen() {
       )}
 
       {review && franchise.phase === 'season_review' && (
-        <Panel accent>
+        <div ref={seasonReviewRef}><Panel accent>
           <p className="eyebrow">Season review — Grade {review.grade}</p>
           <p className="body">{review.ownershipVerdict}</p>
           {review.primaryIssue && (
@@ -237,7 +287,12 @@ export function HomeScreen() {
           <p className="body" style={{ marginTop: 8 }}>
             Offseason priority: {review.offseasonPriority}
           </p>
-        </Panel>
+          {!franchise.playoffs && (
+            <button type="button" className="btn btn-secondary" style={{ marginTop: 12, width: '100%' }} onClick={watchPlayoffs}>
+              Follow league playoffs
+            </button>
+          )}
+        </Panel></div>
       )}
 
       {pending && (
@@ -260,7 +315,7 @@ export function HomeScreen() {
 
       {(franchise.phase === 'regular_season' || franchise.phase === 'trade_deadline') && (
         <Panel accent className="animate-slide-up">
-          <p className="eyebrow">This week — {franchise.gamesThisWeek ?? 0}/3 games played</p>
+          <p className="eyebrow">This week — {franchise.gamesThisWeek ?? 0}/{GAMES_PER_WEEK} games played</p>
           <div style={{ display: 'grid', gap: 8, marginTop: 8 }}>
             <button type="button" className="btn btn-primary" onClick={() => setScreen('play_game')}>
               Play game — set starting five
@@ -281,12 +336,18 @@ export function HomeScreen() {
         style={{ marginTop: 8, marginBottom: 12, display: franchise.phase === 'regular_season' || franchise.phase === 'trade_deadline' ? 'none' : undefined }}
         onClick={advanceWeek}
       >
-        {primaryCta(franchise.phase, userPlayoffPending, draftOnClock)}
+        {primaryCta(franchise.phase, userPlayoffPending, draftOnClock, franchise.playoffs?.round === 'Complete', draftNoPicksLeft)}
       </button>
 
       {franchise.phase === 'playoffs' && (
-        <button type="button" className="btn btn-secondary" style={{ marginBottom: 12, width: '100%' }} onClick={() => setScreen('playoffs')}>
-          Open playoff command center
+        <button type="button" className="btn btn-secondary" style={{ marginBottom: 12, width: '100%' }} onClick={watchPlayoffs}>
+          {franchise.madePlayoffs ? 'Open playoff command center' : 'Follow league playoffs'}
+        </button>
+      )}
+
+      {franchise.phase === 'season_review' && !franchise.playoffs && (
+        <button type="button" className="btn btn-secondary" style={{ marginBottom: 12, width: '100%' }} onClick={watchPlayoffs}>
+          Follow league playoffs
         </button>
       )}
 

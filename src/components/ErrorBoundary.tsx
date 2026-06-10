@@ -29,6 +29,11 @@ export class ErrorBoundary extends Component<Props, State> {
           <p className="body" style={{ marginBottom: 20 }}>
             Your local save should still be intact. Reload the app to return to your franchise.
           </p>
+          {this.state.message && (
+            <p className="body" style={{ marginBottom: 20, fontSize: 12, opacity: 0.7, wordBreak: 'break-word' }}>
+              {this.state.message}
+            </p>
+          )}
           <button type="button" className="btn btn-primary" onClick={() => window.location.assign('/')}>
             Return to main menu
           </button>

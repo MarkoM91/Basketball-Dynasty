@@ -84,6 +84,9 @@ export function buildPlayoffRunSummary(state: PlayoffState, league: League, user
     return `${seedLabel}${userTeam?.fullName ?? 'Your team'} eliminated in the first round by ${opponentName} (${userSeriesScore(fallback, userTeamId)}).`;
   }
 
+  if (state.userResult === 'Missed playoffs') {
+    return `${userTeam?.fullName ?? 'Your team'} missed the top 16 — watching the league bracket.`;
+  }
   if (state.userResult) return `${seedLabel}${userTeam?.fullName ?? 'Your team'} — ${state.userResult}.`;
   if (state.userEliminated) return `${seedLabel}${userTeam?.fullName ?? 'Your team'} — eliminated.`;
 

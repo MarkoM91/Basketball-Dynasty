@@ -3,33 +3,60 @@ import {
   COMPARE_FAQ,
   COMPARE_INTRO,
   COMPARE_ROWS,
-  cellLabel,
 } from '../content/compare';
+import type { CompareCell } from '../content/compare';
 import { LandingFooter, LandingHeader } from '../components/LandingChrome';
 import { PUBLIC_PAGES } from '../seo';
+
+function CellBadge({ value, us = false }: { value: CompareCell; us?: boolean }) {
+  if (value === 'yes') {
+    return (
+      <span className={`compare-badge compare-badge--yes${us ? ' compare-badge--us' : ''}`}>
+        ✓ Yes
+      </span>
+    );
+  }
+  if (value === 'partial') {
+    return <span className="compare-badge compare-badge--partial">~ Partial</span>;
+  }
+  if (value === 'no') {
+    return <span className="compare-badge compare-badge--no">✕ No</span>;
+  }
+  return <span className="compare-badge compare-badge--text">{value}</span>;
+}
+
 function CompareTable({ caption }: { caption?: string }) {
   return (
     <div className="compare-table-wrap">
+      {caption && <p className="compare-caption sr-only">{caption}</p>}
       <table className="compare-table">
-        {caption && <caption className="compare-caption">{caption}</caption>}
         <thead>
           <tr>
-            <th scope="col">Feature</th>
-            <th scope="col">Basketball Dynasty</th>
+            <th scope="col" className="compare-th-feature">Feature</th>
+            <th scope="col" className="compare-th-us">
+              <span className="compare-us-label">Basketball Dynasty</span>
+              <span className="compare-us-pill">Our pick</span>
+            </th>
             <th scope="col">Basketball GM</th>
-            <th scope="col">Typical browser sim</th>
+            <th scope="col">Typical sim</th>
           </tr>
         </thead>
         <tbody>
-          {COMPARE_ROWS.map((row) => (
-            <tr key={row.feature}>
-              <th scope="row">
+          {COMPARE_ROWS.map((row, i) => (
+            <tr key={row.feature} className={i % 2 === 0 ? 'compare-row-even' : ''}>
+              <th scope="row" className="compare-th-row">
                 {row.feature}
                 {row.note && <span className="compare-row-note">{row.note}</span>}
               </th>
-              <td className="compare-cell compare-cell--us">{cellLabel(row.dynasty)}</td>
-              <td className="compare-cell">{cellLabel(row.basketballGm)}</td>
-              <td className="compare-cell">{cellLabel(row.typical)}</td>
+              <td className="compare-cell compare-cell--us">
+                <CellBadge value={row.dynasty} us />
+              </td>
+              <td className="compare-cell">
+                <CellBadge value={row.basketballGm} />
+              </td>
+              <td className="compare-cell">
+                <CellBadge value={row.typical} />
+              </td>
             </tr>
           ))}
         </tbody>

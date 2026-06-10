@@ -27,6 +27,17 @@ export function isRookie(player: Player, season: number): boolean {
   return inferDraftSeason(player, season) === season;
 }
 
+export function rosterRookies(roster: Player[], season: number): Player[] {
+  return roster.filter((p) => isRookie(p, season));
+}
+
+/** Draft slot label for roster table, e.g. "#12". */
+export function rookiePickLabel(player: Player, season: number): string | null {
+  if (!isRookie(player, season)) return null;
+  if (player.draftPick !== undefined) return `#${player.draftPick}`;
+  return 'R';
+}
+
 export function rookieDraftSeason(player: Player, season: number): number | undefined {
   return inferDraftSeason(player, season);
 }

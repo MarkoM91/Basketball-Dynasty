@@ -5,7 +5,6 @@ import { DesktopHeader, DesktopSidebar } from './DesktopSidebar';
 import { pathFromScreen } from '../routes';
 import { useGameStore, normalizeFranchise } from '../store/gameStore';
 import type { ScreenId } from '../types/game';
-import { ROSTER_SIZE } from '../data/rosterBuilder';
 function useMobileLayout() {
   const [mobile, setMobile] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(max-width: 959px)').matches,
@@ -28,8 +27,12 @@ export function HydrationGate({ children }: { children: ReactNode }) {
   useEffect(() => {
     const finish = () => {
       const { franchise } = useGameStore.getState();
-      if (franchise && franchise.roster.length !== ROSTER_SIZE) {
-        useGameStore.setState({ franchise: normalizeFranchise(franchise) });
+      if (franchise) {
+        try {
+          useGameStore.setState({ franchise: normalizeFranchise(franchise) });
+        } catch (err) {
+          console.error('Failed to normalize franchise on load:', err);
+        }
       }
       setReady(true);
     };

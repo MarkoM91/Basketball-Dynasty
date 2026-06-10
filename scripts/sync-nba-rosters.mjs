@@ -197,24 +197,15 @@ function parseName(full) {
   return { firstName, lastName };
 }
 
-const SURNAME_OVERRIDES = {
-  Dončić: 'Donkcicc',
-  Doncic: 'Donkcicc',
-  Flagg: 'Flaggg',
-  Vanderbilt: 'Vanderbildt',
-  James: 'Jhames',
-};
-
 function typoSurname(lastName) {
   const m = lastName.match(/^(.+?)(\s+(Jr\.|II|III|IV))$/i);
   if (m) {
-    const base = SURNAME_OVERRIDES[m[1]] ?? typoSurname(m[1]);
-    return `${base}${m[2]}`;
+    return `${typoSurname(m[1])}${m[2]}`;
   }
-  if (SURNAME_OVERRIDES[lastName]) return SURNAME_OVERRIDES[lastName];
   if (lastName.length < 2) return `${lastName}${lastName}`;
   const last = lastName[lastName.length - 1];
-  if (lastName.endsWith(last + last)) return lastName;
+  // Real surname typo: double the final letter, or add one more if already doubled (Flagg → Flaggg).
+  if (lastName.endsWith(last + last)) return `${lastName}${last}`;
   return `${lastName}${last}`;
 }
 
@@ -266,35 +257,7 @@ function parseRosterHtml(html) {
   return players.slice(0, ROSTER_SIZE);
 }
 
-/** Put franchise stars first so core slots (0–6) match real top rotation. */
-const TEAM_STAR_ORDER = {
-  'LA|Cosmos': [
-    'Luka Dončić', 'LeBron James', 'Austin Reaves', 'Deandre Ayton', 'Rui Hachimura',
-    'Marcus Smart', 'Jarred Vanderbilt', 'Dalton Knecht', 'Jaxson Hayes', 'Bronny James',
-  ],
-  'Dallas|Lasso': [
-    'Cooper Flagg', 'Kyrie Irving', 'P.J. Washington', 'Daniel Gafford', 'Dereck Lively II',
-    'Klay Thompson', 'Naji Marshall', 'Max Christie', 'Khris Middleton',
-  ],
-};
-
-function reorderByStars(key, players) {
-  const priority = TEAM_STAR_ORDER[key];
-  if (!priority?.length) return players;
-  const ordered = [];
-  const used = new Set();
-  for (const target of priority) {
-    const hit = players.find((p) => p.name === target || p.name.includes(target.split(' ')[0]));
-    if (hit && !used.has(hit.name)) {
-      ordered.push(hit);
-      used.add(hit.name);
-    }
-  }
-  for (const p of players) {
-    if (!used.has(p.name)) ordered.push(p);
-  }
-  return ordered;
-}
+import { reorderRosterByStars, TEAM_STAR_ORDER } from './team-star-order.mjs';
 
 async function fetchRoster(abbr) {
   const url = `https://www.basketball-reference.com/teams/${abbr}/2026.html`;
@@ -328,8 +291,8 @@ import { TEAM_PARODY_DEPTH } from './parodyRosterDepth';
 /**
  * BBGM-style parody naming rule (every entry):
  * 1. Fictional first name — same first letter as the real player, but a different name.
- * 2. Surname with exactly one typo.
- * Synced from NBA 2025-26 rosters (nba.com / Basketball-Reference). Snapshot: 4 June 2026.
+ * 2. Real surname from the official roster with exactly one typo (usually double the final letter).
+ * Synced from NBA 2025-26 rosters (nba-rosters-2026.json). Snapshot: 4 June 2026.
  */
 export const ROSTER_PARODY_SIZE = 18;
 export type ParodyPlayerTemplate = {
@@ -461,14 +424,14 @@ async function main() {
     process.stdout.write(`${prefetched ? 'Processing' : 'Fetching'} ${abbr} (${key})... `);
     let players;
     if (prefetched?.[key]) {
-      players = reorderByStars(key, prefetched[key]);
+      players = reorderRosterByStars(key, prefetched[key]);
       if (players.length < ROSTER_SIZE) {
         console.log(`WARN: only ${players.length} players — need ${ROSTER_SIZE}`);
       }
     } else {
       try {
         players = await fetchRoster(abbr);
-        players = reorderByStars(key, players);
+        players = reorderRosterByStars(key, players);
       } catch (err) {
         console.log(`FAILED: ${err.message}`);
         continue;

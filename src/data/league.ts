@@ -1,4 +1,4 @@
-import type { League, LeagueTeam, TeamStrategy } from '../types/game';
+import type { Franchise, League, LeagueTeam, TeamStrategy } from '../types/game';
 import { uid } from './scenarios';
 import { resolveTeamFullName, resolveTeamIdentity } from './teamNames';
 import { getTeamVisual } from '../lib/visuals/teamLogos';
@@ -6,6 +6,10 @@ import { initialTeamScoring } from '../engine/stats';
 import { SEASON_GAME_COUNT, seedLeagueRecords } from '../engine/leagueSimulation';
 import { teamRegularSeasonRecord } from '../engine/regularSeasonRecord';
 import { buildLeagueSchedule, ensureLeagueSchedule } from '../engine/leagueSchedule';
+import { PROBALLERS_RATINGS } from './proballersRatings';
+import { teamStarFromRatings, teamStrengthFromRatings } from '../engine/proballersPlayer';
+import { strategyForFranchise, teamRatingStrength } from '../engine/scenarioDifficulty';
+import { ensureLeagueRosters } from '../engine/leagueWorld';
 
 export const LEAGUE_TEAM_TEMPLATES: { city: string; name: string; market: 'Small' | 'Mid' | 'Large' }[] = [
   { city: 'Boston', name: 'Harbor', market: 'Large' },
@@ -40,7 +44,7 @@ export const LEAGUE_TEAM_TEMPLATES: { city: string; name: string; market: 'Small
   { city: 'San Antonio', name: 'Mission', market: 'Small' },
 ];
 
-function pickStrategy(strength: number): TeamStrategy {
+export function pickStrategy(strength: number): TeamStrategy {
   if (strength >= 86) return Math.random() > 0.5 ? 'all_in' : 'contend';
   if (strength >= 80) return 'contend';
   if (strength >= 76) return Math.random() > 0.5 ? 'playin' : 'retool';
@@ -56,14 +60,21 @@ export function createLeague(
   userName: string,
   userStrength: number,
   userRecord?: { wins: number; losses: number },
+  userStrategy: TeamStrategy = 'contend',
 ): League {
   const userIdentity = resolveTeamIdentity(userCity, userName);
   const teams: LeagueTeam[] = LEAGUE_TEAM_TEMPLATES.map((t, i) => {
     const isUser = t.city === userIdentity.city && t.name === userIdentity.name;
-    const strength = isUser
-      ? userStrength
+    const teamKey = `${t.city}|${t.name}`;
+    const rated = PROBALLERS_RATINGS[teamKey];
+    const derivedStrength = rated && rated.length >= 8
+      ? teamStrengthFromRatings(rated)
       : clamp(62 + Math.floor(Math.random() * 28) + (i % 5) - 2, 62, 91);
-    const strategy = isUser ? 'contend' : pickStrategy(strength);
+    const derivedStar = rated?.length
+      ? teamStarFromRatings(rated)
+      : clamp(derivedStrength + 4 + (i % 7), 68, 94);
+    const strength = isUser ? userStrength : derivedStrength;
+    const strategy = isUser ? userStrategy : pickStrategy(strength);
     const gamesPlayed =
       isUser && userRecord ? userRecord.wins + userRecord.losses : 0;
     const wins = isUser && userRecord ? userRecord.wins : 0;
@@ -86,7 +97,7 @@ export function createLeague(
       regularLosses: losses,
       strength: Math.round(strength * 10) / 10,
       payroll: Math.round(strength * 1.45 * 1_000_000),
-      starOverall: clamp(Math.round(strength + 4 + (i % 7)), 68, 94),
+      starOverall: isUser ? clamp(Math.round(userStrength + 4), 68, 94) : clamp(derivedStar, 68, 94),
       taxAverse: t.market === 'Small' || Math.random() > 0.55,
       isUser,
       ...scoring,
@@ -101,7 +112,7 @@ export function createLeague(
     userRecord,
   );
 
-  return { season, teams: balanced, schedule: buildLeagueSchedule(balanced, season), draftOrder: [], draftLotteryLog: [] };
+  return { season, teams: balanced, schedule: buildLeagueSchedule(balanced, season), draftOrder: [], draftLotteryLog: [], rosters: {} };
 }
 
 function clamp(n: number, min: number, max: number): number {
@@ -141,13 +152,25 @@ export function syncUserTeam(
     market: 'Small' | 'Mid' | 'Large';
     roster: { overall: number; injured?: boolean }[];
     teamScoring?: { ppgFor: number; ppgAgainst: number; games: number };
+    scenarioId?: Franchise['scenarioId'];
+    window?: Franchise['window'];
+    gameLog?: Franchise['gameLog'];
+    season?: number;
+    leagueTeamId?: string;
   },
+  userRecord?: { wins: number; losses: number },
 ): League {
   const identity = resolveTeamIdentity(franchise.city, franchise.name);
-  const strength = franchise.roster.length
-    ? franchise.roster.filter((p) => !('injured' in p && p.injured)).reduce((s, p) => s + p.overall, 0) /
-      Math.max(1, franchise.roster.length)
-    : 75;
+  const strength = franchise.scenarioId
+    ? teamRatingStrength(franchise as Franchise)
+    : franchise.roster.length
+      ? franchise.roster.filter((p) => !('injured' in p && p.injured)).reduce((s, p) => s + p.overall, 0) /
+        Math.max(1, franchise.roster.length)
+      : 75;
+  const strategy = franchise.scenarioId || franchise.window
+    ? strategyForFranchise(franchise as Franchise)
+    : undefined;
+  const reg = userRecord ?? franchise.regularSeasonRecord ?? franchise.record;
 
   return {
     ...league,
@@ -159,14 +182,13 @@ export function syncUserTeam(
           ? {
               ppgFor: franchise.teamScoring!.ppgFor,
               ppgAgainst: franchise.teamScoring!.ppgAgainst,
-              scoreGames: franchise.record.wins + franchise.record.losses,
+              scoreGames: reg.wins + reg.losses,
             }
           : {
               ppgFor: t.ppgFor,
               ppgAgainst: t.ppgAgainst,
               scoreGames: t.scoreGames,
             };
-      const reg = franchise.regularSeasonRecord ?? franchise.record;
       return normalizeLeagueTeam({
         ...t,
         wins: reg.wins,
@@ -174,6 +196,7 @@ export function syncUserTeam(
         regularWins: reg.wins,
         regularLosses: reg.losses,
         strength: Math.round(strength * 10) / 10,
+        strategy: strategy ?? t.strategy,
         payroll: franchise.cap.payroll,
         market: franchise.market,
         starOverall: Math.max(...franchise.roster.map((p) => p.overall)),
@@ -205,13 +228,14 @@ export function normalizeLeagueTeam(t: LeagueTeam): LeagueTeam {
   };
 }
 
-export function normalizeLeague(league: League): League {
+export function normalizeLeague(league: League, userFranchise?: Franchise | null): League {
   const withSchedule = ensureLeagueSchedule({
     ...league,
     teams: league.teams.map(normalizeLeagueTeam),
   });
+  const withRosters = ensureLeagueRosters(withSchedule, userFranchise);
   return {
-    ...withSchedule,
+    ...withRosters,
     draftOrder: (league.draftOrder ?? []).map((entry) => ({
       ...entry,
       teamName: resolveTeamFullName(entry.teamName),

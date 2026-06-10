@@ -1,5 +1,5 @@
 import { formatMoney } from '../data/scenarios';
-import { birdRightsLabel, formatCap } from '../engine/cap';
+import { birdRightsLabel, formatCap, formatCapBar, formatUsableCapRoom, isOffseasonCapWindow } from '../engine/cap';
 import { useGameStore } from '../store/gameStore';
 import { Panel } from '../components/UI';
 
@@ -47,8 +47,29 @@ export function CapScreen() {
 
       <Panel>
         <p className="eyebrow">Exceptions & tax</p>
-        <div className="analysis-row"><span>Cap room</span><strong>{formatCap(cap.roomAvailable)}</strong></div>
-        <div className="analysis-row"><span>MLE available</span><strong>{formatCap(cap.mleAvailable)}</strong></div>
+        <div className="analysis-row"><span>Usable cap room</span><strong>{formatUsableCapRoom(cap)}</strong></div>
+        <div className="analysis-row"><span>Cap sheet payroll</span><strong>{formatCapBar(cap.payroll, cap.capLimit)}</strong></div>
+        {(cap.rosterSalary ?? 0) > 0 && cap.rosterSalary !== cap.payroll && (
+          <div className="analysis-row"><span>Roster salary (book)</span><strong>{formatCap(cap.rosterSalary!)}</strong></div>
+        )}
+        <div className="analysis-row"><span>Raw room</span><strong>{formatCap(cap.projectedRoom)}</strong></div>
+        {cap.capHoldsTotal > 0 && (
+          <div className="analysis-row"><span>Cap holds</span><strong>{formatCap(cap.capHoldsTotal)}</strong></div>
+        )}
+        {(cap.incompleteRosterCharge ?? 0) > 0 && (
+          <div className="analysis-row"><span>Incomplete roster</span><strong>{formatCap(cap.incompleteRosterCharge!)}</strong></div>
+        )}
+        {isOffseasonCapWindow(franchise.phase) && cap.capHolds.length > 0 && (
+          <>
+            {cap.capHolds.map((h) => (
+              <div key={h.playerId} className="analysis-row" style={{ fontSize: 12, opacity: 0.85 }}>
+                <span>{h.name}</span>
+                <strong>{formatCap(h.amount)}</strong>
+              </div>
+            ))}
+          </>
+        )}
+        <div className="analysis-row"><span>MLE available</span><strong>{cap.mleUsed ? 'Used' : formatCap(cap.mleAvailable)}</strong></div>
         <div className="analysis-row"><span>BAE available</span><strong>{cap.baeAvailable ? formatCap(cap.baeAvailable) : 'Frozen (tax team)'}</strong></div>
         <div className="analysis-row"><span>Projected tax bill</span><strong className={cap.taxBill ? 'danger' : ''}>{cap.taxBill ? formatCap(cap.taxBill) : '$0'}</strong></div>
         <div className="analysis-row"><span>Dead money</span><strong>{formatCap(cap.deadMoney)}</strong></div>

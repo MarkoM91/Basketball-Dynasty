@@ -1,6 +1,7 @@
 import type { Coach, Franchise, Player } from '../types/game';
 import { uid } from '../data/scenarios';
 import { fireCoach } from './coaches';
+import { canRenewWithBirdRights } from './cap';
 import { renewalSalary, roundSalary } from './salaries';
 
 export function expiringPlayers(franchise: Franchise): Player[] {
@@ -35,6 +36,9 @@ export function renewPlayerContract(franchise: Franchise, playerId: string): Fra
   if (!player || player.contract.yearsRemaining > 0) return franchise;
 
   const { years, salary } = playerRenewalTerms(player);
+  const birdCheck = canRenewWithBirdRights(franchise, player, salary);
+  if (!birdCheck.ok) return franchise;
+
   const name = `${player.firstName} ${player.lastName}`;
 
   return {
@@ -48,6 +52,7 @@ export function renewPlayerContract(franchise: Franchise, playerId: string): Fra
               yearsRemaining: years,
               annualSalary: salary,
               isExpiring: false,
+              birdYears: (p.contract.birdYears ?? 1) + 1,
             },
           }
         : p,
@@ -73,6 +78,7 @@ export function releaseExpiringPlayer(franchise: Franchise, playerId: string): F
   let next: Franchise = {
     ...franchise,
     roster: franchise.roster.filter((p) => p.id !== playerId),
+    pendingFreeAgents: [...(franchise.pendingFreeAgents ?? []), player],
     memory: [
       {
         id: uid('mem'),

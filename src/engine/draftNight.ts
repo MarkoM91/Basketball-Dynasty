@@ -1,7 +1,8 @@
-import type { DraftNightState, Franchise, League, Prospect } from '../types/game';
+import type { DraftClassStrength, DraftNightState, Franchise, League, Prospect } from '../types/game';
 import { buildNameRegistry, personNameKey, takeUniqueName } from '../data/names';
 import { makeProspect, playerName } from '../data/scenarios';
 import { teamNameForDraftPick } from './draftOrder';
+import { draftClassQualityBias } from './careerMode';
 
 export const DRAFT_TEAM_COUNT = 30;
 export const DRAFT_ROUNDS = 2;
@@ -25,17 +26,19 @@ export function normalizeDraftNight(
   draftPickNumber?: number,
 ): DraftNightState {
   const slot = draftPickNumber ?? state.userPickNumber ?? 14;
-  const userPickNumbers = state.userPickNumbers?.length
+  // Use Array.isArray so an empty array (all picks traded away) is preserved,
+  // while undefined/null (uninitialized legacy save) falls back to default slots.
+  const userPickNumbers = Array.isArray(state.userPickNumbers)
     ? state.userPickNumbers
     : userPickSlots(slot);
   const normalized: DraftNightState = {
     ...state,
-    userPickNumber: userPickNumbers[0],
+    userPickNumber: userPickNumbers[0] ?? state.userPickNumber,
     userPickNumbers,
     totalPicks: state.totalPicks ?? DRAFT_TOTAL_PICKS,
     userPicksMade: state.userPicksMade ?? [],
     userDraftedNames: state.userDraftedNames ?? [],
-    log: state.log.map((entry) => ({
+    log: (state.log ?? []).map((entry) => ({
       ...entry,
       round: entry.round ?? draftRound(entry.pick),
     })),
@@ -92,59 +95,204 @@ type DraftTier = 'first' | 'second';
 const FIRST_ROUND_POOL = 38;
 const SECOND_ROUND_POOL = 32;
 
-function ratingsForTier(tier: DraftTier, rank: number) {
+/** Deterministically pick draft class strength from the season number. */
+export function generateClassStrength(season: number): DraftClassStrength {
+  const roll = ((season * 137 + 31) % 100);
+  if (roll < 20) return 'Weak';
+  if (roll < 70) return 'Average';
+  if (roll < 88) return 'Loaded';
+  return 'Deep';
+}
+
+export function classStrengthLabel(strength: DraftClassStrength): string {
+  switch (strength) {
+    case 'Loaded': return '🔥 Loaded class';
+    case 'Deep':   return '📦 Deep class';
+    case 'Weak':   return '⚠️ Weak class';
+    default:       return 'Average class';
+  }
+}
+
+function classShift(strength: DraftClassStrength): { ovr: number; pot: number; bustMod: number } {
+  switch (strength) {
+    case 'Loaded': return { ovr: 2, pot: 3, bustMod: -1 };
+    case 'Deep':   return { ovr: 1, pot: 1, bustMod: 0 };
+    case 'Weak':   return { ovr: -3, pot: -4, bustMod: 1 };
+    default:       return { ovr: 0, pot: 0, bustMod: 0 };
+  }
+}
+
+/**
+ * BBGM-style: scoutedOverall = current raw ability (low for rookies).
+ * potential = development ceiling (what they can become in 3-5 seasons).
+ * The gap between them drives our development engine.
+ *
+ * First round sub-tiers:
+ *   Top 5  (rank 0-4):  OVR 54-66, POT 83-96  — elite upside, raw now
+ *   Lottery (5-14):     OVR 50-62, POT 75-90
+ *   Late 1st (15-29):   OVR 46-58, POT 68-83
+ *
+ * Second round:
+ *   Early 2nd (0-14):   OVR 40-52, POT 62-76
+ *   Late 2nd (15-31):   OVR 36-48, POT 55-70
+ */
+const FIRST_ROUND_SCOUT_NOTES = [
+  'Elite athleticism and upside. Raw skill-set needs 2–3 years of NBA reps before he contributes.',
+  'High-upside prospect. Scouts love the tools — the translation to the next level is the question.',
+  "Can't-miss potential if the skills develop. Will be a project year one.",
+  'Strong two-way tools. Decision-making under NBA speed is the major concern.',
+  'Boom-or-bust. Either a franchise player or a bust — scouts are split.',
+  'Late bloomer type. Should contribute in year 2-3 as a rotation piece with star potential.',
+  'High floor, high ceiling. NBA-ready defender; offense needs significant work.',
+  'Stretch-four upside. Shooting mechanics are there — needs strength and positioning.',
+];
+
+const SECOND_ROUND_SCOUT_NOTES = [
+  'Two-way contract candidate. Athletic, raw — needs G-League time before stick.',
+  'Specialist upside. If the shooting translates, carves out a rotation role.',
+  "High-effort guy. Won't wow you on film but earns minutes through grit.",
+  'Hidden gem possibility. Played in a poor system — tools are undervalued.',
+  'Developmental big. Physical profile is intriguing but needs 2 years minimum.',
+];
+
+function ratingsForTier(tier: DraftTier, rank: number, qualityBias = 0, strength: DraftClassStrength = 'Average') {
+  const shift = classShift(strength);
+
   if (tier === 'first') {
-    const ovrLo = Math.max(66, 74 - Math.floor(rank / 3));
-    const ovrHi = Math.min(81, ovrLo + 5 + (rank % 3));
-    const potLo = Math.max(74, 90 - Math.floor(rank / 2));
-    const potHi = Math.min(94, potLo + 6 + (rank % 4));
+    const boost = rank < qualityBias ? Math.min(4, Math.ceil((qualityBias - rank) / 3)) : 0;
+
+    // Current ability — raw, low. Decreases with rank (later picks are worse NOW).
+    const ovrLo = Math.max(44, 58 - Math.floor(rank / 2) + boost + shift.ovr);
+    const ovrHi = Math.min(70, ovrLo + 6 + (rank % 3 === 0 ? 2 : 0));
+
+    // Potential — their ceiling after development. Stays higher, narrows later.
+    const potLo = Math.max(66, 88 - Math.floor(rank * 0.7) + boost + shift.pot);
+    const potHi = Math.min(98, potLo + 8 + (rank % 4 === 0 ? 3 : 0));
+
+    const rawBust = rank % 5 === 0 ? 2 : rank % 3 === 0 ? 1 : 0;
+    const bustLevel = Math.max(0, Math.min(2, rawBust + shift.bustMod));
+    const note = FIRST_ROUND_SCOUT_NOTES[rank % FIRST_ROUND_SCOUT_NOTES.length];
+
     return {
       scoutedOverall: [ovrLo, ovrHi] as [number, number],
       potential: [potLo, potHi] as [number, number],
-      floor: ovrLo - 5,
+      floor: ovrLo - 4,
       ceiling: potHi,
-      bustRisk: (rank % 5 === 0 ? 'High' : rank % 3 === 0 ? 'Medium' : 'Low') as Prospect['bustRisk'],
-      scoutNote: 'First-round profile — rotation upside with starter potential.',
+      bustRisk: (['Low', 'Medium', 'High'] as const)[bustLevel],
+      scoutNote: note,
     };
   }
 
-  const ovrLo = Math.max(48, 56 - Math.floor(rank / 4));
-  const ovrHi = Math.min(65, ovrLo + 4 + (rank % 3));
-  const potLo = Math.max(50, 64 - Math.floor(rank / 3));
-  const potHi = Math.min(72, potLo + 5 + (rank % 3));
+  // Second round — more raw, lower ceiling, higher bust rate
+  const ovrLo = Math.max(34, 48 - Math.floor(rank / 3) + shift.ovr);
+  const ovrHi = Math.min(58, ovrLo + 5 + (rank % 3));
+  const potLo = Math.max(52, 70 - Math.floor(rank / 2) + shift.pot);
+  const potHi = Math.min(80, potLo + 6 + (rank % 3));
+  const rawBust = rank % 3 === 0 ? 2 : rank % 2 === 0 ? 1 : 0;
+  const bustLevel = Math.max(0, Math.min(2, rawBust + shift.bustMod));
+  const note = SECOND_ROUND_SCOUT_NOTES[rank % SECOND_ROUND_SCOUT_NOTES.length];
+
   return {
     scoutedOverall: [ovrLo, ovrHi] as [number, number],
     potential: [potLo, potHi] as [number, number],
     floor: ovrLo - 4,
     ceiling: potHi,
-    bustRisk: (rank % 3 === 0 ? 'High' : rank % 2 === 0 ? 'Medium' : 'Low') as Prospect['bustRisk'],
-    scoutNote: 'Second-round profile — depth piece, two-way contract candidate.',
+    bustRisk: (['Low', 'Medium', 'High'] as const)[bustLevel],
+    scoutNote: note,
   };
 }
 
-function makeBoardProspect(used: Set<string>, salt: number, tier: DraftTier, rank: number): Prospect {
+const INTL_ARCHETYPES = ['Euro Playmaker', 'Stretch Operator', 'Athletic Big', 'International Wing'];
+const INTL_NOTES = [
+  'Playing in a top European league — scouts project 1-year development window before NBA-readiness.',
+  'Explosive athlete overseas. Needs a season to adjust to the speed of the pro game.',
+  'High-upside international — teams are split on whether he needs 1 or 2 years to develop.',
+  'Coached by a former NBA player overseas. Technical skill is there; athleticism needs NBA reps.',
+];
+
+function makeInternationalProspect(used: Set<string>, salt: number, rank: number, strength: DraftClassStrength): Prospect {
   const { firstName, lastName } = takeUniqueName(used, salt);
-  const ratings = ratingsForTier(tier, rank);
+  const ratings = ratingsForTier('second', rank, 0, strength);
+  // International prospects: wider scouting range, higher upside than typical 2nd round
+  const potBoost = 4 + (salt % 5);
+  const prospect = makeProspect({
+    firstName,
+    lastName,
+    position: (['PG', 'SG', 'SF', 'PF', 'C'] as const)[salt % 5],
+    archetype: INTL_ARCHETYPES[salt % INTL_ARCHETYPES.length],
+    age: 20 + (salt % 3),
+    ...ratings,
+    potential: [ratings.potential[0], Math.min(82, ratings.potential[1] + potBoost)] as [number, number],
+    ceiling: Math.min(82, ratings.ceiling + potBoost),
+    scoutNote: INTL_NOTES[salt % INTL_NOTES.length],
+  });
+  return {
+    ...prospect,
+    isInternational: true,
+    stashYears: (salt % 3 === 0 ? 2 : 1) as 1 | 2,
+  };
+}
+
+function prospectAge(tier: DraftTier, rank: number, salt: number): number {
+  // Top picks tend to be younger (one-and-done), mid/late more developed
+  if (tier === 'first') {
+    if (rank < 5) return 19 + (salt % 2 === 0 ? 0 : 1);      // 19–20
+    if (rank < 18) return 19 + (salt % 3 === 0 ? 2 : rank % 2); // 19–21
+    return 20 + (rank % 3);                                      // 20–22
+  }
+  return 20 + (salt % 4 === 0 ? 3 : rank % 3);                 // 20–23
+}
+
+/** Younger = wider scouting range + higher potential ceiling; older = tighter but floor-safe. */
+function agePotentialShift(age: number): { potBoost: number; rangeWiden: number } {
+  if (age <= 19) return { potBoost: 4, rangeWiden: 3 };
+  if (age <= 20) return { potBoost: 2, rangeWiden: 2 };
+  if (age <= 21) return { potBoost: 0, rangeWiden: 1 };
+  if (age === 22) return { potBoost: -2, rangeWiden: 0 };
+  return { potBoost: -4, rangeWiden: -1 };
+}
+
+function makeBoardProspect(used: Set<string>, salt: number, tier: DraftTier, rank: number, qualityBias = 0, strength: DraftClassStrength = 'Average'): Prospect {
+  const { firstName, lastName } = takeUniqueName(used, salt);
+  const ratings = ratingsForTier(tier, rank, qualityBias, strength);
+  const age = prospectAge(tier, rank, salt);
+  const { potBoost, rangeWiden } = agePotentialShift(age);
+
+  const potHiBoosted = Math.min(98, ratings.potential[1] + potBoost);
+  const potLoBoosted = Math.min(potHiBoosted - 2, ratings.potential[0] + Math.floor(potBoost / 2));
+  const ovrHiWidened = Math.min(88, ratings.scoutedOverall[1] + rangeWiden);
+  const ovrLoWidened = Math.max(44, ratings.scoutedOverall[0] - rangeWiden);
+
   return makeProspect({
     firstName,
     lastName,
     position: (['PG', 'SG', 'SF', 'PF', 'C'] as const)[salt % 5],
     archetype: ['Two-Way Wing', 'Stretch Big', 'Floor General', 'Rim Runner', '3-and-D Guard'][salt % 5],
-    age: tier === 'first' ? 19 + (rank % 2) : 20 + (rank % 3),
+    age,
     ...ratings,
+    scoutedOverall: [ovrLoWidened, ovrHiWidened] as [number, number],
+    potential: [potLoBoosted, potHiBoosted] as [number, number],
+    ceiling: potHiBoosted,
   });
 }
 
-function buildTieredDraftBoard(scouted: Prospect[], used: Set<string>): Prospect[] {
+function buildTieredDraftBoard(scouted: Prospect[], used: Set<string>, qualityBias = 0, strength: DraftClassStrength = 'Average'): Prospect[] {
   const board = [...scouted];
   let salt = board.length;
 
   for (let rank = 0; rank < FIRST_ROUND_POOL; rank += 1) {
-    board.push(makeBoardProspect(used, salt, 'first', rank));
+    board.push(makeBoardProspect(used, salt, 'first', rank, qualityBias, strength));
     salt += 1;
   }
+
+  // Scatter 4–5 international prospects among the 2nd round slots
+  const intlSlots = new Set([3, 8, 14, 21, 28].slice(0, strength === 'Loaded' ? 5 : 4));
   for (let rank = 0; rank < SECOND_ROUND_POOL; rank += 1) {
-    board.push(makeBoardProspect(used, salt + 1000 + rank, 'second', rank));
+    if (intlSlots.has(rank)) {
+      board.push(makeInternationalProspect(used, salt + 1000 + rank, rank, strength));
+    } else {
+      board.push(makeBoardProspect(used, salt + 1000 + rank, 'second', rank, 0, strength));
+    }
   }
 
   return board;
@@ -253,10 +401,14 @@ function migrateDraftBoard(state: DraftNightState): DraftNightState {
 }
 
 export function initDraftNight(franchise: Franchise, _league: League): DraftNightState {
+  // Use both rounds as baseline; reconcileDraftNightWithPicks (called on load) will
+  // remove any slots whose picks were traded away before draft night started.
   const userPickNumbers = userPickSlots(franchise.draftPickNumber ?? 14);
   const scouted = franchise.draftBoard.length >= 5 ? [...franchise.draftBoard] : [];
   const used = boardNameRegistry(scouted);
-  const board = buildTieredDraftBoard(scouted, used);
+  const qualityBias = draftClassQualityBias(franchise);
+  const classStrength = generateClassStrength(franchise.season);
+  const board = buildTieredDraftBoard(scouted, used, qualityBias, classStrength);
 
   return {
     active: true,
@@ -271,6 +423,7 @@ export function initDraftNight(franchise: Franchise, _league: League): DraftNigh
     log: [],
     stakeholderNote: buildStakeholderNote(franchise, pickBestAvailable(board, [])),
     onClock: userPickNumbers.includes(1),
+    classStrength,
   };
 }
 

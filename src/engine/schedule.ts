@@ -1,11 +1,13 @@
 import type { Franchise, League } from '../types/game';
 import { getTeamById } from '../data/league';
+import { effectiveGameStrength } from './leagueWorld';
 import {
   ensureLeagueSchedule,
   getUserWeekMatchups,
   SCHEDULE_GAMES_PER_WEEK,
   SCHEDULE_WEEKS,
   SEASON_GAME_COUNT,
+  TRADE_DEADLINE_WEEK,
 } from './leagueSchedule';
 
 export interface ScheduleGame {
@@ -20,7 +22,7 @@ export interface ScheduleGame {
   score?: string;
 }
 
-export { SCHEDULE_WEEKS, SCHEDULE_GAMES_PER_WEEK, SEASON_GAME_COUNT };
+export { SCHEDULE_WEEKS, SCHEDULE_GAMES_PER_WEEK, SEASON_GAME_COUNT, TRADE_DEADLINE_WEEK };
 
 export function buildSeasonSchedule(franchise: Franchise, league: League): ScheduleGame[] {
   const userId = franchise.leagueTeamId;
@@ -106,6 +108,11 @@ export function scheduleRecord(schedule: ScheduleGame[]): { wins: number; losses
   return { wins, losses };
 }
 
-export function opponentStrength(league: League, opponentId: string): number {
-  return Math.round(getTeamById(league, opponentId)?.strength ?? 75);
+export function opponentStrength(
+  league: League,
+  opponentId: string,
+  userFranchise?: Franchise | null,
+  week?: number,
+): number {
+  return Math.round(effectiveGameStrength(league, opponentId, userFranchise, week));
 }

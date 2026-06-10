@@ -198,6 +198,9 @@ export function createSubmittedProposal(
   responseNote?: string,
 ): SubmittedTradeProposal {
   const partner = getTeamById(league, proposal.partnerTeamId);
+  const outgoingSnapshot = franchise.roster
+    .filter((p) => proposal.outgoingPlayerIds.includes(p.id))
+    .map((p) => ({ id: p.id, name: playerName(p) }));
   return {
     id: uid('stp'),
     submittedWeek: franchise.week,
@@ -210,6 +213,7 @@ export function createSubmittedProposal(
     partnerVerdict,
     responseNote,
     expiresWeek: franchise.week + 2,
+    outgoingSnapshot,
   };
 }
 
@@ -368,11 +372,12 @@ function buildBlockInquiryOffer(
 
 function buildFallbackBlockProposal(
   franchise: Franchise,
+  league: League,
   partner: LeagueTeam,
   targetPlayer: Player,
   variant: number,
 ): TradeProposal {
-  const assets = generatePartnerTradeAssets(partner);
+  const assets = generatePartnerTradeAssets(partner, league, franchise);
   const outgoingSalary = targetPlayer.contract.annualSalary;
   const primary = pickBestSingleAsset(assets, outgoingSalary, franchise);
   const secondary = assets.find((p) => p.id !== primary.id) ?? assets[0];
@@ -398,11 +403,12 @@ function buildFallbackBlockProposal(
 
 function buildFallbackPickProposal(
   franchise: Franchise,
+  league: League,
   partner: LeagueTeam,
   targetPick: DraftPick,
   variant: number,
 ): TradeProposal {
-  const assets = generatePartnerTradeAssets(partner);
+  const assets = generatePartnerTradeAssets(partner, league, franchise);
   const primary = assets[variant % assets.length];
   const secondary = assets[(variant + 1) % assets.length];
 
@@ -426,14 +432,14 @@ function buildFallbackPickProposal(
 }
 
 function partnerReturnPick(
-  franchise: Franchise,
+  _franchise: Franchise,
   partner: LeagueTeam,
   round: 1 | 2,
   yearOffset = 1,
   protections?: string,
 ): DraftPick {
   return {
-    year: franchise.season + yearOffset,
+    year: LEAGUE_CALENDAR_YEAR + yearOffset,
     round,
     originalTeam: partner.fullName,
     ...(protections ? { protections } : {}),
@@ -442,12 +448,13 @@ function partnerReturnPick(
 
 function buildBlockOfferProposal(
   franchise: Franchise,
+  league: League,
   partner: LeagueTeam,
   targetPlayer: Player | undefined,
   targetPick: DraftPick | undefined,
   variant: number,
 ): TradeProposal | null {
-  const assets = generatePartnerTradeAssets(partner);
+  const assets = generatePartnerTradeAssets(partner, league, franchise);
   if (assets.length < 2) return null;
 
   const assetKey = targetPlayer?.id ?? (targetPick ? pickKey(targetPick) : 'unknown');
@@ -520,7 +527,7 @@ function finalizeBlockOffer(
   targetPlayer: Player | undefined,
   targetPick: DraftPick | undefined,
 ): TradeOffer | null {
-  const proposal = buildBlockOfferProposal(franchise, partner, targetPlayer, targetPick, variant);
+  const proposal = buildBlockOfferProposal(franchise, league, partner, targetPlayer, targetPick, variant);
   if (!proposal) return null;
 
   const offer = buildBlockInquiryOffer(franchise, league, proposal);
@@ -557,8 +564,25 @@ function finalizeBlockOffer(
 
 /** True when an offer is tied to a current listing and sends the listed asset out. */
 export function isValidBlockListingOffer(franchise: Franchise, offer: TradeOffer): boolean {
-  if (!offer.blockInquiry || !offer.listedAssetKey) return false;
+  if (!offer.blockInquiry) return false;
   const block = franchise.tradeBlock ?? EMPTY_TRADE_BLOCK;
+  const totalListed = block.playerIds.length + block.pickKeys.length;
+
+  // Package offer: all listed asset keys must still be on the block and match outgoing
+  if (offer.listedAssetKeys) {
+    if (offer.listedAssetKeys.length !== totalListed) return false;
+    const outgoingIds = offer.outgoing.players.map((p) => p.id);
+    const outgoingKeys = offer.outgoing.picks.map((p) => pickKey(p));
+    return offer.listedAssetKeys.every((k) => {
+      if (block.playerIds.includes(k)) return outgoingIds.includes(k);
+      if (block.pickKeys.includes(k)) return outgoingKeys.includes(k);
+      return false;
+    });
+  }
+
+  if (!offer.listedAssetKey) return false;
+  // Single-asset offers are only valid when exactly one asset is listed
+  if (totalListed > 1) return false;
 
   if (block.playerIds.includes(offer.listedAssetKey)) {
     const listedId = offer.listedAssetKey;
@@ -617,6 +641,100 @@ function stripBlockListingOffers(franchise: Franchise): Franchise {
   };
 }
 
+function generatePackageBlockOffers(
+  franchise: Franchise,
+  league: League,
+  players: Player[],
+  picks: DraftPick[],
+): TradeOffer[] {
+  const assetKeys = [
+    ...players.map((p) => p.id),
+    ...picks.map((p) => pickKey(p)),
+  ];
+  const totalSalary = players.reduce((sum, p) => sum + p.contract.annualSalary, 0);
+  const partners = league.teams.filter((t) => !t.isUser);
+
+  const ranked = partners
+    .map((partner) => {
+      const playerScore = players.reduce((sum, p) => sum + scorePartnerInterest(partner, p), 0);
+      const pickScore = picks.reduce((sum, p) => sum + scorePartnerInterestForPick(partner, p), 0);
+      return { partner, score: playerScore + pickScore };
+    })
+    .sort((a, b) => b.score - a.score);
+
+  const offers: TradeOffer[] = [];
+  const usedPartners = new Set<string>();
+
+  for (const { partner, score } of ranked) {
+    if (offers.length >= 4) break;
+    if (usedPartners.has(partner.id)) continue;
+
+    const assets = generatePartnerTradeAssets(partner, league, franchise);
+    if (assets.length < 1) continue;
+
+    const seed = hashString(`${partner.id}-pkg-${assetKeys.join('-')}`);
+    const packageType = pickInt(seed, 0, 3, 1);
+
+    const incomingPlayers: Player[] = [];
+    const incomingPicks: DraftPick[] = [];
+
+    switch (packageType) {
+      case 0:
+        incomingPlayers.push(pickBestSingleAsset(assets, totalSalary, franchise));
+        incomingPicks.push(partnerReturnPick(franchise, partner, 1, 1, 'Top-10 protected'));
+        break;
+      case 1:
+        incomingPlayers.push(...pickBestPair(assets, totalSalary, franchise));
+        incomingPicks.push(partnerReturnPick(franchise, partner, 2));
+        break;
+      case 2:
+        incomingPlayers.push(pickBestSingleAsset(assets, totalSalary, franchise));
+        incomingPicks.push(partnerReturnPick(franchise, partner, 1, 1));
+        incomingPicks.push(partnerReturnPick(franchise, partner, 2, 2));
+        break;
+      default:
+        incomingPlayers.push(...pickBestPair(assets, totalSalary, franchise));
+        break;
+    }
+
+    const proposal: TradeProposal = {
+      partnerTeamId: partner.id,
+      incomingPlayers,
+      outgoingPlayerIds: players.map((p) => p.id),
+      incomingPicks,
+      outgoingPickKeys: picks.map((p) => pickKey(p)),
+    };
+
+    const baseOffer = buildBlockInquiryOffer(franchise, league, proposal);
+    if (!baseOffer) continue;
+
+    const packageLabel = [
+      ...players.map((p) => playerName(p)),
+      ...picks.map(pickDescription),
+    ].join(' + ');
+
+    const interestScore = Math.min(88, Math.round(score / Math.max(players.length + picks.length, 1)));
+
+    offers.push({
+      ...baseOffer,
+      id: `block-pkg-${partner.id}-${assetKeys.join('-')}`,
+      blockInquiry: true,
+      listedAssetKeys: assetKeys,
+      analysis: {
+        ...baseOffer.analysis,
+        shortTerm: `Inbound offer for your package.`,
+        longTerm: `${partner.fullName} wants ${packageLabel} and proposes this return.`,
+        mediaRisk: 'Other teams may counter if word spreads.',
+        partnerAcceptScore: interestScore,
+      },
+    });
+
+    usedPartners.add(partner.id);
+  }
+
+  return offers;
+}
+
 /** Drop stale block offers and regenerate packages for every current listing. */
 export function reconcileBlockListingOffers(
   franchise: Franchise,
@@ -630,18 +748,35 @@ export function reconcileBlockListingOffers(
   let next = stripBlockListingOffers(franchise);
   let added = 0;
 
-  for (const playerId of block.playerIds) {
-    const offers = generateInstantBlockOffers(next, league, { type: 'player', key: playerId });
-    if (!offers.length) continue;
-    next = { ...next, tradeOffers: mergeTradeOffers(next.tradeOffers ?? [], offers) };
-    added += offers.length;
-  }
+  const totalAssets = block.playerIds.length + block.pickKeys.length;
 
-  for (const key of block.pickKeys) {
-    const offers = generateInstantBlockOffers(next, league, { type: 'pick', key });
-    if (!offers.length) continue;
-    next = { ...next, tradeOffers: mergeTradeOffers(next.tradeOffers ?? [], offers) };
-    added += offers.length;
+  if (totalAssets > 1) {
+    // Generate combined package offers for all listed assets together
+    const listedPlayers = block.playerIds
+      .map((id) => franchise.roster.find((p) => p.id === id))
+      .filter(Boolean) as Player[];
+    const listedPicks = block.pickKeys
+      .map((k) => franchise.draftPicks.find((p) => pickKey(p) === k))
+      .filter(Boolean) as DraftPick[];
+    const offers = generatePackageBlockOffers(next, league, listedPlayers, listedPicks);
+    if (offers.length) {
+      next = { ...next, tradeOffers: mergeTradeOffers(next.tradeOffers ?? [], offers) };
+      added += offers.length;
+    }
+  } else {
+    for (const playerId of block.playerIds) {
+      const offers = generateInstantBlockOffers(next, league, { type: 'player', key: playerId });
+      if (!offers.length) continue;
+      next = { ...next, tradeOffers: mergeTradeOffers(next.tradeOffers ?? [], offers) };
+      added += offers.length;
+    }
+
+    for (const key of block.pickKeys) {
+      const offers = generateInstantBlockOffers(next, league, { type: 'pick', key });
+      if (!offers.length) continue;
+      next = { ...next, tradeOffers: mergeTradeOffers(next.tradeOffers ?? [], offers) };
+      added += offers.length;
+    }
   }
 
   return { franchise: next, added };
@@ -696,9 +831,9 @@ export function generateInstantBlockOffers(
       if (offers.length >= 4 || usedPartners.has(partner.id)) continue;
       const fallbackProposal =
         targetPlayer !== undefined
-          ? buildFallbackBlockProposal(franchise, partner, targetPlayer, offers.length)
+          ? buildFallbackBlockProposal(franchise, league, partner, targetPlayer, offers.length)
           : targetPick
-            ? buildFallbackPickProposal(franchise, partner, targetPick, offers.length)
+            ? buildFallbackPickProposal(franchise, league, partner, targetPick, offers.length)
             : null;
       if (!fallbackProposal) continue;
 

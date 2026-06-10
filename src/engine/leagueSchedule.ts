@@ -1,15 +1,51 @@
 import type { League, LeagueMatchup, LeagueTeam } from '../types/game';
 import { hashString } from '../lib/visuals/hash';
 
-export const SCHEDULE_WEEKS = 26;
-export const SCHEDULE_GAMES_PER_WEEK = 3;
-export const SEASON_GAME_COUNT = SCHEDULE_WEEKS * SCHEDULE_GAMES_PER_WEEK;
+export const SCHEDULE_GAMES_PER_WEEK = 2;
+export const SCHEDULE_WEEKS = 41;
+export const SEASON_GAME_COUNT = 82;
+export const TRADE_DEADLINE_WEEK = 32;
 
 function pairKey(a: string, b: string): string {
   return a < b ? `${a}|${b}` : `${b}|${a}`;
 }
 
-/** Build a balanced 78-game schedule: home-and-home vs all 29 opponents + 20 flex games. */
+/** One flex round: each team plays once (15 pairings for 30 teams). */
+function flexRoundPairIndices(n: number, round: number): [number, number][] {
+  const rotatable = Array.from({ length: n - 1 }, (_, i) => i);
+  const r = round % (n - 1);
+  const rotated = [...rotatable.slice(r), ...rotatable.slice(0, r)];
+  const ordered = [...rotated, n - 1];
+  const pairs: [number, number][] = [];
+  for (let i = 0; i < n / 2; i += 1) {
+    pairs.push([ordered[i], ordered[n - 1 - i]]);
+  }
+  return pairs;
+}
+
+function teamGameCounts(schedule: LeagueMatchup[], teamIds: string[]): Map<string, number> {
+  const counts = new Map(teamIds.map((id) => [id, 0]));
+  for (const game of schedule) {
+    counts.set(game.homeTeamId, (counts.get(game.homeTeamId) ?? 0) + 1);
+    counts.set(game.awayTeamId, (counts.get(game.awayTeamId) ?? 0) + 1);
+  }
+  return counts;
+}
+
+function isBalancedSchedule(schedule: LeagueMatchup[], teamIds: string[]): boolean {
+  if (!schedule.length) return false;
+  const counts = teamGameCounts(schedule, teamIds);
+  return teamIds.every((id) => counts.get(id) === SEASON_GAME_COUNT);
+}
+
+export function scheduleNeedsRebuild(schedule: LeagueMatchup[] | undefined, teamIds: string[]): boolean {
+  if (!schedule?.length) return true;
+  if (!isBalancedSchedule(schedule, teamIds)) return true;
+  const maxWeek = schedule.reduce((max, m) => Math.max(max, m.week), 0);
+  return maxWeek < SCHEDULE_WEEKS;
+}
+
+/** Build a balanced 82-game schedule: home-and-home vs all 29 opponents + 24 flex games. */
 export function buildLeagueSchedule(teams: LeagueTeam[], season: number): LeagueMatchup[] {
   const ids = [...teams].map((t) => t.id).sort();
   const n = ids.length;
@@ -24,15 +60,14 @@ export function buildLeagueSchedule(teams: LeagueTeam[], season: number): League
     }
   }
 
-  for (let i = 0; i < n; i += 1) {
-    for (let k = 0; k < 20; k += 1) {
-      const j = (i + 1 + k) % n;
-      if (j === i) continue;
-      const homeFirst = hashString(`${season}-flex-${ids[i]}-${ids[j]}-${k}`) % 2 === 0;
+  const flexRounds = SEASON_GAME_COUNT - (n - 1) * 2;
+  for (let round = 0; round < flexRounds; round += 1) {
+    for (const [a, b] of flexRoundPairIndices(n, round)) {
+      const homeFirst = hashString(`${season}-flex-${ids[a]}-${ids[b]}-${round}`) % 2 === 0;
       raw.push({
-        homeTeamId: homeFirst ? ids[i] : ids[j],
-        awayTeamId: homeFirst ? ids[j] : ids[i],
-        salt: 100 + k,
+        homeTeamId: homeFirst ? ids[a] : ids[b],
+        awayTeamId: homeFirst ? ids[b] : ids[a],
+        salt: 100 + round,
       });
     }
   }
@@ -99,7 +134,8 @@ export function buildLeagueSchedule(teams: LeagueTeam[], season: number): League
 }
 
 export function ensureLeagueSchedule(league: League): League {
-  if (league.schedule?.length) return league;
+  const teamIds = league.teams.map((t) => t.id);
+  if (league.schedule?.length && !scheduleNeedsRebuild(league.schedule, teamIds)) return league;
   return { ...league, schedule: buildLeagueSchedule(league.teams, league.season) };
 }
 
@@ -121,6 +157,6 @@ export function userOpponentIdsForWeek(league: League, userTeamId: string, week:
 }
 
 export function expectedWinsForStrength(strength: number, games = SEASON_GAME_COUNT): number {
-  const winRate = 1 / (1 + Math.exp(-(strength - 75) / 5.5));
+  const winRate = 1 / (1 + Math.exp(-(strength - 75) / 6.5));
   return Math.round(games * winRate);
 }

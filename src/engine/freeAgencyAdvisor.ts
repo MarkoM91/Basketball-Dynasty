@@ -121,19 +121,20 @@ export function analyzeTeamNeeds(franchise: Franchise): TeamNeed[] {
 
 function capBriefing(franchise: Franchise): string {
   const { cap } = franchise;
+  const room = cap.effectiveRoom;
   if (cap.inSecondApron) {
     return 'Second apron — hard-capped. Only minimum deals or trade exceptions are realistic.';
   }
-  if (cap.projectedRoom <= 0 && !cap.inLuxuryTax) {
-    return `No cap room (${formatMoney(0)}). Use MLE (${formatMoney(cap.mleAvailable)}) or minimum contracts only.`;
+  if (room <= 0 && !cap.inLuxuryTax) {
+    return `No usable cap room. Use MLE (${formatMoney(cap.mleAvailable)}) or minimum contracts only.`;
   }
-  if (cap.projectedRoom <= 0 && cap.inLuxuryTax) {
+  if (room <= 0 && cap.inLuxuryTax) {
     return `Tax team with no room — taxpayer MLE (${formatMoney(cap.mleAvailable)}) or minimums. Ownership hates adding tax.`;
   }
-  if (cap.projectedRoom < 8_000_000) {
-    return `Tight room (${formatMoney(cap.projectedRoom)}). One mid-level signing max — pick your spot carefully.`;
+  if (room < 8_000_000) {
+    return `Tight room (${formatMoney(room)} usable). One mid-level signing max — pick your spot carefully.`;
   }
-  return `${formatMoney(cap.projectedRoom)} in room. You can chase one starter or two rotation pieces.`;
+  return `${formatMoney(room)} usable room. You can chase one starter or two rotation pieces.`;
 }
 
 function strategyBriefing(franchise: Franchise): string {
@@ -182,7 +183,7 @@ function recommendPitch(
     }
   }
 
-  if (franchise.cap.projectedRoom < agent.askingSalary * 0.5 || franchise.cap.inLuxuryTax) {
+  if (franchise.cap.effectiveRoom < agent.askingSalary * 0.5 || franchise.cap.inLuxuryTax) {
     return { pitch: 'team_friendly', reason: 'Keep payroll flexible.' };
   }
 
@@ -232,8 +233,8 @@ function scoreFreeAgent(
 function buildSummary(franchise: Franchise, needs: TeamNeed[], targets: FaTargetSuggestion[]): string {
   const topNeed = needs[0];
   if (!targets.length) {
-    if (franchise.cap.projectedRoom <= 0) {
-      return `Cap room is gone. Assistant GM says: stand pat or hunt minimum contracts${topNeed ? ` at ${topNeed.position}` : ''}.`;
+    if (franchise.cap.effectiveRoom <= 0) {
+      return `Usable cap room is gone. Assistant GM says: stand pat or hunt minimum contracts${topNeed ? ` at ${topNeed.position}` : ''}.`;
     }
     return 'No clear free-agent fits on the board — consider advancing the market or pivoting to trades.';
   }

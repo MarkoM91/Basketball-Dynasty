@@ -1555,24 +1555,24 @@
   ],
   "LA|Current": [
     {
-      "name": "Norchad Omier",
+      "name": "Kawhi Leonard",
       "position": "SF"
-    },
-    {
-      "name": "Sean Pedulla",
-      "position": "SG"
     },
     {
       "name": "Bradley Beal",
       "position": "SG"
     },
     {
-      "name": "Kawhi Leonard",
-      "position": "SF"
+      "name": "Bennedict Mathurin",
+      "position": "SG"
     },
     {
-      "name": "Kobe Sanders",
+      "name": "Darius Garland",
       "position": "SG"
+    },
+    {
+      "name": "Brook Lopez",
+      "position": "C"
     },
     {
       "name": "Derrick Jones Jr.",
@@ -1587,16 +1587,16 @@
       "position": "SG"
     },
     {
-      "name": "Bennedict Mathurin",
+      "name": "Norchad Omier",
+      "position": "SF"
+    },
+    {
+      "name": "Sean Pedulla",
       "position": "SG"
     },
     {
-      "name": "Darius Garland",
+      "name": "Kobe Sanders",
       "position": "SG"
-    },
-    {
-      "name": "Brook Lopez",
-      "position": "C"
     },
     {
       "name": "Cam Christie",
@@ -1629,7 +1629,27 @@
   ],
   "LA|Cosmos": [
     {
-      "name": "Adou Thiero",
+      "name": "Luka Dončić",
+      "position": "SF"
+    },
+    {
+      "name": "LeBron James",
+      "position": "SF"
+    },
+    {
+      "name": "Austin Reaves",
+      "position": "SG"
+    },
+    {
+      "name": "Deandre Ayton",
+      "position": "C"
+    },
+    {
+      "name": "Rui Hachimura",
+      "position": "SF"
+    },
+    {
+      "name": "Marcus Smart",
       "position": "SG"
     },
     {
@@ -1641,7 +1661,7 @@
       "position": "SF"
     },
     {
-      "name": "Deandre Ayton",
+      "name": "Jaxson Hayes",
       "position": "C"
     },
     {
@@ -1649,12 +1669,12 @@
       "position": "SG"
     },
     {
-      "name": "Luke Kennard",
+      "name": "Adou Thiero",
       "position": "SG"
     },
     {
-      "name": "Jaxson Hayes",
-      "position": "C"
+      "name": "Luke Kennard",
+      "position": "SG"
     },
     {
       "name": "Jake LaRavia",
@@ -1665,10 +1685,6 @@
       "position": "SF"
     },
     {
-      "name": "Austin Reaves",
-      "position": "SG"
-    },
-    {
       "name": "Drew Timme",
       "position": "SF"
     },
@@ -1677,24 +1693,8 @@
       "position": "SG"
     },
     {
-      "name": "LeBron James",
-      "position": "SF"
-    },
-    {
-      "name": "Rui Hachimura",
-      "position": "SF"
-    },
-    {
       "name": "Chris Mañon",
       "position": "SG"
-    },
-    {
-      "name": "Marcus Smart",
-      "position": "SG"
-    },
-    {
-      "name": "Luka Dončić",
-      "position": "SF"
     },
     {
       "name": "Kobe Bufkin",
@@ -1851,16 +1851,44 @@
   ],
   "Dallas|Lasso": [
     {
-      "name": "John Poulakidas",
+      "name": "Cooper Flagg",
+      "position": "SF"
+    },
+    {
+      "name": "Kyrie Irving",
       "position": "SG"
+    },
+    {
+      "name": "P.J. Washington",
+      "position": "SF"
+    },
+    {
+      "name": "Daniel Gafford",
+      "position": "SF"
+    },
+    {
+      "name": "Dereck Lively II",
+      "position": "C"
+    },
+    {
+      "name": "Klay Thompson",
+      "position": "SG"
+    },
+    {
+      "name": "Naji Marshall",
+      "position": "SF"
     },
     {
       "name": "Max Christie",
       "position": "SG"
     },
     {
-      "name": "Dereck Lively II",
-      "position": "C"
+      "name": "Khris Middleton",
+      "position": "SF"
+    },
+    {
+      "name": "John Poulakidas",
+      "position": "SG"
     },
     {
       "name": "Dwight Powell",
@@ -1879,23 +1907,7 @@
       "position": "SG"
     },
     {
-      "name": "Kyrie Irving",
-      "position": "SG"
-    },
-    {
-      "name": "Naji Marshall",
-      "position": "SF"
-    },
-    {
       "name": "Caleb Martin",
-      "position": "SF"
-    },
-    {
-      "name": "Khris Middleton",
-      "position": "SF"
-    },
-    {
-      "name": "Daniel Gafford",
       "position": "SF"
     },
     {
@@ -1903,20 +1915,8 @@
       "position": "SF"
     },
     {
-      "name": "P.J. Washington",
-      "position": "SF"
-    },
-    {
       "name": "Moussa Cisse",
       "position": "C"
-    },
-    {
-      "name": "Klay Thompson",
-      "position": "SG"
-    },
-    {
-      "name": "Cooper Flagg",
-      "position": "SF"
     },
     {
       "name": "Marvin Bagley III",

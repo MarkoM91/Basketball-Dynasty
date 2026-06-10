@@ -7,6 +7,8 @@ export function PlayMenu({
   gamesPerWeek,
   onPrimary,
   primaryLabel,
+  primaryDisabled,
+  primaryDisabledReason,
   secondaryActions,
 }: {
   phase: SeasonPhase;
@@ -14,6 +16,8 @@ export function PlayMenu({
   gamesPerWeek: number;
   onPrimary: () => void;
   primaryLabel: string;
+  primaryDisabled?: boolean;
+  primaryDisabledReason?: string;
   secondaryActions?: { label: string; onClick: () => void }[];
 }) {
   const gamesLeft = Math.max(0, gamesPerWeek - gamesThisWeek);
@@ -21,16 +25,16 @@ export function PlayMenu({
   return (
     <div className="play-menu">
       <div className="play-menu-main">
-        <button type="button" className="play-menu-btn" onClick={onPrimary}>
+        <button type="button" className="play-menu-btn" onClick={onPrimary} disabled={primaryDisabled}>
           <span className="play-menu-icon">▶</span>
-          <span>
+          <span style={{ textAlign: 'left' }}>
             <span className="play-menu-label">{primaryLabel}</span>
-            <span className="play-menu-phase">{phaseLabel(phase)}</span>
+            <span className="play-menu-phase">{primaryDisabled && primaryDisabledReason ? primaryDisabledReason : phaseLabel(phase)}</span>
           </span>
         </button>
         {phase === 'regular_season' || phase === 'trade_deadline' ? (
           <p className="play-menu-meta">
-            {gamesLeft} game{gamesLeft === 1 ? '' : 's'} left this week · 78-game schedule
+            {gamesLeft} game{gamesLeft === 1 ? '' : 's'} left this week · 82-game schedule
           </p>
         ) : null}
       </div>

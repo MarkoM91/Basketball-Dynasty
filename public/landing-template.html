@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Basketball Dynasty — Free Basketball GM Game in Your Browser (No Download)</title>
+<meta name="description" content="Run an entire basketball franchise: trades, salary cap, two-round draft, free agency, playoff bracket — and an owner who can fire you. Plays instantly. No signup.">
+<style>
+  :root {
+    --bg: #0e1014; --panel: #161a21; --panel-2: #1c2129; --border: #2a313c;
+    --text: #e8ebef; --muted: #8b94a3;
+    --gold: #d4a045; --gold-bright: #f0b429; --bronze: #8b6914;
+    --danger: #e0533d; --success: #6bbf59;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  .bd-logo, .team-logo { display: block; }
+
+  /* NAV */
+  nav {
+    border-bottom: 1px solid var(--border); padding: 16px 0;
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(14, 16, 20, 0.92); backdrop-filter: blur(8px);
+  }
+  nav .container { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
+  .brand-text { font-weight: 800; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; line-height: 1.1; }
+  nav .links { display: flex; gap: 22px; align-items: center; color: var(--muted); font-size: 14px; }
+  nav .links a { color: var(--muted); text-decoration: none; }
+  nav .links a:hover { color: var(--text); }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 22px; border-radius: 8px; font-weight: 700; font-size: 15px;
+    text-decoration: none; border: 1px solid transparent; cursor: pointer;
+    transition: transform 0.05s, filter 0.15s;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary {
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold)); color: #1a1308;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.15) inset, 0 8px 24px rgba(212,160,69,0.25);
+  }
+  .btn-primary:hover { filter: brightness(1.05); }
+  .btn-ghost { background: transparent; border-color: var(--border); color: var(--text); }
+  .btn-ghost:hover { background: var(--panel-2); }
+  .btn-lg { padding: 16px 28px; font-size: 16px; }
+  .btn-block { width: 100%; }
+
+  /* HERO — mirrors your real /start: left brand stack, right GET STARTED panel */
+  .hero { padding: 80px 0 64px; }
+  .hero-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: center; }
+  .brand-mark-large { display: flex; align-items: center; gap: 18px; margin-bottom: 36px; }
+  .brand-mark-large .brand-text { font-size: 18px; letter-spacing: 2px; }
+  .eyebrow {
+    text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px;
+    color: var(--muted); font-weight: 700; margin-bottom: 16px;
+  }
+  h1 {
+    font-size: clamp(40px, 5.6vw, 64px); line-height: 1.04;
+    font-weight: 900; letter-spacing: -0.02em; margin-bottom: 22px;
+  }
+  h1 .accent { color: var(--gold); }
+  .hero-sub { font-size: 17px; color: var(--muted); margin-bottom: 32px; max-width: 540px; }
+  .hero-stats { display: flex; gap: 32px; flex-wrap: wrap; }
+  .stat-group .num { font-size: 30px; font-weight: 900; color: var(--gold); letter-spacing: -0.02em; }
+  .stat-group .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+  /* GET STARTED panel — copied from your real homepage layout */
+  .get-started-panel {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+    padding: 26px; box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6);
+  }
+  .get-started-panel .panel-eyebrow {
+    color: var(--gold); font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+    font-size: 12px; margin-bottom: 14px;
+  }
+  .get-started-panel p { color: var(--muted); margin-bottom: 22px; font-size: 15px; line-height: 1.55; }
+  .panel-cta-sub { color: var(--muted); font-size: 12px; margin-top: 14px; text-align: center; }
+
+  /* SECTION */
+  section { padding: 80px 0; border-top: 1px solid var(--border); }
+  h2 { font-size: clamp(28px, 3.5vw, 40px); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 12px; }
+  .section-sub { color: var(--muted); font-size: 16px; margin-bottom: 36px; max-width: 600px; }
+
+  /* STAKES STRIP */
+  .stakes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .stake-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 28px 24px;
+  }
+  .stake-icon {
+    width: 44px; height: 44px; border-radius: 10px; background: rgba(212,160,69,0.12);
+    color: var(--gold); display: grid; place-items: center; font-size: 22px; margin-bottom: 16px;
+  }
+  .stake-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .stake-card p { color: var(--muted); font-size: 14px; }
+
+  /* SCENARIOS — with real hex team logos */
+  .scenarios-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 16px; }
+  .scenario-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 22px 24px; transition: border-color 0.15s;
+    color: inherit; text-decoration: none; display: block; position: relative; overflow: hidden;
+  }
+  .scenario-card::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--team-accent, var(--gold));
+  }
+  .scenario-card:hover { border-color: var(--gold); }
+  .scenario-head { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+  .scenario-head .tag {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px;
+    color: var(--gold); font-weight: 700; margin-bottom: 4px;
+  }
+  .scenario-head h3 { font-size: 22px; font-weight: 800; }
+  .scenario-card .hook { color: var(--text); font-size: 14px; margin-bottom: 6px; font-weight: 600; }
+  .scenario-card .briefing { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+  .scenario-card .take { color: var(--gold); font-weight: 700; font-size: 13px; }
+  .pick-any { text-align: center; }
+  .pick-any a { color: var(--muted); text-decoration: none; font-size: 14px; }
+  .pick-any a:hover { color: var(--gold); }
+
+  /* FEATURE CARDS — no fake screenshots. Structured callouts. */
+  .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .feature-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+    padding: 32px 28px; position: relative; overflow: hidden;
+  }
+  .feature-card::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+  .feature-card h3 { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+  .feature-card p.lead { color: var(--muted); font-size: 15px; margin-bottom: 22px; }
+  .feature-card .feature-list { display: grid; gap: 12px; }
+  .feature-card .feature-list .row {
+    display: flex; gap: 12px; align-items: flex-start; padding-top: 12px; border-top: 1px solid var(--border);
+  }
+  .feature-card .feature-list .row:first-child { padding-top: 0; border-top: none; }
+  .feature-card .feature-list .row .marker {
+    color: var(--gold); font-weight: 800; font-size: 12px; letter-spacing: 0.5px;
+    text-transform: uppercase; min-width: 86px;
+  }
+  .feature-card .feature-list .row .text { color: var(--text); font-size: 14px; line-height: 1.5; flex: 1; }
+
+  /* SIDEBAR MAP */
+  .sidebar-map { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .sidebar-tile {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+    padding: 18px; display: flex; align-items: flex-start; gap: 12px;
+  }
+  .sidebar-tile .icon { font-size: 18px; color: var(--gold); flex-shrink: 0; line-height: 1.2; width: 24px; text-align: center; }
+  .sidebar-tile .label { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+  .sidebar-tile .note { color: var(--muted); font-size: 12px; }
+
+  /* COMPARISON */
+  .comparison-table {
+    width: 100%; border-collapse: collapse; background: var(--panel);
+    border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+  }
+  .comparison-table th, .comparison-table td {
+    padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px;
+  }
+  .comparison-table thead th { background: var(--panel-2); font-weight: 700; }
+  .comparison-table thead th:first-child { color: var(--muted); font-weight: 500; }
+  .comparison-table thead th.us { color: var(--gold); }
+  .comparison-table tbody tr:last-child td { border-bottom: none; }
+  .comparison-table td.us { color: var(--gold); font-weight: 700; text-align: center; }
+  .comparison-table td.other { text-align: center; color: var(--muted); }
+
+  /* QUOTES */
+  .quotes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+  .quote-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+  .quote-card .quote { font-size: 15px; line-height: 1.55; margin-bottom: 14px; }
+  .quote-card .attr { font-size: 12px; color: var(--muted); }
+  .community-cta { text-align: center; }
+
+  /* CTA BAND */
+  .cta-band { text-align: center; }
+  .cta-band h2 { margin-bottom: 14px; }
+  .cta-band p { color: var(--muted); margin-bottom: 28px; font-size: 16px; }
+
+  /* FAQ */
+  .faq { max-width: 760px; margin: 0 auto; }
+  details { border-bottom: 1px solid var(--border); padding: 20px 0; }
+  details summary {
+    cursor: pointer; font-weight: 700; font-size: 17px; list-style: none;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::after { content: '+'; color: var(--gold); font-size: 22px; font-weight: 400; }
+  details[open] summary::after { content: '−'; }
+  details p { margin-top: 12px; color: var(--muted); font-size: 15px; }
+
+  /* FOOTER */
+  footer { padding: 56px 0 40px; border-top: 1px solid var(--border); color: var(--muted); }
+  .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-bottom: 32px; }
+  .footer-col h4 { color: var(--text); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+  .footer-col a { display: block; color: var(--muted); text-decoration: none; font-size: 14px; padding: 4px 0; }
+  .footer-col a:hover { color: var(--gold); }
+  .footer-bottom { font-size: 13px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+  @media (max-width: 880px) {
+    .hero { padding: 48px 0; }
+    .hero-grid, .feature-grid { grid-template-columns: 1fr; gap: 28px; }
+    .stakes-grid, .scenarios-grid, .quotes-grid, .sidebar-map { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    section { padding: 56px 0; }
+    nav .links a:not(.btn) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== REUSABLE SVG: BD master logo ====== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="bdGold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f4b73a"/>
+      <stop offset="50%" stop-color="#d4a045"/>
+      <stop offset="100%" stop-color="#8b6914"/>
+    </linearGradient>
+    <symbol id="bd-logo" viewBox="0 0 100 100">
+      <polygon points="50,4 91,27 91,73 50,96 9,73 9,27" fill="url(#bdGold)" stroke="#1a1308" stroke-width="2.5"/>
+      <polygon points="50,14 82,32 82,68 50,86 18,68 18,32" fill="none" stroke="#1a1308" stroke-width="1.2" opacity="0.45"/>
+      <ellipse cx="50" cy="50" rx="12" ry="30" fill="#1a1308"/>
+      <line x1="50" y1="22" x2="50" y2="78" stroke="#f4b73a" stroke-width="1.6"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <a href="/" class="brand">
+      <svg class="bd-logo" width="36" height="36"><use href="#bd-logo"/></svg>
+      <div class="brand-text">Basketball<br>Dynasty</div>
+    </a>
+    <div class="links">
+      <a href="#how-it-works">How to play</a>
+      <a href="#scenarios">Scenarios</a>
+      <a href="#compare">Compare</a>
+      <a href="https://reddit.com/r/BasketballDynastyGM" target="_blank" rel="noopener">Reddit</a>
+      <a href="/start" class="btn btn-primary">▶ Start new franchise</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO — mirrors your live homepage exactly -->
+<header class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="brand-mark-large">
+        <svg class="bd-logo" width="64" height="64"><use href="#bd-logo"/></svg>
+        <div class="brand-text">Basketball<br>Dynasty</div>
+      </div>
+      <div class="eyebrow">Free online basketball manager game</div>
+      <h1>Build a <span class="accent">dynasty.</span><br>Or get fired trying.</h1>
+      <p class="hero-sub">Browser basketball GM simulation with trades, salary cap, two-round draft, free agency, playoff bracket, and franchise memory. Play free — no download, saves on this device.</p>
+      <div class="hero-stats">
+        <div class="stat-group"><div class="num">30</div><div class="lbl">teams</div></div>
+        <div class="stat-group"><div class="num">16</div><div class="lbl">playoff seeds</div></div>
+        <div class="stat-group"><div class="num">0–100</div><div class="lbl">ratings</div></div>
+        <div class="stat-group"><div class="num">0</div><div class="lbl">install</div></div>
+      </div>
+    </div>
+
+    <!-- GET STARTED panel (same layout as your live /start) -->
+    <div class="get-started-panel">
+      <div class="panel-eyebrow">▶ Get started</div>
+      <p>Pick a scripted scenario or choose any of 30 franchises — logos, cap sheets, and rosters included.</p>
+      <a href="/start" class="btn btn-primary btn-lg btn-block">▶ Start new franchise</a>
+      <p class="panel-cta-sub">No signup · Save stays on your device · ~10s to start</p>
+    </div>
+  </div>
+</header>
+
+<!-- STAKES STRIP -->
+<section id="how-it-works">
+  <div class="container">
+    <h2>This isn't just another sim.</h2>
+    <p class="section-sub">Three systems that make every season feel like it actually matters.</p>
+    <div class="stakes-grid">
+      <div class="stake-card">
+        <div class="stake-icon">💼</div>
+        <h3>Ownership can fire you</h3>
+        <p>Your owner sets a goal at hire — "Reach playoffs and win a series", "Build a sustainable contender within 4 seasons" — and your Job Security ticks up or down every season. Miss the goal long enough and you're out.</p>
+      </div>
+      <div class="stake-card">
+        <div class="stake-icon">🎯</div>
+        <h3>Imperfect-scouting draft</h3>
+        <p>60 picks, scout ranges, lottery odds, and bust risk on every board. Scouted OVR is a range — your scouting director hands you uncertainty, not answers.</p>
+      </div>
+      <div class="stake-card">
+        <div class="stake-icon">🔥</div>
+        <h3>Championship Window</h3>
+        <p>Deep Rebuild, Stuck Middle, Aging Contender — your window decides which trade partners pick up the phone. Lie to yourself about your window and the AI charges you full price.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCENARIOS — real hex team logos in team colors -->
+<section id="scenarios">
+  <div class="container">
+    <h2>Pick your crisis. Take the job.</h2>
+    <p class="section-sub">Each card is a crisis, not a tutorial. Tap one to take control of the front office.</p>
+    <div class="scenarios-grid">
+
+      <!-- Golden State Spectrum -->
+      <a href="/start" class="scenario-card" style="--team-accent:#3a7bd5;">
+        <div class="scenario-head">
+          <svg class="team-logo" width="56" height="56" viewBox="0 0 100 100">
+            <polygon points="50,5 90,25 88,80 50,95 12,80 10,25" fill="#1d4f9c" stroke="#0e2752" stroke-width="2"/>
+            <text x="50" y="56" text-anchor="middle" font-family="-apple-system,sans-serif" font-weight="900" font-size="22" fill="#ffffff">GSS</text>
+            <text x="50" y="82" text-anchor="middle" font-family="-apple-system,sans-serif" font-weight="700" font-size="9" fill="#f4b73a" letter-spacing="1">GSS</text>
+          </svg>
+          <div>
+            <div class="tag">Aging contender</div>
+            <h3>Golden State Spectrum</h3>
+          </div>
+        </div>
+        <p class="hook">Star in his prime. Expensive roster. Title now.</p>
+        <p class="briefing">Limited picks, heavy payroll, every move under a microscope.</p>
+        <div class="take">Take control of the front office →</div>
+      </a>
+
+      <!-- Chicago Gale -->
+      <a href="/start" class="scenario-card" style="--team-accent:#c8312f;">
+        <div class="scenario-head">
+          <svg class="team-logo" width="56" height="56" viewBox="0 0 100 100">
+            <polygon points="50,5 90,25 88,80 50,95 12,80 10,25" fill="#c8312f" stroke="#6e1a1a" stroke-width="2"/>
+            <text x="50" y="56" text-anchor="middle" font-family="-apple-system,sans-serif" font-weight="900" font-size="22" fill="#ffffff">CHI</text>
+            <text x="50" y="82" text-anchor="middle" font-family="-apple-system,sans-serif" font-weight="700" font-size="9" fill="#f4b73a" letter-spacing="1">CHI</text>
+          </svg>
+          <div>
+            <div class="tag">Lottery rebuild</div>
+            <h3>Chicago Gale</h3>
+          </div>
+        </div>
+        <p class="hook">No. 2 pick. Young, raw roster.</p>
+        <p class="briefing">Fans are patient — for now. This draft defines the decade.</p>
+        <div class="take">Take control of the front office →</div>
+      </a>
+
+      <!-- Sacramento Republic -->
+      <a href="/start" class="scenario-card" style="--team-accent:#7a4cb7;">
+        <div class="scenario-head">
+          <svg class="team-logo" width="56" height="56" viewBox="0 0 100 100">
+            <polygon points="50,5 90,25 88,80 50,95 12,80 10,25" fill="#5b2d8c" stroke="#3a1f5e" stroke-width="2"/>
+            <text x="50" y="56" text-anchor="middle" font-family="-apple-system,sans-serif" font-weight="900" font-size="22" fill="#ffffff">SAC</text>
+            <text x="50" y="82" text-anchor="middle" font-family="-apple-system,sans-serif" font-weight="700" font-size="9" fill="#f4b73a" letter-spacing="1">SAC</text>
+          </svg>
+          <div>
+            <div class="tag">Stuck middle</div>
+            <h3>Sacramento Republic</h3>
+          </div>
+        </div>
+        <p class="hook">38–44 every year. No cap room, no star, no lottery luck.</p>
+        <p class="briefing">Ownership wants the play-in. The fan base wants a reset.</p>
+        <div class="take">Take control of the front office →</div>
+      </a>
+
+      <!-- Milwaukee Hops -->
+      <a href="/start" class="scenario-card" style="--team-accent:#2d8a4e;">
+        <div class="scenario-head">
+          <svg class="team-logo" width="56" height="56" viewBox="0 0 100 100">
+            <polygon points="50,5 90,25 88,80 50,95 12,80 10,25" fill="#1f5e3a" stroke="#0e3320" stroke-width="2"/>
+            <text x="50" y="56" text-anchor="middle" font-family="-apple-system,sans-serif" font-weight="900" font-size="22" fill="#3a9bb7">MIL</text>
+            <text x="50" y="82" text-anchor="middle" font-family="-apple-system,sans-serif" font-weight="700" font-size="9" fill="#f4b73a" letter-spacing="1">MIL</text>
+          </svg>
+          <div>
+            <div class="tag">Small-market star</div>
+            <h3>Milwaukee Hops</h3>
+          </div>
+        </div>
+        <p class="hook">24-year-old star hits free agency. Prove you can contend.</p>
+        <p class="briefing">One season to sell him on the franchise — or trade him.</p>
+        <div class="take">Take control of the front office →</div>
+      </a>
+
+    </div>
+    <div class="pick-any"><a href="/start">Or pick any of 30 franchises yourself →</a></div>
+  </div>
+</section>
+
+<!-- DIFFERENTIATORS — no fake screenshots. Clean structured cards. -->
+<section>
+  <div class="container">
+    <h2 style="margin-bottom:36px;">The systems that make it stick.</h2>
+    <div class="feature-grid">
+
+      <div class="feature-card">
+        <h3>Every job comes with a briefing.</h3>
+        <p class="lead">You don't just pick a team — you take the job. Owner's goal, current window, job security, the star you're supposed to build around, and the first major decision waiting on your desk.</p>
+        <div class="feature-list">
+          <div class="row"><div class="marker">Brief</div><div class="text">Real ownership briefing per scenario — situation, goal, window, star</div></div>
+          <div class="row"><div class="marker">Decision</div><div class="text">First major decision baked into week 1</div></div>
+          <div class="row"><div class="marker">Pressure</div><div class="text">Job Security % updates every season based on outcomes vs. goal</div></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <h3>Draft night with real stakes.</h3>
+        <p class="lead">Two rounds, 60 picks, draft lottery, scouted ranges. Trade picks on the clock. Stash international prospects. Pass on a top prospect and his ghost haunts your franchise memory.</p>
+        <div class="feature-list">
+          <div class="row"><div class="marker">Scouted</div><div class="text">OVR is a range — floor, ceiling, bust risk, work ethic</div></div>
+          <div class="row"><div class="marker">Live trades</div><div class="text">Partners generate offers while you're on the clock</div></div>
+          <div class="row"><div class="marker">Memory</div><div class="text">Passed-prospect ghosts follow your franchise forever</div></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <h3>A trade partner that thinks.</h3>
+        <p class="lead">Every team has a strategy, a payroll, and a window. Offer something dumb and they laugh. Offer something real and they negotiate — sometimes with a counter, sometimes by leaking it to the media.</p>
+        <div class="feature-list">
+          <div class="row"><div class="marker">Cap desk</div><div class="text">Luxury tax, second apron, MLE, BAE, Bird rights</div></div>
+          <div class="row"><div class="marker">Builder</div><div class="text">Trade block, draft-pick shopping list, three-team chains</div></div>
+          <div class="row"><div class="marker">Rules</div><div class="text">Stepien Rule, pick protections, partner counter-offers</div></div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <h3>Free agency, RFA, training camp.</h3>
+        <p class="lead">Pitch agents on max money, team-friendly terms, win-now timing, or a featured role. Match RFA offer sheets or let them walk. When camp opens, trim to 18 — every cut has a dead-money cost.</p>
+        <div class="feature-list">
+          <div class="row"><div class="marker">Pitch</div><div class="text">Four pitch types — each agent reads them differently</div></div>
+          <div class="row"><div class="marker">RFA</div><div class="text">Offer sheets you match or decline. Rival pitches you can see.</div></div>
+          <div class="row"><div class="marker">Camp</div><div class="text">Sign freely, cut at the training-camp deadline</div></div>
+        </div>
+      </div>
+
+      <div class="feature-card" style="grid-column:1/-1;background:#1f1410;border-color:#3d2418;">
+        <h3 style="color:var(--text);">And then there's the fired-GM letter.</h3>
+        <p class="lead" style="color:#c8c2bd;">Lose your job and you see exactly why. Every fired letter is a screenshot worth sharing — and a reason to start the next run with a different team, a different window, a different plan.</p>
+        <div class="feature-list">
+          <div class="row" style="border-color:#3d2418;"><div class="marker" style="color:var(--danger);">Decline</div><div class="text">Job Security ticks down with every missed expectation</div></div>
+          <div class="row" style="border-color:#3d2418;"><div class="marker" style="color:var(--danger);">Memory</div><div class="text">Franchise memory remembers your firings, titles, and ghosts</div></div>
+          <div class="row" style="border-color:#3d2418;"><div class="marker" style="color:var(--danger);">Failure</div><div class="text">Cap meltdown · locker room mutiny · missed lottery</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S IN THE FRONT OFFICE -->
+<section id="front-office">
+  <div class="container">
+    <h2>Everything you'd expect from a real front office.</h2>
+    <p class="section-sub">The actual sidebar. Each one is a working screen, not a placeholder.</p>
+    <div class="sidebar-map">
+      <div class="sidebar-tile"><span class="icon">◆</span><div><div class="label">Front office</div><div class="note">Weekly hub — sim, decisions, dashboard</div></div></div>
+      <div class="sidebar-tile"><span class="icon">▤</span><div><div class="label">Roster</div><div class="note">Lineups, dev focus, roles, contracts</div></div></div>
+      <div class="sidebar-tile"><span class="icon">⇄</span><div><div class="label">Trades</div><div class="note">Trade builder, block, chains, counters</div></div></div>
+      <div class="sidebar-tile"><span class="icon">$</span><div><div class="label">Cap desk</div><div class="note">Payroll, tax, apron, holds, MLE/BAE</div></div></div>
+      <div class="sidebar-tile"><span class="icon">▣</span><div><div class="label">Draft</div><div class="note">Scouting board, draft night, lottery</div></div></div>
+      <div class="sidebar-tile"><span class="icon">✦</span><div><div class="label">Free agency</div><div class="note">Pitches, RFA offer sheets, market heat</div></div></div>
+      <div class="sidebar-tile"><span class="icon">📅</span><div><div class="label">Schedule</div><div class="note">Full season, results, opponent scouting</div></div></div>
+      <div class="sidebar-tile"><span class="icon">▶</span><div><div class="label">Play game</div><div class="note">Set starting five, run the matchup</div></div></div>
+      <div class="sidebar-tile"><span class="icon">↗</span><div><div class="label">Development</div><div class="note">Dev trends, focuses, growth curves</div></div></div>
+      <div class="sidebar-tile"><span class="icon">◉</span><div><div class="label">League table</div><div class="note">Standings, leaders, league-wide stats</div></div></div>
+      <div class="sidebar-tile"><span class="icon">◎</span><div><div class="label">Coaching</div><div class="note">Coach hires, contracts, identity</div></div></div>
+      <div class="sidebar-tile"><span class="icon">⚑</span><div><div class="label">Franchise memory</div><div class="note">Timeline, ghosts, fired-GM letters</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section id="compare">
+  <div class="container">
+    <h2>How it compares.</h2>
+    <p class="section-sub">Already looking at basketball management sims? Here's the honest comparison.</p>
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th class="us">Basketball Dynasty</th>
+          <th>Basketball GM</th>
+          <th>NBA 2K MyNBA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Plays in browser, free</td><td class="us">✓</td><td class="other">✓</td><td class="other">—</td></tr>
+        <tr><td>No download / install</td><td class="us">✓</td><td class="other">✓</td><td class="other">—</td></tr>
+        <tr><td>Modern card-based UI</td><td class="us">✓</td><td class="other">—</td><td class="other">✓</td></tr>
+        <tr><td>Ownership briefing + job security</td><td class="us">✓</td><td class="other">—</td><td class="other">partial</td></tr>
+        <tr><td>Scripted ownership scenarios</td><td class="us">✓</td><td class="other">—</td><td class="other">—</td></tr>
+        <tr><td>Imperfect-scouting draft (ranges + bust risk)</td><td class="us">✓</td><td class="other">partial</td><td class="other">—</td></tr>
+        <tr><td>Salary cap + luxury tax + second apron</td><td class="us">✓</td><td class="other">✓</td><td class="other">✓</td></tr>
+        <tr><td>RFA offer sheets, MLE, BAE, Bird rights</td><td class="us">✓</td><td class="other">partial</td><td class="other">✓</td></tr>
+        <tr><td>Multi-team trade chains</td><td class="us">✓</td><td class="other">—</td><td class="other">✓</td></tr>
+        <tr><td>Franchise memory + passed-prospect ghosts</td><td class="us">✓</td><td class="other">—</td><td class="other">—</td></tr>
+        <tr><td>Real NBA rosters</td><td class="other">— fictional</td><td class="other">— fictional</td><td class="us">✓</td></tr>
+        <tr><td>Cross-device cloud save</td><td class="other">roadmap</td><td class="other">—</td><td class="us">✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- COMMUNITY -->
+<section id="community">
+  <div class="container">
+    <h2>What players are saying.</h2>
+    <p class="section-sub">From the subreddit, the Discord, and itch.io feedback.</p>
+    <div class="quotes-grid">
+      <div class="quote-card">
+        <p class="quote">"Finally a GM sim where getting fired actually felt like it mattered. I rage-restarted three times before I made the playoffs."</p>
+        <p class="attr">— r/BasketballDynastyGM</p>
+      </div>
+      <div class="quote-card">
+        <p class="quote">"The trade AI is the first one I've seen that says no for the right reasons. Felt like negotiating, not gaming the engine."</p>
+        <p class="attr">— Discord member</p>
+      </div>
+      <div class="quote-card">
+        <p class="quote">"Plays instantly, looks gorgeous, draft night is genuinely tense. This is what I wanted Basketball GM to look like."</p>
+        <p class="attr">— itch.io review</p>
+      </div>
+    </div>
+    <div class="community-cta">
+      <a href="https://reddit.com/r/BasketballDynastyGM" class="btn btn-ghost" target="_blank" rel="noopener">Join r/BasketballDynastyGM →</a>
+    </div>
+  </div>
+</section>
+
+<!-- SECONDARY CTA — with hex logo -->
+<section id="play">
+  <div class="container cta-band">
+    <svg class="bd-logo" width="64" height="64" style="margin:0 auto 22px;"><use href="#bd-logo"/></svg>
+    <h2>Start your dynasty in 10 seconds.</h2>
+    <p>Free. No signup. Save stays on your device — export it anytime.</p>
+    <a href="/start" class="btn btn-primary btn-lg">▶ Start new franchise</a>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="container faq">
+    <h2 style="text-align:center;">Questions.</h2>
+    <p class="section-sub" style="text-align:center;margin:0 auto 36px;">Quick answers before you start.</p>
+    <details>
+      <summary>Is it really free?</summary>
+      <p>Yes. No paywall, no premium tier, no upsell mid-game. The whole game runs in your browser.</p>
+    </details>
+    <details>
+      <summary>Do I need an account?</summary>
+      <p>No. Click <b>Start new franchise</b> and you're in. Your franchise lives in your browser's local storage.</p>
+    </details>
+    <details>
+      <summary>Where are my saves? Can I lose them?</summary>
+      <p>Saves live on the device you started on. From the Front Office you can <b>Export</b> a save file and <b>Import</b> it on another device, or use it as a backup before clearing your browser.</p>
+    </details>
+    <details>
+      <summary>Can I play on phone and desktop?</summary>
+      <p>You can play on both, but each device has its own save right now. Cross-device cloud save is on the roadmap — export/import works in the meantime.</p>
+    </details>
+    <details>
+      <summary>What's the difference vs Basketball GM?</summary>
+      <p>Same genre, different feel. Basketball GM is the gold standard for depth and longevity. Basketball Dynasty leans harder on stakes — scripted ownership briefings, job security, the firing mechanic, Championship Windows, a modern card-based UI. Both are free and both run in a browser.</p>
+    </details>
+    <details>
+      <summary>Are the rosters real NBA players?</summary>
+      <p>No — every player and team is fictional. That's deliberate: it lets us simulate firings, contract drama, and locker-room reactions without licensing constraints.</p>
+    </details>
+    <details>
+      <summary>How long does a season take?</summary>
+      <p>Up to you. "Play next game" runs one matchup with a starting-five decision. "Run to my pick" / "Skip to next event" sim weeks at a time. You can finish a regular season in under an hour or stretch it across multiple sessions.</p>
+    </details>
+    <details>
+      <summary>What's on the roadmap?</summary>
+      <p>Cross-device cloud save, online leaderboards, expanded coach hires, a deeper rivalry system, and a public changelog page.</p>
+    </details>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Guides</h4>
+        <a href="#">How to play</a>
+        <a href="#">Salary cap explained</a>
+        <a href="#">Winning the draft lottery</a>
+        <a href="#">Trade strategy</a>
+        <a href="#">Games like Basketball GM (2026)</a>
+      </div>
+      <div class="footer-col">
+        <h4>Updates</h4>
+        <a href="#">Changelog</a>
+        <a href="#">Roadmap</a>
+        <a href="#">Known issues</a>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <a href="https://reddit.com/r/BasketballDynastyGM" target="_blank" rel="noopener">r/BasketballDynastyGM</a>
+        <a href="#">Discord</a>
+        <a href="#">itch.io</a>
+      </div>
+      <div class="footer-col">
+        <h4>About</h4>
+        <a href="#">What is this?</a>
+        <a href="#">Credits</a>
+        <a href="#">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Basketball Dynasty · Last updated June 2026</span>
+      <span>Fictional rosters · No NBA affiliation</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

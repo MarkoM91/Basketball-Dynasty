@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import type { League, PlayoffRound, PlayoffSeries, PlayoffState } from '../types/game';
 import { getTeamById } from '../data/league';
 import {
@@ -18,6 +19,31 @@ type Props = {
   league: League;
   userTeamId: string;
 };
+
+const ROUND_MATCHUP_COUNT: Record<PlayoffRound, number> = {
+  'First Round': 8,
+  'Quarterfinals': 4,
+  'Semifinals': 2,
+  'Finals': 1,
+  'Complete': 0,
+};
+
+function TbdMatchup() {
+  return (
+    <div className="bracket-matchup bracket-matchup--tbd">
+      <div className="bracket-team">
+        <span className="bracket-seed">—</span>
+        <span className="bracket-name bracket-tbd-name">TBD</span>
+        <span className="bracket-wins">—</span>
+      </div>
+      <div className="bracket-team">
+        <span className="bracket-seed">—</span>
+        <span className="bracket-name bracket-tbd-name">TBD</span>
+        <span className="bracket-wins">—</span>
+      </div>
+    </div>
+  );
+}
 
 function TeamLine({
   seed,
@@ -91,25 +117,36 @@ function RoundColumn({
   series,
   league,
   userTeamId,
+  isActive,
 }: {
   round: PlayoffRound;
   series: PlayoffSeries[];
   league: League;
   userTeamId: string;
+  isActive: boolean;
 }) {
-  if (!series.length) return null;
+  const expected = ROUND_MATCHUP_COUNT[round];
+  const tbdCount = Math.max(0, expected - series.length);
 
   return (
-    <div className="bracket-round">
+    <div className={`bracket-round${isActive ? ' bracket-round--active' : ''}`}>
       <p className="bracket-round-label">{roundLabel(round)}</p>
-      {series.map((item) => (
-        <MatchupCard key={item.id} series={item} league={league} userTeamId={userTeamId} />
-      ))}
+      <div className="bracket-round-matchups">
+        {series.map((item) => (
+          <MatchupCard key={item.id} series={item} league={league} userTeamId={userTeamId} />
+        ))}
+        {Array.from({ length: tbdCount }).map((_, i) => (
+          <TbdMatchup key={`tbd-${i}`} />
+        ))}
+      </div>
     </div>
   );
 }
 
 export function PlayoffBracket({ state, league, userTeamId }: Props) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const activeRoundRef = useRef<HTMLDivElement>(null);
+
   const summary = buildPlayoffRunSummary(state, league, userTeamId);
   const fullHistory = bracketHasFullHistory(state);
   let grouped = groupSeriesByRound(getAllBracketSeries(state));
@@ -129,6 +166,17 @@ export function PlayoffBracket({ state, league, userTeamId }: Props) {
     ? getTeamById(league, opponentInSeries(elimination, userTeamId).teamId)?.fullName
     : undefined;
 
+  useEffect(() => {
+    if (activeRoundRef.current && scrollRef.current) {
+      const el = activeRoundRef.current;
+      const container = scrollRef.current;
+      const elLeft = el.offsetLeft;
+      const elWidth = el.offsetWidth;
+      const containerWidth = container.offsetWidth;
+      container.scrollLeft = elLeft - containerWidth / 2 + elWidth / 2;
+    }
+  }, [state.round]);
+
   return (
     <Panel accent={Boolean(elimination)} className="bracket-panel">
       <p className="eyebrow">Playoff bracket</p>
@@ -147,16 +195,28 @@ export function PlayoffBracket({ state, league, userTeamId }: Props) {
         </p>
       )}
 
-      <div className="bracket-grid">
-        {BRACKET_ROUNDS.map((round) => (
-          <RoundColumn
-            key={round}
-            round={round}
-            series={grouped[round]}
-            league={league}
-            userTeamId={userTeamId}
-          />
-        ))}
+      <div className="bracket-scroll-wrapper">
+        <div className="bracket-grid" ref={scrollRef}>
+          {BRACKET_ROUNDS.map((round) => {
+            const isActive = state.round === round;
+            return (
+              <div
+                key={round}
+                ref={isActive ? activeRoundRef : undefined}
+                className="bracket-round-wrapper"
+              >
+                <RoundColumn
+                  round={round}
+                  series={grouped[round]}
+                  league={league}
+                  userTeamId={userTeamId}
+                  isActive={isActive}
+                />
+              </div>
+            );
+          })}
+        </div>
+        <div className="bracket-fade-right" />
       </div>
 
       {state.championName && (

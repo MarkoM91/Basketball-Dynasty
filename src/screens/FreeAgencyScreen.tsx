@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { ROSTER_SIZE } from '../data/rosterBuilder';
 import { formatMoney } from '../data/scenarios';
+import { formatUsableCapRoom } from '../engine/cap';
 
 import {
   marketHeatLabel,
@@ -89,7 +90,7 @@ function FaOfferPanel({
       </div>
 
       <label className="stat-label" htmlFor={`fa-salary-${fa.id}`}>
-        Offer · cap room {formatMoney(franchise.cap.projectedRoom)}
+        Offer · {formatUsableCapRoom(franchise.cap)} usable room
       </label>
       <div className="fa-offer-salary-row">
         <input
@@ -147,21 +148,29 @@ function FaOfferPanel({
       </div>
 
       <p className="fa-offer-status">
-        {!preview.capOk && <span className="danger-text">{preview.capReason} · </span>}
-        {preview.likelySign ? (
+        {!preview.capOk ? (
+          <span className="danger-text">{preview.capReason}</span>
+        ) : preview.likelySign && franchise.roster.length >= ROSTER_SIZE ? (
+          <span className="warning-text">Over roster limit — you'll need to cut before the season opens</span>
+        ) : preview.likelySign ? (
           <span className="success-text">Ready to sign</span>
-        ) : !preview.beatsRival && bounds.rival ? (
+        ) : !preview.beatsRival && preview.rivalSalary > 0 ? (
           <span className="danger-text">
             Raise to {formatMoney(minSalaryToSign(fa, pitch))}/yr to beat {fa.topOfferTeam ?? 'rival bid'}
           </span>
         ) : preview.projectedInterest < preview.signThreshold ? (
-          <span>Interest {preview.projectedInterest}% — need {preview.signThreshold}%</span>
+          <span>Interest {preview.projectedInterest}% — need {preview.signThreshold}% (try Max $ or Big role)</span>
         ) : (
-          <span className="success-text">Salary works — submit offer</span>
+          <span>Almost there — tweak salary or pitch</span>
         )}
       </p>
 
-      <button type="button" className="btn btn-primary fa-offer-submit" onClick={() => onSubmit(pitch, salary, years)}>
+      <button
+        type="button"
+        className="btn btn-primary fa-offer-submit"
+        disabled={!preview.capOk || !preview.likelySign}
+        onClick={() => onSubmit(pitch, salary, years)}
+      >
         Offer {formatMoney(salary)}/yr · {pitchShortLabel(pitch)}
       </button>
     </div>
@@ -189,7 +198,9 @@ export function FreeAgencyScreen() {
           <p className="eyebrow">Free agency</p>
           <h1 className="title-lg">Sign players</h1>
           <p className="body" style={{ fontSize: 12, marginTop: 6, marginBottom: 0 }}>
-            {franchise.roster.length}/{ROSTER_SIZE} roster · {formatMoney(franchise.cap.projectedRoom)} room
+            {franchise.roster.length}/{ROSTER_SIZE} roster · {formatUsableCapRoom(franchise.cap)} usable
+            {franchise.cap.capHoldsTotal > 0 ? ` · ${formatMoney(franchise.cap.capHoldsTotal)} holds` : ''}
+            {franchise.cap.mleUsed ? ' · MLE used' : ` · MLE ${formatMoney(franchise.cap.mleAvailable)}`}
           </p>
         </div>
         <button type="button" className="btn btn-ghost" onClick={() => setScreen('home')}>Back</button>
@@ -266,6 +277,7 @@ export function FreeAgencyScreen() {
                   <p className="title-md">{fa.firstName} {fa.lastName} · {fa.age} · {fa.position}</p>
                   <div className="fa-player-chips">
                     <span className="chip chip-gold">{fa.archetype}</span>
+                    {fa.formerTeam && <span className="chip">ex-{fa.formerTeam.split(' ').slice(-1)[0]}</span>}
                     <span className="chip">{marketHeatLabel(fa)}</span>
                     {(fa.suitorCount ?? 0) > 0 && (
                       <span className="chip chip-warning">{fa.suitorCount} suitors</span>

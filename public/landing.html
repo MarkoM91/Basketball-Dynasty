@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Basketball Dynasty — Run Your Franchise. Every Move Matters.</title>
+  <meta name="description" content="Basketball Dynasty is the deepest mobile GM sim. No pay-to-win. Trade, draft, sign, and build a dynasty entirely in your browser — free forever." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Design tokens (mirrored from app) ─────────────────── */
+    :root {
+      --arena-black: #0a0c10;
+      --charcoal:    #12151c;
+      --deep-navy:   #151b28;
+      --slate:       #1c2230;
+      --warm-gray:   #2a3040;
+      --bronze:      #a67c3d;
+      --gold:        #c9a84c;
+      --off-white:   #e8eaed;
+      --silver:      #9aa3b2;
+      --success:     #3d8b6e;
+      --font-sans:   'DM Sans', system-ui, sans-serif;
+      --font-mono:   'IBM Plex Mono', monospace;
+      --radius:      12px;
+      --radius-sm:   8px;
+      --shadow:      0 8px 32px rgba(0,0,0,.45);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: var(--arena-black);
+      color: var(--off-white);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(21,27,40,.95), transparent),
+        var(--arena-black);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Layout ─────────────────────────────────────────────── */
+    .page-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ── Topbar ─────────────────────────────────────────────── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(10,12,16,.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .topbar-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 20px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand-lockup {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      color: var(--arena-black);
+      background: linear-gradient(135deg, var(--bronze), var(--gold));
+      box-shadow: 0 4px 16px rgba(201,168,76,.25);
+      flex-shrink: 0;
+    }
+    .brand-name {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .topbar-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(180deg, var(--bronze), #7a5a22);
+      color: var(--off-white);
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 0 4px 14px rgba(166,124,61,.3);
+      transition: filter .15s, transform .15s;
+    }
+    .topbar-cta:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+    /* ── Hero ───────────────────────────────────────────────── */
+    .hero {
+      padding: 72px 0 60px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(201,168,76,.3);
+      border-radius: 999px;
+      padding: 5px 14px;
+      margin-bottom: 20px;
+    }
+    .hero-headline {
+      font-size: clamp(38px, 7vw, 64px);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      line-height: 1.0;
+      max-width: 14ch;
+      margin: 0 auto 20px;
+    }
+    .hero-headline-accent {
+      background: linear-gradient(90deg, var(--gold), #e8c96a);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero-subhead {
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--silver);
+      max-width: 46ch;
+      margin: 0 auto 36px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .btn-hero-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 28px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(180deg, var(--bronze), #7a5a22);
+      color: var(--off-white);
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 6px 24px rgba(166,124,61,.35);
+      transition: filter .15s, transform .15s;
+    }
+    .btn-hero-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
+
+    .btn-hero-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 24px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,.12);
+      color: var(--silver);
+      font-size: 14px;
+      font-weight: 600;
+      transition: border-color .15s, color .15s;
+    }
+    .btn-hero-ghost:hover { border-color: rgba(201,168,76,.4); color: var(--gold); }
+
+    .hero-proof {
+      font-size: 12px;
+      color: var(--silver);
+      opacity: .7;
+    }
+
+    /* ── Promo screenshot strip ─────────────────────────────── */
+    .screenshot-strip {
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 80px;
+    }
+    .screenshot-strip::before,
+    .screenshot-strip::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 80px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .screenshot-strip::before { left: 0;  background: linear-gradient(to right, var(--arena-black), transparent); }
+    .screenshot-strip::after  { right: 0; background: linear-gradient(to left,  var(--arena-black), transparent); }
+
+    .screenshot-track {
+      display: flex;
+      gap: 14px;
+      padding: 8px 0 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .screenshot-track::-webkit-scrollbar { display: none; }
+
+    .screenshot-item {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 12px 40px rgba(0,0,0,.55);
+    }
+    .screenshot-item img {
+      display: block;
+      height: 260px;
+      width: auto;
+    }
+
+    /* ── Feature grid ───────────────────────────────────────── */
+    .section {
+      padding: 60px 0;
+    }
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--silver);
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: clamp(26px, 4vw, 36px);
+      font-weight: 800;
+      letter-spacing: -.02em;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+    .section-body {
+      font-size: 15px;
+      color: var(--silver);
+      line-height: 1.6;
+      max-width: 52ch;
+      margin-bottom: 40px;
+    }
+
+    .feature-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    }
+    .feature-card {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color .2s, background .2s;
+    }
+    .feature-card:hover {
+      border-color: rgba(201,168,76,.25);
+      background: rgba(201,168,76,.04);
+    }
+    .feature-icon {
+      font-size: 22px;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .feature-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--off-white);
+    }
+    .feature-body {
+      font-size: 13px;
+      color: var(--silver);
+      line-height: 1.55;
+    }
+
+    /* ── Scenario teaser ────────────────────────────────────── */
+    .scenarios-section { padding: 60px 0; }
+
+    .scenario-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      margin-bottom: 20px;
+    }
+    .scenario-card {
+      background: var(--slate);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: var(--radius);
+      padding: 18px;
+      transition: border-color .2s, background .2s;
+    }
+    .scenario-card:hover { border-color: rgba(201,168,76,.35); }
+    .scenario-card-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .team-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      color: var(--arena-black);
+      flex-shrink: 0;
+    }
+    .scenario-meta { display: flex; flex-direction: column; gap: 2px; }
+    .scenario-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--silver);
+    }
+    .scenario-team {
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .scenario-hook {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--off-white);
+      margin-bottom: 6px;
+    }
+    .scenario-briefing {
+      font-size: 12px;
+      color: var(--silver);
+      line-height: 1.5;
+    }
+
+    /* ── Social proof strip ─────────────────────────────────── */
+    .proof-section {
+      padding: 48px 0;
+      border-top: 1px solid rgba(255,255,255,.06);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .proof-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+    .proof-card {
+      background: rgba(0,0,0,.2);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+    }
+    .proof-stars {
+      color: var(--gold);
+      font-size: 13px;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+    .proof-quote {
+      font-size: 13px;
+      color: var(--off-white);
+      line-height: 1.55;
+      margin-bottom: 10px;
+    }
+    .proof-author {
+      font-size: 11px;
+      color: var(--silver);
+    }
+
+    /* ── Compare section ────────────────────────────────────── */
+    .compare-section { padding: 60px 0; }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .compare-table th {
+      padding: 10px 14px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+      color: var(--silver);
+    }
+    .compare-table th.col-us {
+      color: var(--gold);
+      border-bottom-color: rgba(201,168,76,.45);
+    }
+    .compare-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      text-align: center;
+      color: var(--silver);
+    }
+    .compare-table td:first-child {
+      text-align: left;
+      color: var(--off-white);
+    }
+    .compare-table td.col-us { color: var(--gold); font-weight: 700; }
+    .check { color: #6ecfaa; }
+    .cross { color: #e87878; opacity: .6; }
+
+    /* ── Bottom CTA ─────────────────────────────────────────── */
+    .cta-section {
+      padding: 80px 0;
+      text-align: center;
+    }
+    .cta-card {
+      background: linear-gradient(180deg, rgba(28,34,48,.95), rgba(18,21,28,.98));
+      border: 1px solid rgba(201,168,76,.22);
+      border-radius: var(--radius);
+      padding: 48px 32px;
+      box-shadow: var(--shadow);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .cta-headline {
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 800;
+      letter-spacing: -.02em;
+      margin-bottom: 12px;
+    }
+    .cta-body {
+      font-size: 15px;
+      color: var(--silver);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(180deg, var(--bronze), #7a5a22);
+      color: var(--off-white);
+      font-size: 16px;
+      font-weight: 700;
+      box-shadow: 0 6px 24px rgba(166,124,61,.35);
+      transition: filter .15s, transform .15s;
+    }
+    .btn-cta:hover { filter: brightness(1.1); transform: translateY(-2px); }
+    .cta-sub {
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--silver);
+      opacity: .6;
+    }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    .footer {
+      border-top: 1px solid rgba(255,255,255,.07);
+      padding: 24px 0 32px;
+    }
+    .footer-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-copy {
+      font-size: 12px;
+      color: var(--silver);
+      opacity: .6;
+    }
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      font-size: 12px;
+      color: var(--silver);
+      opacity: .7;
+      transition: opacity .15s, color .15s;
+    }
+    .footer-links a:hover { opacity: 1; color: var(--gold); }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .hero { padding: 48px 0 40px; }
+      .hero-subhead { font-size: 15px; }
+      .btn-hero-primary, .btn-hero-ghost { padding: 13px 20px; font-size: 14px; }
+      .section, .scenarios-section, .compare-section, .cta-section { padding: 40px 0; }
+      .cta-card { padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Topbar ──────────────────────────────────────────────── -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="/" class="brand-lockup" style="text-decoration:none;color:inherit;">
+        <div class="brand-mark">BD</div>
+        <span class="brand-name">Basketball Dynasty</span>
+      </a>
+      <nav style="display:flex;align-items:center;gap:8px;">
+        <a href="/guide" style="font-size:12px;color:var(--silver);padding:6px 10px;display:none;" id="nav-guide">How to play</a>
+        <a href="/" class="topbar-cta">Play Free →</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Hero ───────────────────────────────────────────────── -->
+  <main>
+    <div class="page-wrap">
+      <section class="hero">
+        <div class="hero-eyebrow">Free to play · No login · No paywalls</div>
+        <h1 class="hero-headline">
+          Run the <span class="hero-headline-accent">front office.</span>
+          Every move matters.
+        </h1>
+        <p class="hero-subhead">
+          Trade stars, draft rookies, navigate crises, and build a dynasty —
+          all in a deep basketball GM sim that runs entirely in your browser.
+        </p>
+        <div class="hero-actions">
+          <a href="/" class="btn-hero-primary">🏀 Start Your Dynasty</a>
+          <a href="/guide" class="btn-hero-ghost">How it works →</a>
+        </div>
+        <p class="hero-proof">No account. No download. Saved locally — your progress stays.</p>
+      </section>
+    </div>
+
+    <!-- Screenshot strip (full-bleed, scrollable) -->
+    <section class="screenshot-strip page-wrap" style="max-width:100%;padding:0;">
+      <div class="screenshot-track" style="padding:0 max(20px, calc(50vw - 480px));">
+        <div class="screenshot-item"><img src="/promo/02-front-office.png"   alt="Front office dashboard" /></div>
+        <div class="screenshot-item"><img src="/promo/06-trade-war-room.png"  alt="Trade war room" /></div>
+        <div class="screenshot-item"><img src="/promo/03-playoffs-bracket.png" alt="Playoffs bracket" /></div>
+        <div class="screenshot-item"><img src="/promo/05-roster.png"          alt="Roster management" /></div>
+        <div class="screenshot-item"><img src="/promo/04-league-standings.png" alt="League standings" /></div>
+        <div class="screenshot-item"><img src="/promo/08-cap-desk.png"        alt="Cap desk" /></div>
+      </div>
+    </section>
+
+    <!-- ── Features ─────────────────────────────────────────── -->
+    <div class="page-wrap">
+      <section class="section">
+        <p class="section-eyebrow">What you get</p>
+        <h2 class="section-title">Everything a real GM deals with</h2>
+        <p class="section-body">
+          No simplified sliders. Every decision has context, trade-offs, and consequences
+          that ripple across your rebuild.
+        </p>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <span class="feature-icon">🤝</span>
+            <p class="feature-title">Trade Negotiator</p>
+            <p class="feature-body">Build multi-asset packages. AI teams counter-offer, reject, or accept based on their real needs. A built-in analyzer tells you who wins.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🏆</span>
+            <p class="feature-title">Draft Scouting</p>
+            <p class="feature-body">Scout prospects, trade picks, manage protections. Your second-rounder matters as much as your first when you're rebuilding.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">💰</span>
+            <p class="feature-title">Cap Management</p>
+            <p class="feature-body">Navigate max deals, team options, and cap holds. Every signing today shapes your flexibility for the next three seasons.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🎯</span>
+            <p class="feature-title">Scenario Mode</p>
+            <p class="feature-body">Start mid-crisis: aging star, tanking ownership, expiring window. Each scenario has a real first decision waiting on day one.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">📊</span>
+            <p class="feature-title">Free Agency</p>
+            <p class="feature-body">Pitch players with salary, years, and role guarantees. Rivals bid up your targets. Timing and pitch quality change the outcome.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🏟️</span>
+            <p class="feature-title">Full Playoffs</p>
+            <p class="feature-body">Live bracket, series results, per-game leaders. Simulate through or watch it unfold — the championship is always earned, never handed over.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Scenario teaser ───────────────────────────────── -->
+      <section class="scenarios-section">
+        <p class="section-eyebrow">Pick your crisis</p>
+        <h2 class="section-title">Tap a scenario. Take the job.</h2>
+        <p class="section-body">Each card is a real front-office situation — no tutorial, no warmup. The pressure starts on day one.</p>
+
+        <div class="scenario-grid">
+          <div class="scenario-card">
+            <div class="scenario-card-head">
+              <div class="team-mark" style="background:linear-gradient(135deg,#1d428a,#fff);">BOS</div>
+              <div class="scenario-meta">
+                <span class="scenario-label">The Rebuild</span>
+                <span class="scenario-team">Boston Harbor</span>
+              </div>
+            </div>
+            <p class="scenario-hook">Your star just demanded a trade. Do you blow it up or buy more time?</p>
+            <p class="scenario-briefing">18–29. Ownership wants a youth movement. Your star has two years left and his patience is gone. Every team is calling.</p>
+          </div>
+
+          <div class="scenario-card">
+            <div class="scenario-card-head">
+              <div class="team-mark" style="background:linear-gradient(135deg,#552583,#fdb927);">LAK</div>
+              <div class="scenario-meta">
+                <span class="scenario-label">The Window</span>
+                <span class="scenario-team">LA Monarchs</span>
+              </div>
+            </div>
+            <p class="scenario-hook">You're two wins from a championship. Your closer is in the last year of his deal.</p>
+            <p class="scenario-briefing">54–12. Best record in the league. But your second star is a free agent after the Finals — re-sign now or let him walk?</p>
+          </div>
+
+          <div class="scenario-card">
+            <div class="scenario-card-head">
+              <div class="team-mark" style="background:linear-gradient(135deg,#007ac1,#ef3b24);">NYK</div>
+              <div class="scenario-meta">
+                <span class="scenario-label">The Tank</span>
+                <span class="scenario-team">New York Knights</span>
+              </div>
+            </div>
+            <p class="scenario-hook">Ownership wants the top pick. But your veterans are fighting for a playoff spot they shouldn't have.</p>
+            <p class="scenario-briefing">27–40. You're 4 games out of a play-in. Do you sell at the deadline or let pride win the week?</p>
+          </div>
+        </div>
+
+        <p style="font-size:13px;color:var(--silver);margin-top:8px;">
+          Or skip the script — pick any of the 30 franchises and run your own plan from day one.
+        </p>
+      </section>
+
+      <!-- ── Social proof ──────────────────────────────────── -->
+      <section class="proof-section">
+        <p class="section-eyebrow" style="margin-bottom:20px;">From the community</p>
+        <div class="proof-grid">
+          <div class="proof-card">
+            <div class="proof-stars">★★★★★</div>
+            <p class="proof-quote">"The trade system is the best I've seen in any GM sim — mobile or desktop. The AI actually counters intelligently."</p>
+            <p class="proof-author">r/BasketballDynastyGM</p>
+          </div>
+          <div class="proof-card">
+            <div class="proof-stars">★★★★★</div>
+            <p class="proof-quote">"Been rebuilding the same franchise for six seasons. Haven't won a title yet. Can't stop playing."</p>
+            <p class="proof-author">Discord · #general</p>
+          </div>
+          <div class="proof-card">
+            <div class="proof-stars">★★★★★</div>
+            <p class="proof-quote">"Played every GM sim out there. This is the only one where the draft actually matters every single year."</p>
+            <p class="proof-author">r/BasketballDynastyGM</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Compare ───────────────────────────────────────── -->
+      <section class="compare-section">
+        <p class="section-eyebrow">Why Basketball Dynasty</p>
+        <h2 class="section-title">Built for GMs, not casuals</h2>
+        <p class="section-body">Most GM sims strip out the hard parts. We kept them.</p>
+
+        <div style="overflow-x:auto;">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th style="text-align:left;">Feature</th>
+                <th class="col-us">Basketball Dynasty</th>
+                <th>Other mobile GM apps</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>No account required</td>
+                <td class="col-us check">✓ Play instantly</td>
+                <td class="cross">✗ Forced signup</td>
+              </tr>
+              <tr>
+                <td>Trade pick protections</td>
+                <td class="col-us check">✓ Full control</td>
+                <td class="cross">✗ Not available</td>
+              </tr>
+              <tr>
+                <td>AI counter-offers</td>
+                <td class="col-us check">✓ Dynamic</td>
+                <td class="cross">✗ Accept/Reject only</td>
+              </tr>
+              <tr>
+                <td>Cap sheet depth</td>
+                <td class="col-us check">✓ Team options, holds</td>
+                <td class="cross">✗ Salary total only</td>
+              </tr>
+              <tr>
+                <td>Scenario mode</td>
+                <td class="col-us check">✓ Crisis on day one</td>
+                <td class="cross">✗ Standard start</td>
+              </tr>
+              <tr>
+                <td>Free to play</td>
+                <td class="col-us check">✓ No pay-to-win</td>
+                <td class="cross">✗ Paywalled features</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ── Bottom CTA ────────────────────────────────────── -->
+      <section class="cta-section">
+        <div class="cta-card">
+          <h2 class="cta-headline">Your roster won't build itself.</h2>
+          <p class="cta-body">
+            The draft is live. Free agency opens next week. Three teams are calling about your star.
+            What's your first move?
+          </p>
+          <a href="/" class="btn-cta">🏀 Start Your Dynasty</a>
+          <p class="cta-sub">Free forever · No account · Runs in any browser</p>
+        </div>
+      </section>
+    </div><!-- /page-wrap -->
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="brand-lockup">
+        <div class="brand-mark" style="width:32px;height:32px;font-size:10px;">BD</div>
+        <span class="brand-name" style="font-size:12px;">Basketball Dynasty</span>
+      </div>
+      <p class="footer-copy">© 2026 Basketball Dynasty · Free GM sim · No affiliation with any real league</p>
+      <nav class="footer-links">
+        <a href="/guide">How to Play</a>
+        <a href="https://www.reddit.com/r/BasketballDynastyGM/" target="_blank" rel="noopener">Reddit</a>
+        <a href="https://discord.gg/your-server" target="_blank" rel="noopener">Discord</a>
+        <a href="/privacy">Privacy</a>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>

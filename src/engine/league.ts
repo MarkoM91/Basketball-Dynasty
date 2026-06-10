@@ -1,10 +1,17 @@
 import type { DraftPick, Franchise, League, LeagueTeam, Player, TradeOffer } from '../types/game';
 import { getStandings, getTeamById, normalizeLeagueTeam, strategyLabel, teamWantsPicks, teamWantsVeterans } from '../data/league';
+import { teamRegularSeasonRecord } from './regularSeasonRecord';
 import { uid } from '../data/scenarios';
 import { capTradeScoreAdjust } from './cap';
 import { SEASON_GAME_COUNT } from './leagueSimulation';
+import { executeLeagueTrades as executeLeagueTradesFromWorld } from './leagueWorld';
+import {
+  applyTradeMarketModifiers,
+  buildCareerTradeExtras,
+  tradeMarketModifiers,
+} from './careerMode';
 
-export { simulateLeagueWeek, SEASON_GAME_COUNT, formatWinPct } from './leagueSimulation';
+export { simulateLeagueWeek, SEASON_GAME_COUNT, SCHEDULE_WEEKS, TRADE_DEADLINE_WEEK, formatWinPct } from './leagueSimulation';
 
 function clamp(n: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, n));
@@ -109,20 +116,8 @@ export function ensureUserPlayoffSeed(league: League): League {
   };
 }
 
-export function simulateLeagueTrades(league: League): string[] {
-  const headlines: string[] = [];
-  const traders = league.teams.filter((t) => !t.isUser && Math.random() > 0.65);
-  for (const team of traders.slice(0, 3)) {
-    if (teamWantsPicks(team.strategy)) {
-      headlines.push(
-        `${team.fullName} (${strategyLabel(team.strategy)}) acquires future picks from a contender.`,
-      );
-    } else if (teamWantsVeterans(team.strategy)) {
-      headlines.push(
-        `${team.fullName} adds veteran help — ${team.strategy === 'all_in' ? 'mortgaging assets' : 'buying a play-in spot'}.`,
-      );
-    }
-  }
+export function simulateLeagueTrades(league: League, userFranchise?: Franchise | null): string[] {
+  const { headlines } = executeLeagueTradesFromWorld(league, userFranchise);
   return headlines;
 }
 
@@ -194,12 +189,13 @@ export function generateLeagueTradeOffers(franchise: Franchise, league: League):
   if (franchise.phase !== 'trade_deadline' && franchise.phase !== 'regular_season') return [];
 
   const partners = league.teams.filter((t) => !t.isUser);
+  const mod = tradeMarketModifiers(franchise);
   const offers: TradeOffer[] = [];
   const young = franchise.roster.filter((p) => p.age < 26 && p.overall < 80);
   const star = franchise.roster.find((p) => p.isStar);
   const bench = franchise.roster.filter((p) => p.role === 'Bench' || p.role === 'Rotation');
 
-  if (young.length && franchise.draftPicks.length) {
+  if (young.length && franchise.draftPicks.length && !mod.suppressWinNowOffers) {
     const partner = partners.find((t) => teamWantsVeterans(t.strategy)) ?? partners[0];
     const outgoing = young[0];
     const pick = franchise.draftPicks[0];
@@ -231,7 +227,7 @@ export function generateLeagueTradeOffers(franchise: Franchise, league: League):
     });
   }
 
-  if (bench.length && franchise.draftPicks.length) {
+  if (bench.length && franchise.draftPicks.length && !mod.suppressWinNowOffers) {
     const partner = partners.find((t) => t.taxAverse && teamWantsVeterans(t.strategy)) ?? partners[1] ?? partners[0];
     const pick = franchise.draftPicks[0];
     const incoming = makeIncomingPlayer(partner, 'wing');
@@ -262,7 +258,7 @@ export function generateLeagueTradeOffers(franchise: Franchise, league: League):
     });
   }
 
-  if (star && (franchise.window.includes('Rebuild') || franchise.window === 'Early Rebuild')) {
+  if (star && (franchise.window.includes('Rebuild') || franchise.window === 'Early Rebuild') && mod.starSalePressure >= 0.5) {
     const partner = partners.find((t) => teamWantsPicks(t.strategy) && t.market === 'Large') ?? partners[0];
     offers.push({
       id: uid('tr'),
@@ -292,7 +288,9 @@ export function generateLeagueTradeOffers(franchise: Franchise, league: League):
     });
   }
 
-  return offers.slice(0, 3);
+  offers.push(...buildCareerTradeExtras(franchise, partners, makeIncomingPlayer));
+
+  return applyTradeMarketModifiers(offers, franchise).slice(0, 4);
 }
 
 export function userMadePlayoffs(league: League): boolean {
@@ -300,7 +298,9 @@ export function userMadePlayoffs(league: League): boolean {
   const user = standings.find((t) => t.isUser);
   if (!user) return false;
   const seed = standings.indexOf(user) + 1;
-  return seed <= 16;
+  const reg = teamRegularSeasonRecord(user);
+  const winPct = reg.wins / Math.max(1, reg.wins + reg.losses);
+  return seed <= 12 && winPct >= 0.42;
 }
 
 export function getUserSeed(league: League): number {

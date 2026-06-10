@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { LogoHex } from './LandingChrome';
 import { formatSavedAt } from '../lib/saveFile';
 import { phaseLabel } from '../engine/simulation';
 import { franchiseRegularSeasonRecord } from '../engine/regularSeasonRecord';
@@ -86,7 +87,7 @@ export function DesktopSidebar({
     <aside className="desktop-sidebar">
       <div className="desktop-sidebar-brand">
         <Link to="/" className="desktop-logo">
-          <span className="desktop-logo-mark">BD</span>
+          <span className="desktop-logo-mark"><LogoHex /></span>
           <span>
             <span className="desktop-logo-title">Basketball Dynasty</span>
             <span className="desktop-logo-sub">Browser GM sim</span>
@@ -128,6 +129,13 @@ export function DesktopSidebar({
         <p className="desktop-save-note">
           {lastSavedAt ? `Saved · ${formatSavedAt(lastSavedAt)}` : 'Auto-save on this device'}
         </p>
+        <div className="desktop-sidebar-links">
+          <Link to="/guide" className="desktop-sidebar-link">How to play</Link>
+          <Link to="/compare" className="desktop-sidebar-link">Compare</Link>
+          <a href="https://basketballdynasty.com" className="desktop-sidebar-link" target="_blank" rel="noopener">Site</a>
+          <a href="https://discord.gg/Uh7Z9j6uS" className="desktop-sidebar-link" target="_blank" rel="noopener">Discord</a>
+          <a href="https://www.reddit.com/r/BasketballDynastyGM" className="desktop-sidebar-link" target="_blank" rel="noopener">Reddit</a>
+        </div>
       </div>
     </aside>
   );

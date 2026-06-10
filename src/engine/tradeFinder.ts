@@ -39,7 +39,7 @@ export function findTradeMatches(
   if (!outgoingPool.length) return [];
 
   for (const partner of partners) {
-    const assets = generatePartnerTradeAssets(partner).filter((p) => {
+    const assets = generatePartnerTradeAssets(partner, league, franchise).filter((p) => {
       if (p.overall < minOvr) return false;
       if (options.targetPosition && p.position !== options.targetPosition) return false;
       return true;

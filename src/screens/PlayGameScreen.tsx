@@ -98,7 +98,7 @@ export function PlayGameScreen() {
     setScreen(isPlayoffs ? 'playoffs' : 'home');
   };
 
-  const rosterSorted = [...franchise.roster]
+  const rosterSorted = [...(franchise.roster ?? [])]
     .filter((p) => !p.injured)
     .sort((a, b) => b.overall - a.overall);
 
@@ -148,7 +148,7 @@ export function PlayGameScreen() {
       <Panel accent>
         <div className="lineup-court">
           {SLOT_LABELS.map((pos, i) => {
-            const player = franchise.roster.find((p) => p.id === lineup[i]);
+            const player = (franchise.roster ?? []).find((p) => p.id === lineup[i]);
             return (
               <button
                 key={pos}

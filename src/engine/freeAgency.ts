@@ -1,10 +1,11 @@
 import type { FreeAgent, Franchise, League, LeagueTeam, PitchType } from '../types/game';
 import { takeUniqueName } from '../data/names';
 import { uid, playerName, formatMoney } from '../data/scenarios';
-import { applyRosterSize } from '../data/rosterBuilder';
+import { rosterFullMessage, rosterHasRoom } from './rosterCuts';
 import { strategyLabel } from '../data/league';
-import { canSignFreeAgent } from './cap';
+import { canSignFreeAgent, applySigningToCap } from './cap';
 import { freeAgentAskingSalary, isMaxContract } from './salaries';
+import { simLeagueFreeAgency } from './leagueWorld';
 
 function clamp(n: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, n));
@@ -161,7 +162,7 @@ function baseInterest(franchise: Franchise, fa: FreeAgent, league: League): numb
     if (franchise.window.includes('Contender')) interest += 12;
   }
   if (fa.priorities.includes('money')) {
-    interest += franchise.cap.projectedRoom / 2_000_000;
+    interest += franchise.cap.effectiveRoom / 2_000_000;
     if (franchise.cap.inLuxuryTax) interest -= 15;
   }
   if (fa.priorities.includes('role')) {
@@ -406,7 +407,7 @@ export function offerSalaryBounds(franchise: Franchise, fa: FreeAgent): {
   const max = Math.max(
     suggested,
     Math.round(ask * (tier === 'star' ? 1.15 : 1.12)),
-    franchise.cap.projectedRoom > 0 ? franchise.cap.projectedRoom : ask,
+    franchise.cap.effectiveRoom > 0 ? franchise.cap.effectiveRoom : ask,
   );
   return {
     min: Math.round(ask * (tier === 'depth' ? 0.88 : 0.82)),
@@ -438,11 +439,9 @@ function evaluateOffer(
   customSalary: boolean;
 } {
   const tier = faMarketTier(fa.overall);
-  const rival = pickRivalTeam(league, fa);
   const attempts = fa.userPitchAttempts ?? 0;
   const rivalSalary =
-    fa.rivalOfferSalary ??
-    (rival ? rivalOfferSalary(fa, rival) : Math.round(fa.askingSalary * (0.96 + Math.random() * 0.1)));
+    fa.rivalOfferSalary ?? (fa.topOfferTeam ? Math.round(fa.askingSalary * 1.02) : 0);
 
   const pitchFx = pitchBonus(pitch, franchise, fa);
   const customSalary = offeredSalary !== undefined;
@@ -476,7 +475,11 @@ function evaluateOffer(
 
   const threshold = signThreshold(fa, salary, rivalSalary);
   const beatsRival = salaryBeatsRival(pitch, salary, rivalSalary, attempts, customSalary, tier);
-  const signed = capCheck.ok && interest >= threshold && beatsRival;
+  const honestUncontested =
+    !fa.topOfferTeam &&
+    (tier === 'depth' || tier === 'rotation') &&
+    salary >= Math.round(fa.askingSalary * (tier === 'depth' ? 0.88 : 0.92));
+  const signed = capCheck.ok && beatsRival && (honestUncontested || interest >= threshold);
 
   return {
     salary,
@@ -578,20 +581,34 @@ export function pitchFreeAgent(
     };
   }
 
+  if (!rosterHasRoom(franchise)) {
+    return {
+      franchise,
+      message: rosterFullMessage(),
+      signed: false,
+    };
+  }
+
   const signed = ev.signed;
 
   if (!signed) {
+    const fairUncontested =
+      !fa.topOfferTeam &&
+      (tier === 'depth' || tier === 'rotation') &&
+      salary >= Math.round(fa.askingSalary * (tier === 'depth' ? 0.92 : 0.95));
     const escalate = tier === 'star' ? 1.025 : tier === 'starter' ? 1.02 : tier === 'depth' ? 1.003 : 1.01;
     const nextRivalSalary = Math.round(Math.max(rivalSalary, salary * 0.99) * (escalate + attempts * (tier === 'depth' ? 0.003 : 0.012)));
     const beatTarget = minSalaryToSign({ ...fa, rivalOfferSalary: nextRivalSalary, userPitchAttempts: attempts + 1 }, pitch);
-    const msg =
-      !ev.beatsRival && fa.topOfferTeam
+    const msg = fairUncontested
+      ? `${playerName(fa)} is weighing options. Try Max $ or bump to ${formatMoney(Math.round(fa.askingSalary * 1.02))}/yr.`
+      : !ev.beatsRival && fa.topOfferTeam
         ? tier === 'depth' || tier === 'rotation'
           ? `${playerName(fa)} will sign if you offer ${formatMoney(beatTarget)}/yr — matches ${fa.topOfferTeam}'s bid.`
           : `${playerName(fa)} passed on ${formatMoney(salary)}/yr — need ${formatMoney(beatTarget)}+ to flip him from ${fa.topOfferTeam}.`
         : failureMessage(fa, rival, interest, nextRivalSalary, salary);
     const interestCap =
       tier === 'star' ? 42 : tier === 'starter' ? 50 : tier === 'rotation' ? 62 : 78;
+    const spawnRival = Boolean(fa.topOfferTeam) || (!fairUncontested && tier !== 'depth');
     return {
       franchise: {
         ...franchise,
@@ -600,12 +617,12 @@ export function pitchFreeAgent(
             ? {
                 ...a,
                 interest: clamp(Math.min(interest, interestCap - attempts * (tier === 'depth' ? 2 : 4)), 5, 90),
-                topOfferTeam: a.topOfferTeam ?? rival?.fullName,
-                rivalOfferSalary: nextRivalSalary,
+                topOfferTeam: spawnRival ? a.topOfferTeam ?? rival?.fullName : a.topOfferTeam,
+                rivalOfferSalary: spawnRival ? nextRivalSalary : a.rivalOfferSalary,
                 suitorCount:
-                  tier === 'depth'
-                    ? a.suitorCount ?? 1
-                    : Math.max(a.suitorCount ?? 1, tier === 'star' ? 5 : 2),
+                  spawnRival && tier !== 'depth'
+                    ? Math.max(a.suitorCount ?? 1, tier === 'star' ? 5 : 2)
+                    : a.suitorCount,
                 userPitchAttempts: attempts + 1,
               }
             : a,
@@ -644,9 +661,10 @@ export function pitchFreeAgent(
   };
 
   return {
-    franchise: applyRosterSize({
+    franchise: {
       ...franchise,
       roster: [...franchise.roster, player],
+      cap: applySigningToCap(franchise.cap, salary, capException === 'MLE' ? 'MLE' : capException === 'Room' ? undefined : capException),
       freeAgents: franchise.freeAgents.map((a) =>
         a.id === agentId ? { ...a, signed: true, interest: 100, topOfferTeam: undefined, rivalOfferSalary: undefined } : a,
       ),
@@ -660,7 +678,7 @@ export function pitchFreeAgent(
         },
         ...franchise.memory,
       ],
-    }),
+    },
     message: fa.topOfferTeam
       ? `You flipped ${fa.firstName} ${fa.lastName} off ${fa.topOfferTeam} on ${formatMoney(salary)}/yr. ${years}-year deal via ${capException}. ${pitchFx.rolePromise}`
       : `Contract agreed. ${fa.firstName} ${fa.lastName} joins on ${formatMoney(salary)}/yr × ${years} years via ${capException}. ${pitchFx.rolePromise}`,
@@ -668,7 +686,10 @@ export function pitchFreeAgent(
   };
 }
 
-export function simAISignings(franchise: Franchise, league: League): { franchise: Franchise; headlines: string[] } {
+export function simAISignings(
+  franchise: Franchise,
+  league: League,
+): { franchise: Franchise; league: League; headlines: string[] } {
   const headlines: string[] = [];
   const remaining = franchise.freeAgents.filter((a) => !a.signed);
   const signedIds = new Set<string>();
@@ -688,26 +709,15 @@ export function simAISignings(franchise: Franchise, league: League): { franchise
     }
   }
 
-  const openRotation = remaining.filter((a) => !signedIds.has(a.id) && !a.signed && faMarketTier(a.overall) === 'rotation');
-  const openDepth = remaining.filter((a) => !signedIds.has(a.id) && !a.signed && faMarketTier(a.overall) === 'depth');
-  const aiPool = [...openRotation, ...openDepth].sort((a, b) => b.overall - a.overall);
-
-  const signCount = Math.min(4, Math.floor(aiPool.length * 0.45));
-  for (let i = 0; i < signCount; i += 1) {
-    const fa = aiPool[i];
-    if (!fa) break;
-    signedIds.add(fa.id);
-    const team = pickRivalTeam(league, fa);
-    headlines.push(`${playerName(fa)} signs with ${team?.fullName ?? 'a rival'} — market clearing.`);
-  }
+  const leagueFa = simLeagueFreeAgency(league, franchise.freeAgents, signedIds, franchise);
+  headlines.push(...leagueFa.headlines.slice(0, 4));
 
   return {
     franchise: {
       ...franchise,
-      freeAgents: franchise.freeAgents.map((a) =>
-        signedIds.has(a.id) ? { ...a, signed: true } : a,
-      ),
+      freeAgents: leagueFa.remaining,
     },
+    league: leagueFa.league,
     headlines,
   };
 }

@@ -1,16 +1,24 @@
+import { useMemo, useState } from 'react';
 import { playerName } from '../data/scenarios';
 import { draftPickSummary } from '../engine/draftOrder';
+import {
+  generateDraftPickTradeOffers,
+  pickLabel,
+  remainingUserDraftSlots,
+} from '../engine/draftPickTrade';
 import { getUserDraftRecap } from '../engine/draftRecap';
 import {
   availableProspects,
+  classStrengthLabel,
   draftRound,
   formatUserPickLabel,
   isUserDraftComplete,
   pickInRound,
 } from '../engine/draftNight';
 import { useGameStore } from '../store/gameStore';
-import type { DraftRecapPick } from '../types/game';
+import type { DraftRecapPick, TradeProposal } from '../types/game';
 import { Panel } from '../components/UI';
+import { TradeNegotiateModal } from '../components/TradeNegotiateModal';
 
 function DraftRecapPanel({ recap }: { recap: DraftRecapPick[] }) {
   const round1 = recap.filter((p) => p.round === 1);
@@ -61,12 +69,50 @@ function DraftRecapPanel({ recap }: { recap: DraftRecapPick[] }) {
 }
 
 export function DraftScreen() {
-  const { franchise, league, startDraftNight, runToUserPick, advanceDraftPick, pickOnDraftClock, selectDraftProspect, setScreen } = useGameStore();
-  if (!franchise) return null;
+  const {
+    franchise,
+    league,
+    startDraftNight,
+    runToUserPick,
+    advanceDraftPick,
+    finishDraft,
+    pickOnDraftClock,
+    stashOnDraftClock,
+    callUpStashedPlayer,
+    selectDraftProspect,
+    setScreen,
+    acceptDraftPickTrade,
+    submitDraftPickTrade,
+    submitTradeProposal,
+    requestTradeCounter,
+    submitTradeChain,
+    addDraftSlotToShoppingList,
+  } = useGameStore();
+
+  const [tradePickNumber, setTradePickNumber] = useState<number | null>(null);
+  const [tradePrefill, setTradePrefill] = useState<Partial<TradeProposal> | undefined>();
+
+  const tradableSlots = useMemo(
+    () => (franchise ? remainingUserDraftSlots(franchise) : []),
+    [franchise],
+  );
+  const showPickTradePanel =
+    Boolean(franchise && league) &&
+    tradableSlots.length > 0 &&
+    (franchise?.phase === 'draft_scouting' ||
+      franchise?.phase === 'draft_night' ||
+      franchise?.phase === 'contract_renewals');
+
+  const pickTradeOffers = useMemo(() => {
+    if (!showPickTradePanel || !franchise || !league) return [];
+    return tradableSlots.flatMap((slot) => generateDraftPickTradeOffers(franchise, league, slot));
+  }, [franchise, league, tradableSlots, showPickTradePanel]);
+
+  if (!franchise || !league) return null;
 
   const night = franchise.draftNight;
   const pick = franchise.draftPickNumber;
-  const pickSummary = league ? draftPickSummary(league, franchise.city, franchise.name) : '';
+  const pickSummary = draftPickSummary(league, franchise.city, franchise.name);
   const draftRecap = getUserDraftRecap(franchise);
   const draftComplete =
     franchise.phase === 'contract_renewals' ||
@@ -75,10 +121,16 @@ export function DraftScreen() {
   const prospects =
     night?.active
       ? availableProspects(night)
-      : showProspectBoard && franchise.draftBoard.length > 0
-        ? franchise.draftBoard
+      : showProspectBoard && (franchise.draftBoard?.length ?? 0) > 0
+        ? franchise.draftBoard ?? []
         : [];
   const userPickLabel = night ? formatUserPickLabel(night) : pick ? `#${pick} & #${pick + 30}` : '';
+
+
+  const closePickTrade = () => {
+    setTradePickNumber(null);
+    setTradePrefill(undefined);
+  };
 
   return (
     <div className="page">
@@ -100,13 +152,59 @@ export function DraftScreen() {
         <button type="button" className="btn btn-ghost" onClick={() => setScreen('home')}>Back</button>
       </div>
 
+      {showPickTradePanel && (
+        <Panel>
+          <p className="eyebrow">Your picks · trade away</p>
+          <p className="body" style={{ fontSize: 12, marginTop: 4 }}>
+            Move a pick for win-now help instead of adding roster spots.
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
+            {tradableSlots.map((slot) => (
+              <button
+                key={slot}
+                type="button"
+                className="btn btn-secondary"
+                style={{ padding: '8px 12px' }}
+                onClick={() => addDraftSlotToShoppingList(slot)}
+              >
+                Trade {pickLabel(slot)}
+              </button>
+            ))}
+          </div>
+          {pickTradeOffers.length > 0 && (
+            <div style={{ marginTop: 14 }}>
+              <p className="stat-label">Quick offers</p>
+              {pickTradeOffers.slice(0, 4).map((row) => (
+                <div key={row.id} className="deal-suggestion-card" style={{ marginTop: 8 }}>
+                  <div className="header-bar" style={{ marginBottom: 4 }}>
+                    <strong style={{ fontSize: 13 }}>{row.title}</strong>
+                    <span className="chip chip-gold">{row.acceptScore}%</span>
+                  </div>
+                  <p className="body" style={{ fontSize: 12, margin: '0 0 8px' }}>
+                    {row.detail}
+                  </p>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    style={{ padding: '6px 10px', fontSize: 11 }}
+                    onClick={() => acceptDraftPickTrade(row.offer, row.pickNumber)}
+                  >
+                    Accept for {row.pickLabel}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </Panel>
+      )}
+
       {draftComplete && <DraftRecapPanel recap={draftRecap} />}
 
       {draftComplete && (
         <Panel accent>
           <p className="eyebrow">Next step</p>
           <p className="body" style={{ marginTop: 6 }}>
-            Rookie deals are signed. Review expiring player and coach contracts before free agency.
+            Rookie deals are signed. Trim to 18 if needed, then review expiring contracts before free agency.
           </p>
           <button
             type="button"
@@ -116,6 +214,51 @@ export function DraftScreen() {
           >
             Open contract renewals
           </button>
+        </Panel>
+      )}
+
+      {/* Draft class strength badge */}
+      {(franchise.phase === 'draft_scouting' || franchise.phase === 'draft_night') && !draftComplete && night?.classStrength && (
+        <Panel>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span className={`chip ${night.classStrength === 'Loaded' ? 'chip-gold' : night.classStrength === 'Weak' ? 'chip-danger' : night.classStrength === 'Deep' ? 'chip-success' : ''}`}>
+              {classStrengthLabel(night.classStrength)}
+            </span>
+            <p className="body" style={{ margin: 0, fontSize: 12 }}>
+              {night.classStrength === 'Loaded' && 'Multiple potential stars in this class. Competition for top picks will be fierce.'}
+              {night.classStrength === 'Deep' && 'No transcendent talent, but solid depth through Round 2. Value picks available late.'}
+              {night.classStrength === 'Weak' && 'Thin class — fewer impact players, higher bust rates. Trades and FA may be smarter.'}
+              {night.classStrength === 'Average' && 'Balanced class. A few standouts at the top, depth thins in Round 2.'}
+            </p>
+          </div>
+        </Panel>
+      )}
+
+      {/* International stash panel */}
+      {(franchise.draftStash ?? []).length > 0 && (
+        <Panel>
+          <p className="eyebrow">International stash</p>
+          {(franchise.draftStash ?? []).map((s) => (
+            <div key={s.prospect.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
+              <div>
+                <p className="body" style={{ margin: 0, fontWeight: 600 }}>{s.prospect.firstName} {s.prospect.lastName}</p>
+                <p className="body" style={{ margin: 0, fontSize: 11, color: 'var(--silver)' }}>
+                  {s.prospect.position} · {s.prospect.archetype} · OVR {s.prospect.trueOverall ?? s.prospect.scoutedOverall[0]}–{s.prospect.scoutedOverall[1]}
+                  {s.yearsRemaining > 0 ? ` · ${s.yearsRemaining}yr overseas` : ' · Ready to call up'}
+                </p>
+              </div>
+              {s.yearsRemaining === 0 && (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  style={{ padding: '6px 10px', fontSize: 11 }}
+                  onClick={() => callUpStashedPlayer(s.prospect.id)}
+                >
+                  Call up
+                </button>
+              )}
+            </div>
+          ))}
         </Panel>
       )}
 
@@ -145,34 +288,42 @@ export function DraftScreen() {
             <p className="body">{night.stakeholderNote}</p>
             {!night.onClock && (
               <div style={{ display: 'grid', gap: 8, marginTop: 12 }}>
-                <p className="body" style={{ fontSize: 12, margin: 0 }}>
-                  Tap <strong>Run to my pick</strong> to reach your next selection ({userPickLabel}).
-                </p>
-                <button type="button" className="btn btn-primary" onClick={runToUserPick}>
-                  Run to my pick
-                </button>
-                <button type="button" className="btn btn-secondary" onClick={advanceDraftPick}>
-                  Sim next pick
-                </button>
+                {userPickLabel === 'Draft complete' ? (
+                  <>
+                    <p className="body" style={{ fontSize: 12, margin: 0 }}>
+                      You have no picks remaining. Finish the draft to continue to contract renewals.
+                    </p>
+                    <button type="button" className="btn btn-primary" onClick={finishDraft}>
+                      Finish draft
+                    </button>
+                    <button type="button" className="btn btn-secondary" onClick={advanceDraftPick}>
+                      Sim next pick
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <p className="body" style={{ fontSize: 12, margin: 0 }}>
+                      Tap <strong>Run to my pick</strong> to reach your next selection ({userPickLabel}).
+                    </p>
+                    <button type="button" className="btn btn-primary" onClick={runToUserPick}>
+                      Run to my pick
+                    </button>
+                    <button type="button" className="btn btn-secondary" onClick={advanceDraftPick}>
+                      Sim next pick
+                    </button>
+                  </>
+                )}
               </div>
             )}
             {night.onClock && (
               <p className="body" style={{ fontSize: 12, marginTop: 12, marginBottom: 0 }}>
-                Scroll down and tap <strong>Draft [name]</strong> on the player you want.
+                Scroll down and tap <strong>Draft [name]</strong> on the player you want — or trade the pick above.
               </p>
             )}
           </Panel>
-
         </>
       )}
 
-      {!draftComplete && (
-        <Panel>
-          <p className="body">
-            Scouts are split. Ownership, the coach, and your gut will disagree. Both of your picks will shape the roster.
-          </p>
-        </Panel>
-      )}
 
       {prospects.length === 0 && !draftComplete ? (
         <Panel>
@@ -199,7 +350,14 @@ export function DraftScreen() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
                   <p className="title-md">{playerName(pr)} — {pr.age} — {pr.position}</p>
-                  <span className="chip chip-gold">{pr.archetype}</span>
+                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 4 }}>
+                    <span className="chip chip-gold">{pr.archetype}</span>
+                    {pr.isInternational && (
+                      <span className="chip" style={{ background: 'rgba(59,130,246,0.15)', color: '#60a5fa', border: '1px solid rgba(59,130,246,0.3)' }}>
+                        🌍 Intl · {pr.stashYears}yr stash
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <span className={`chip ${pr.bustRisk === 'High' ? 'chip-danger' : pr.bustRisk === 'Low' ? 'chip-success' : 'chip-warning'}`}>
                   Bust risk: {pr.bustRisk}
@@ -230,14 +388,26 @@ export function DraftScreen() {
               </p>
 
               {night?.onClock ? (
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  style={{ marginTop: 12 }}
-                  onClick={() => pickOnDraftClock(pr.id)}
-                >
-                  Draft {pr.lastName}
-                </button>
+                <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    style={{ flex: 1 }}
+                    onClick={() => pickOnDraftClock(pr.id)}
+                  >
+                    Draft {pr.lastName}
+                  </button>
+                  {pr.isInternational && (
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() => stashOnDraftClock(pr.id)}
+                      title={`Stash overseas for ${pr.stashYears} year${(pr.stashYears ?? 1) > 1 ? 's' : ''} — develops before joining roster`}
+                    >
+                      🌍 Stash
+                    </button>
+                  )}
+                </div>
               ) : !night?.active && (franchise.phase === 'draft_scouting' || franchise.phase === 'draft_night') ? (
                 <button
                   type="button"
@@ -252,6 +422,28 @@ export function DraftScreen() {
           ))}
         </>
       ) : null}
+
+      <TradeNegotiateModal
+        key={tradePickNumber ?? 'closed'}
+        open={tradePickNumber !== null}
+        onClose={closePickTrade}
+        franchise={franchise}
+        league={league}
+        initialPrefill={tradePrefill}
+        onSubmit={(proposal) => {
+          if (tradePickNumber !== null) {
+            submitDraftPickTrade(proposal, tradePickNumber);
+          } else {
+            submitTradeProposal(proposal);
+          }
+          closePickTrade();
+        }}
+        onRequestCounter={(proposal) => {
+          requestTradeCounter(proposal);
+          closePickTrade();
+        }}
+        onSubmitChain={submitTradeChain}
+      />
     </div>
   );
 }

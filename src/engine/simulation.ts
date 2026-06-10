@@ -3,7 +3,10 @@ import { uid } from '../data/scenarios';
 import { rookieScaleSalary } from './salaries';
 import { computeCapOutlook } from './cap';
 import { opponentStrength, scheduledGameAt, type ScheduleGame, SCHEDULE_GAMES_PER_WEEK, SEASON_GAME_COUNT } from './schedule';
-import { applyGameStats, mergeTeamScoring, simulateTeamGameScores } from './stats';
+import { applyGameStats, mergeTeamScoring, simulateTeamGameScores, NBA_HOME_EDGE } from './stats';
+import { lineupSimAdjustment, ensureScenarioRosterShape, evolveFranchiseWindow, refreshScenarioOdds, windowSeasonBump } from './scenarioDifficulty';
+import { evaluateJobSecurity } from './careerMode';
+import { depthBoost } from './leagueWorld';
 
 export const GAMES_PER_WEEK = SCHEDULE_GAMES_PER_WEEK;
 
@@ -13,17 +16,17 @@ function clamp(n: number, min: number, max: number): number {
 
 function moraleModifier(m: MoraleLevel): number {
   switch (m) {
-    case 'Happy': return 2;
+    case 'Happy': return 1;
     case 'Stable': return 0;
     case 'Concerned': return -1;
     case 'Frustrated': return -2;
-    case 'Angry': return -4;
+    case 'Angry': return -3;
   }
 }
 
 export function autoStartingFive(franchise: Franchise): string[] {
   const positions: Position[] = ['PG', 'SG', 'SF', 'PF', 'C'];
-  const available = [...franchise.roster]
+  const available = [...(franchise.roster ?? [])]
     .filter((p) => !p.injured)
     .sort((a, b) => b.overall - a.overall);
   const picked: string[] = [];
@@ -61,7 +64,7 @@ export function validateStartingFive(
     return { ok: false, error: 'Each starter must be a different player.' };
   }
   for (const id of starterIds) {
-    const player = franchise.roster.find((p) => p.id === id);
+    const player = (franchise.roster ?? []).find((p) => p.id === id);
     if (!player) return { ok: false, error: 'Invalid player on lineup card.' };
     if (player.injured) return { ok: false, error: `${player.firstName} ${player.lastName} is injured.` };
   }
@@ -70,16 +73,20 @@ export function validateStartingFive(
 
 export function lineupStrength(franchise: Franchise, starterIds: string[]): number {
   const starters = starterIds
-    .map((id) => franchise.roster.find((p) => p.id === id))
+    .map((id) => (franchise.roster ?? []).find((p) => p.id === id))
     .filter(Boolean) as Player[];
   if (starters.length < 5) return rosterStrength(franchise);
 
-  const talent = starters.reduce((s, p) => s + p.overall, 0) / starters.length;
+  const talent =
+    starters.reduce((s, p) => s + (p.overall - 1), 0) / starters.length;
   const moraleBonus = moraleModifier(franchise.lockerRoom);
-  const coachBonus = (franchise.coach.devRating + franchise.coach.playoffRating) / 40;
-  const chemistry = franchise.starHappiness === 'Happy' ? 2 : franchise.starHappiness === 'Angry' ? -3 : 0;
-  const starBoost = starters.some((p) => p.isStar) ? 1.5 : 0;
-  return talent + moraleBonus + coachBonus + chemistry + starBoost;
+  const coachBonus = (franchise.coach.devRating + franchise.coach.playoffRating) / 55;
+  const chemistry =
+    franchise.starHappiness === 'Happy' ? 1 : franchise.starHappiness === 'Angry' ? -2 : 0;
+  const starBoost = starters.some((p) => p.isStar) ? 0.5 : 0;
+  const bench = depthBoost(franchise.roster) * 0.65;
+  const injuredPenalty = franchise.roster.filter((p) => p.injured).length * 0.75;
+  return talent + moraleBonus + coachBonus + chemistry + starBoost + bench - injuredPenalty + lineupSimAdjustment(franchise);
 }
 
 function rosterStrength(franchise: Franchise): number {
@@ -102,7 +109,7 @@ export function simulateSingleGame(
   if (scheduled && league) {
     home = scheduled.home;
     oppName = scheduled.opponentName;
-    oppStrength = opponentStrength(league, scheduled.opponentId);
+    oppStrength = opponentStrength(league, scheduled.opponentId, franchise, franchise.week);
     gameInWeek = scheduled.gameInWeek;
   } else if (league) {
     const gameSlot = (franchise.gamesThisWeek ?? 0) + 1;
@@ -110,7 +117,7 @@ export function simulateSingleGame(
     if (fallback) {
       home = fallback.home;
       oppName = fallback.opponentName;
-      oppStrength = opponentStrength(league, fallback.opponentId);
+      oppStrength = opponentStrength(league, fallback.opponentId, franchise, franchise.week);
       gameInWeek = fallback.gameInWeek;
     } else {
       const pool = league.teams.filter((t) => !t.isUser);
@@ -126,8 +133,9 @@ export function simulateSingleGame(
     oppStrength = 72 + Math.random() * 18;
   }
 
-  const homeAdv = home ? 2.5 : 0;
-  const result = simulateTeamGameScores(strength, oppStrength, homeAdv);
+  const homeAdv = home ? NBA_HOME_EDGE : 0;
+  const fatigue = (gameInWeek ?? 1) > 1 ? 1.4 : 0;
+  const result = simulateTeamGameScores(strength - fatigue, oppStrength, homeAdv, { isUserTeam: true });
   const teamScore = result.teamScore;
   const oppScore = result.oppScore;
   const won = result.won;
@@ -180,7 +188,7 @@ export function processWeekResults(
   return {
     franchise: {
       ...withStats.franchise,
-      gameLog: [...withStats.logEntries, ...franchise.gameLog].slice(0, 80),
+      gameLog: [...withStats.logEntries, ...franchise.gameLog].slice(0, SEASON_GAME_COUNT + 8),
     },
     logEntries: withStats.logEntries,
   };
@@ -189,32 +197,19 @@ export function processWeekResults(
 export function applyGameResults(franchise: Franchise, results: GameResult[]): Franchise {
   if (results.length === 0) return franchise;
 
-  const played = franchise.regularSeasonRecord
-    ? franchise.regularSeasonRecord.wins + franchise.regularSeasonRecord.losses
-    : franchise.record.wins + franchise.record.losses;
-  if (played >= SEASON_GAME_COUNT) return franchise;
+  if (franchise.regularSeasonRecord) return franchise;
 
-  const wins = results.filter((r) => r.won).length;
-  const losses = results.length - wins;
-  let record = {
-    wins: franchise.record.wins + wins,
-    losses: franchise.record.losses + losses,
+  const seasonLog = (franchise.gameLog ?? []).filter((g) => g.season === franchise.season);
+  if (seasonLog.length >= SEASON_GAME_COUNT) return franchise;
+
+  const record = {
+    wins: seasonLog.filter((g) => g.won).length,
+    losses: seasonLog.filter((g) => !g.won).length,
   };
-  const total = record.wins + record.losses;
-  if (total > SEASON_GAME_COUNT) {
-    const overflow = total - SEASON_GAME_COUNT;
-    if (losses >= overflow) {
-      record = { wins: record.wins, losses: record.losses - overflow };
-    } else {
-      record = {
-        wins: record.wins - (overflow - losses),
-        losses: record.losses - losses,
-      };
-    }
-  }
 
   const winPct = record.wins / Math.max(1, record.wins + record.losses);
-  const playoffOdds = clamp(Math.round(winPct * 100 + (franchise.window.includes('Contender') ? 8 : -5)), 2, 98);
+  const windowBoost = franchise.window.includes('Contender') ? 4 : franchise.window.includes('Rebuild') ? -12 : 0;
+  const playoffOdds = clamp(Math.round(winPct * 100 + windowBoost), 2, 98);
   const titleOdds = clamp(Math.round(playoffOdds * 0.12 + (franchise.roster.some((p) => p.overall >= 90) ? 4 : 0)), 0, 35);
 
   const headline = results[results.length - 1];
@@ -329,31 +324,25 @@ export function computeWindow(franchise: Franchise): WindowStatus {
 }
 
 export function updateJobSecurity(franchise: Franchise): number {
-  let score = franchise.jobSecurity;
-  const winPct = franchise.record.wins / Math.max(1, franchise.record.wins + franchise.record.losses);
-
-  if (franchise.window.includes('Rebuild') || franchise.window.includes('Developing')) {
-    const youngDev = franchise.roster.filter((p) => p.age < 24 && p.devTrend === 'Up').length;
-    score += youngDev * 2 - 1;
-  } else {
-    score += (winPct - 0.5) * 30;
-    score += franchise.playoffOdds > 60 ? 3 : -4;
-  }
-
-  score += (franchise.ownership.confidence - 50) * 0.05;
-  score -= franchise.cap.inLuxuryTax ? 2 : 0;
-  return clamp(Math.round(score), 5, 99);
+  return evaluateJobSecurity(franchise);
 }
 
 export function refreshCap(franchise: Franchise): Franchise {
+  let next = franchise.scenarioId ? ensureScenarioRosterShape(franchise) : franchise;
+  const window = evolveFranchiseWindow(next);
+  const windowMeta = windowSeasonBump(next, window);
+  next = { ...next, window, ...windowMeta };
+  const odds = next.scenarioId ? refreshScenarioOdds(next) : { playoffOdds: next.playoffOdds, titleOdds: next.titleOdds };
+
   return {
-    ...franchise,
-    cap: computeCapOutlook(franchise),
-    window: computeWindow(franchise),
+    ...next,
+    cap: computeCapOutlook(next),
     coreAge: Math.round(
-      (franchise.roster.filter((p) => p.overall >= 75).reduce((s, p) => s + p.age, 0) /
-        Math.max(1, franchise.roster.filter((p) => p.overall >= 75).length)) * 10,
+      (next.roster.filter((p) => p.overall >= 75).reduce((s, p) => s + p.age, 0) /
+        Math.max(1, next.roster.filter((p) => p.overall >= 75).length)) * 10,
     ) / 10,
+    playoffOdds: odds.playoffOdds,
+    titleOdds: odds.titleOdds,
   };
 }
 
@@ -374,6 +363,16 @@ export function phaseLabel(phase: Franchise['phase']): string {
 }
 
 export function statusFromRecord(f: Franchise): string {
+  if (f.phase === 'playoffs') {
+    if (f.playoffs?.championTeamId && f.playoffs.championTeamId === f.leagueTeamId) {
+      return 'NBA champion';
+    }
+    if (f.playoffs?.userResult === 'Missed playoffs') return 'Watching playoffs';
+    if (f.playoffs?.userEliminated) return 'Playoffs — eliminated';
+    return 'Playoffs';
+  }
+  if (f.phase === 'season_review') return 'Season complete';
+
   const games = f.record.wins + f.record.losses;
   if (games === 0) return 'Season opener ahead';
   if (f.playoffOdds >= 75) return 'Playoff team';

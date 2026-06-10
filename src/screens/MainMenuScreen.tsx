@@ -6,14 +6,13 @@ import { franchiseRegularSeasonRecord } from '../engine/regularSeasonRecord';
 import { phaseLabel } from '../engine/simulation';
 import { TeamLogo } from '../components/TeamLogo';
 import { LandingFooter, LandingHeader } from '../components/LandingChrome';
-import { LandingPreview } from '../components/LandingPreview';
 import { LandingSeoSection } from '../components/LandingSeoSection';
 
 const FEATURES = [
+  { icon: '▶', title: 'Set your starting five', body: 'Pick your lineup before every game. Matchups matter — your rotation choices affect the outcome.' },
   { icon: '🎯', title: 'Imperfect-scouting draft', body: '60 picks, scout ranges, lottery odds, and bust risk on every board.' },
   { icon: '🔄', title: 'Trade war room', body: 'Block players, counter offers, and negotiate with AI front offices.' },
-  { icon: '🏆', title: 'Full playoff bracket', body: 'Best-of-seven rounds, play-in tension, and dynasty memory.' },
-  { icon: '📈', title: 'Finances & cap', body: 'Luxury tax, MLE room, ticket revenue, and ownership patience.' },
+  { icon: '🧑‍💼', title: 'Hire & fire coaches', body: 'Sign or cut your head coach each offseason. Development and playoff ratings shape your ceiling.' },
 ];
 
 export function MainMenuScreen() {
@@ -26,23 +25,7 @@ export function MainMenuScreen() {
     lastSavedAt,
     resetGame,
     resetOnboarding,
-    exportSave,
-    importSave,
   } = useGameStore();
-
-  const handleImport = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'application/json,.json';
-    input.onchange = async () => {
-      const file = input.files?.[0];
-      if (!file) return;
-      const text = await file.text();
-      const ok = importSave(text);
-      if (ok) navigate('/office');
-    };
-    input.click();
-  };
 
   const handleNewGame = () => {
     if (started && !window.confirm('Retire your current dynasty and start a new franchise?')) return;
@@ -51,47 +34,88 @@ export function MainMenuScreen() {
     navigate('/start');
   };
 
+  /* ── RETURNING USER ─────────────────────────────────────────── */
+  if (started && franchise) {
+    const r = franchiseRegularSeasonRecord(franchise, league ?? undefined);
+    return (
+      <div className="landing-page">
+        <div className="bg-mesh" aria-hidden="true" />
+        <div className="bg-grain" aria-hidden="true" />
+        <LandingHeader />
+
+
+        <div className="mm-return-layout">
+          {/* Continue card */}
+          <div className="mm-return-card panel panel-accent">
+            {/* Team header */}
+            <div className="mm-return-team">
+              <TeamLogo city={franchise.city} name={franchise.name} size={64} />
+              <div>
+                <p className="eyebrow" style={{ marginBottom: 2 }}>Continue dynasty</p>
+                <p className="title-md" style={{ margin: 0 }}>{franchise.city} {franchise.name}</p>
+                <p className="body" style={{ fontSize: 12, marginTop: 4, color: 'var(--silver)' }}>
+                  Season {franchise.season} · Week {franchise.week} · {r.wins}–{r.losses}
+                </p>
+              </div>
+            </div>
+
+            {/* Status row */}
+            <div className="mm-return-status">
+              <div className="mm-return-stat">
+                <span className="mm-return-stat-label">Phase</span>
+                <span className="mm-return-stat-value">{phaseLabel(franchise.phase)}</span>
+              </div>
+              {selectedScenario && (
+                <div className="mm-return-stat">
+                  <span className="mm-return-stat-label">Scenario</span>
+                  <span className="mm-return-stat-value">{SCENARIOS[selectedScenario].title}</span>
+                </div>
+              )}
+              <div className="mm-return-stat">
+                <span className="mm-return-stat-label">Roster</span>
+                <span className="mm-return-stat-value">{franchise.roster.length} players</span>
+              </div>
+            </div>
+
+            {/* Primary CTA */}
+            <button
+              type="button"
+              className="btn btn-primary"
+              style={{ width: '100%', marginTop: 20, padding: '14px 0', fontSize: 16 }}
+              onClick={() => navigate('/office')}
+            >
+              Open front office →
+            </button>
+
+            {/* Secondary actions */}
+            <div className="mm-return-secondary">
+              <button type="button" className="btn btn-ghost mm-return-sec-btn" onClick={handleNewGame}>
+                New franchise
+              </button>
+            </div>
+
+            {lastSavedAt && (
+              <p className="mono" style={{ fontSize: 10, marginTop: 12, color: 'var(--silver)', textAlign: 'center' }}>
+                Last saved {formatSavedAt(lastSavedAt)}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <LandingSeoSection />
+        <LandingFooter logoLinksHome />
+      </div>
+    );
+  }
+
+  /* ── NEW USER ────────────────────────────────────────────────── */
   return (
     <div className="landing-page">
       <div className="bg-mesh" aria-hidden="true" />
       <div className="bg-grain" aria-hidden="true" />
-
       <LandingHeader />
 
       <div className="landing-layout">
-        {started && franchise && (
-          <div className="panel panel-accent landing-card landing-continue-card landing-continue-slot">
-            <div className="landing-continue-head">
-              <TeamLogo city={franchise.city} name={franchise.name} size={52} />
-              <div>
-                <p className="eyebrow">Continue dynasty</p>
-                <p className="title-md" style={{ margin: 0 }}>{franchise.city} {franchise.name}</p>
-              </div>
-            </div>
-            <p className="body landing-continue-summary" style={{ marginTop: 10 }}>
-              Season {franchise.season}, Week {franchise.week} ·{' '}
-              {(() => {
-                const r = franchiseRegularSeasonRecord(franchise, league ?? undefined);
-                return `${r.wins}–${r.losses}`;
-              })()}
-            </p>
-            <div className="landing-continue-meta">
-              <p className="body" style={{ fontSize: 12, marginTop: 4 }}>
-                {phaseLabel(franchise.phase)}
-                {selectedScenario ? ` · ${SCENARIOS[selectedScenario].title}` : ''}
-              </p>
-              {lastSavedAt && (
-                <p className="mono" style={{ fontSize: 11, marginTop: 8, color: 'var(--silver)' }}>
-                  Last saved {formatSavedAt(lastSavedAt)}
-                </p>
-              )}
-            </div>
-            <button type="button" className="btn btn-primary" style={{ marginTop: 14, width: '100%' }} onClick={() => navigate('/office')}>
-              Open front office
-            </button>
-          </div>
-        )}
-
         <div className="landing-hero">
           <p className="eyebrow">Free online basketball manager game</p>
           <h1 className="title-lg landing-headline">
@@ -127,36 +151,18 @@ export function MainMenuScreen() {
 
         <div className="landing-stack">
           <div className="landing-cta-card">
-            <p className="eyebrow">{started ? 'New dynasty' : 'Get started'}</p>
+            <p className="eyebrow">Get started</p>
             <p className="body landing-cta-copy" style={{ marginTop: 6 }}>
               Pick a scripted scenario or choose any of 30 franchises — logos, cap sheets, and rosters included.
             </p>
             <button type="button" className="btn btn-primary landing-play-btn" onClick={handleNewGame}>
-              {started ? 'Start new franchise' : '▶ Start new franchise'}
+              ▶ Start new franchise
             </button>
-          </div>
-
-          <div className="landing-extra">
-            <LandingPreview />
-
-            <div className="panel landing-card">
-              <p className="eyebrow">Dynasty files</p>
-              <p className="body">Export your save to back up a long rebuild, or import on another device.</p>
-              <div style={{ display: 'grid', gap: 8, marginTop: 12 }}>
-                <button type="button" className="btn btn-ghost" disabled={!started} onClick={() => exportSave()}>
-                  Export save file
-                </button>
-                <button type="button" className="btn btn-ghost" onClick={handleImport}>
-                  Import save file
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
 
       <LandingSeoSection />
-
       <LandingFooter logoLinksHome />
     </div>
   );

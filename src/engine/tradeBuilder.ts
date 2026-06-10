@@ -1,13 +1,16 @@
 import type { DraftPick, Franchise, FranchiseGhost, League, LeagueTeam, Player, Prospect, TradeOffer } from '../types/game';
 import { uid, playerName } from '../data/scenarios';
 import { evaluateTradeForTeam } from './league';
-import { getTeamById } from '../data/league';
+import { getTeamById, teamWantsPicks, teamWantsVeterans } from '../data/league';
 import { formatCap, pickKey, userTradeCapWarnings, validateTradeSalaryMatchAtPayroll, estimateTeamPayroll, SECOND_APRON, capTradeScoreAdjust } from './cap';
-import { clearTeamRosterCache, generateTeamRoster } from './leagueRosters';
+import { clearTeamRosterCache, generateTeamRoster as generateCachedRoster } from './leagueRosters';
+import { getTeamRoster as getWorldRoster, rosterPayroll } from './leagueWorld';
+import { salaryMatchSummary, stepienViolation } from './tradeRules';
 import type { TradeProposal, TradeValidation } from '../types/game';
 
-export function generatePartnerTradeAssets(partner: LeagueTeam): Player[] {
-  return generateTeamRoster(partner);
+export function generatePartnerTradeAssets(partner: LeagueTeam, league?: League, franchise?: Franchise): Player[] {
+  if (league) return getWorldRoster(league, partner, franchise);
+  return generateCachedRoster(partner);
 }
 
 export function clearPartnerTradeAssetCache(): void {
@@ -106,15 +109,28 @@ export function validateProposal(
 
   if (!match.ok) errors.push(match.message);
 
+  const outgoingPicks = proposal.outgoingPickKeys
+    .map((k) => franchise.draftPicks.find((p) => pickKey(p) === k))
+    .filter(Boolean) as DraftPick[];
+
+  const stepien = stepienViolation(outgoingPicks);
+  if (stepien) errors.push(stepien);
+
+  const salaryMatchNote = salaryMatchSummary(
+    franchise.cap.payroll,
+    franchise.cap.inSecondApron,
+    incomingSalary,
+    outgoingSalary,
+    match.maxIncoming,
+    match.ok,
+  );
+
   let partnerAcceptScore = 50;
   let partnerVerdict = 'Incomplete proposal.';
   let partnerCapNote = '';
   let partnerProjectedPayroll = 0;
   let partnerSalaryMatch = true;
   const incomingPicks = proposal.incomingPicks;
-  const outgoingPicks = proposal.outgoingPickKeys
-    .map((k) => franchise.draftPicks.find((p) => pickKey(p) === k))
-    .filter(Boolean) as DraftPick[];
 
   if (partner) {
     const partnerGets = outgoingPlayers;
@@ -123,10 +139,12 @@ export function validateProposal(
     const partnerSendsPicks = incomingPicks;
     const partnerGetsSalary = partnerGets.reduce((s, p) => s + p.contract.annualSalary, 0);
     const partnerSendsSalary = partnerSends.reduce((s, p) => s + p.contract.annualSalary, 0);
-    const partnerPayroll = estimateTeamPayroll(partner);
+    const partnerRoster = getWorldRoster(league, partner, franchise);
+    const partnerPayroll = partnerRoster.length ? rosterPayroll(partnerRoster) : estimateTeamPayroll(partner);
+    const partnerHardCap = partnerPayroll >= SECOND_APRON;
     const partnerMatch = validateTradeSalaryMatchAtPayroll(
       partnerPayroll,
-      partnerPayroll > SECOND_APRON,
+      partnerHardCap,
       partnerGetsSalary,
       partnerSendsSalary,
     );
@@ -140,6 +158,13 @@ export function validateProposal(
     partnerAcceptScore = ev.score;
     partnerVerdict = ev.verdict;
     partnerCapNote = capTradeScoreAdjust(partner, partnerGetsSalary, partnerSendsSalary).note;
+
+    if (teamWantsPicks(partner.strategy) && outgoingPicks.some((p) => p.round === 1)) {
+      partnerAcceptScore = Math.min(99, partnerAcceptScore + 6);
+    }
+    if (teamWantsVeterans(partner.strategy) && outgoingPlayers.some((p) => p.overall >= 78)) {
+      partnerAcceptScore = Math.min(99, partnerAcceptScore + 4);
+    }
 
     const blockBoost =
       outgoingPlayers.filter((p) => franchise.tradeBlock?.playerIds.includes(p.id)).length * 4 +
@@ -168,6 +193,9 @@ export function validateProposal(
     partnerProjectedPayroll,
     partnerSalaryMatch,
     allowedIncoming: match.allowedIncoming,
+    maxIncomingSalary: match.maxIncoming,
+    salaryMatchNote,
+    stepienWarning: stepien ?? undefined,
     errors,
   };
 }

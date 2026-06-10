@@ -71,16 +71,27 @@ function takeGenericName(used: Set<string>, salt: number): { firstName: string; 
   return { firstName, lastName };
 }
 
-/** One surname typo — typically doubles the final letter (Harperr, Reedd). */
+/**
+ * One subtle typo on a real surname — swaps an internal vowel (a→e, e→a, o→u, etc.)
+ * so the name reads almost-right but is clearly fictional. Never doubles letters.
+ * Examples: Mitchell → Mitchall, Brown → Brawn, Torres → Torras
+ */
 export function typoSurname(lastName: string): string {
   const match = lastName.match(/^(.+?)(\s+(Jr\.|II|III|IV))$/i);
-  if (match) {
-    return `${typoSurname(match[1])}${match[2]}`;
+  if (match) return `${typoSurname(match[1])}${match[2]}`;
+
+  // Vowel swap map — cycle each vowel to the next
+  const swapMap: Record<string, string> = { a: 'e', e: 'a', i: 'y', o: 'u', u: 'o', A: 'E', E: 'A', I: 'Y', O: 'U', U: 'O' };
+
+  // Find the last vowel in the word (not the very first char, keep the start recognisable)
+  for (let i = lastName.length - 1; i > 0; i--) {
+    const c = lastName[i];
+    if (swapMap[c]) {
+      return lastName.slice(0, i) + swapMap[c] + lastName.slice(i + 1);
+    }
   }
-  if (lastName.length < 2) return `${lastName}${lastName}`;
-  const last = lastName[lastName.length - 1];
-  if (lastName.endsWith(last + last)) return lastName;
-  return `${lastName}${last}`;
+  // No vowel found (unlikely) — just return as-is
+  return lastName;
 }
 
 /**
@@ -109,7 +120,7 @@ export function takeTeamRosterName(
 
 /**
  * Draft / FA / depth filler names — unassigned draft-class parodies only.
- * Rule: same-letter fictional first name + one surname typo (see parodyRoster.ts).
+ * Rule: fictional first name + real surname with one typo (see parodyRoster.ts).
  * Franchise stars (e.g. Leandro Jhames on LA Cosmos) use pickTeamParodyName().
  */
 export function takeUniqueName(used: Set<string>, salt = 0): { firstName: string; lastName: string } {

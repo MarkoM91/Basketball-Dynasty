@@ -64,9 +64,11 @@ function describeSubmittedProposal(
   receive: string;
 } {
   const sendParts = [
-    ...franchise.roster
-      .filter((pl) => p.proposal.outgoingPlayerIds.includes(pl.id))
-      .map((pl) => playerName(pl)),
+    ...(p.outgoingSnapshot
+      ? p.outgoingSnapshot.map((s) => s.name)
+      : franchise.roster
+          .filter((pl) => p.proposal.outgoingPlayerIds.includes(pl.id))
+          .map((pl) => playerName(pl))),
     ...p.proposal.outgoingPickKeys.map((key) => {
       const pick = franchise.draftPicks.find((dp) => pickKey(dp) === key);
       return pick ? pickDescription(pick) : key;
@@ -187,6 +189,7 @@ export function TradeScreen() {
     clearTradeBlock,
     withdrawProposal,
     setScreen,
+    openTradeShopDrawer,
   } = useGameStore();
 
   const [tab, setTab] = useState<TradeTab>('shop');
@@ -225,6 +228,13 @@ export function TradeScreen() {
     syncBlockListingOffers();
   }, [syncBlockListingOffers, franchise?.tradeBlock?.playerIds, franchise?.tradeBlock?.pickKeys]);
 
+  useEffect(() => {
+    if (openTradeShopDrawer) {
+      setShowRosterDrawer(true);
+      useGameStore.setState({ openTradeShopDrawer: false });
+    }
+  }, [openTradeShopDrawer]);
+
   if (!franchise || !league) return null;
 
   const blockCount = tradeBlockAssetCount(franchise);
@@ -235,7 +245,14 @@ export function TradeScreen() {
   const negotiation = franchise.tradeNegotiation;
 
   const pendingOutbound = activeProposals.filter((p) => p.status === 'pending').length;
-  const counteredProposals = activeProposals.filter((p) => p.status === 'countered');
+  // Hide countered proposals that already have an active pendingCounter from the same team
+  const counteredProposals = activeProposals.filter(
+    (p) => p.status === 'countered' &&
+      !(franchise.pendingCounter && (
+        p.partnerTeamId === franchise.pendingCounter.partnerTeamId ||
+        p.partnerTeamName === franchise.pendingCounter.partnerTeam
+      )),
+  );
   const hasNegotiations =
     franchise.pendingCounter !== null ||
     counteredProposals.length > 0 ||
@@ -376,7 +393,9 @@ export function TradeScreen() {
                   <div className="trade-offer-row-main">
                     <strong style={{ fontSize: 13 }}>{offer.partnerTeam}</strong>
                     {offer.blockInquiry && (
-                      <p className="body" style={{ fontSize: 11, margin: '2px 0 0', opacity: 0.75 }}>For your listing</p>
+                      <p className="body" style={{ fontSize: 11, margin: '2px 0 0', opacity: 0.75 }}>
+                        {offer.listedAssetKeys ? 'For your package' : 'For your listing'}
+                      </p>
                     )}
                     <TradeOfferPackageDetail offer={offer} />
                     <p className="body" style={{ fontSize: 12, margin: '8px 0 0' }}>{offer.analysis.longTerm}</p>
@@ -492,12 +511,23 @@ export function TradeScreen() {
                     {showHistory ? 'Hide history' : `Show history (${historyProposals.length})`}
                   </button>
                   {showHistory &&
-                    historyProposals.slice(0, 10).map((p) => (
-                      <div key={p.id} className="analysis-row">
-                        <span>{p.partnerTeamName} · Wk {p.submittedWeek}</span>
-                        <span className={proposalStatusClass(p.status)}>{p.status}</span>
-                      </div>
-                    ))}
+                    historyProposals.slice(0, 10).map((p) => {
+                      const pkg = describeSubmittedProposal(franchise, p);
+                      return (
+                        <div key={p.id} className="trade-history-row">
+                          <div className="trade-history-row-main">
+                            <div className="trade-history-row-header">
+                              <span className="trade-history-team">{p.partnerTeamName} · Wk {p.submittedWeek}</span>
+                              <span className={proposalStatusClass(p.status)}>{p.status}</span>
+                            </div>
+                            <div className="trade-history-recap">
+                              <span><span className="stat-label">Sent</span> {pkg.send}</span>
+                              <span><span className="stat-label">Got</span> {pkg.receive}</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                 </Panel>
               )}
             </>
@@ -628,7 +658,7 @@ export function TradeScreen() {
                   </button>
                 );
               })}
-              {franchise.draftPicks.map((pick) => {
+              {[...franchise.draftPicks].sort((a, b) => a.year - b.year || a.round - b.round).map((pick) => {
                 const key = pickKey(pick);
                 const onBlock = blockedPickKeys.includes(key);
                 return (

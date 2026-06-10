@@ -56,19 +56,39 @@ export function mergeLeagueTeamScoring(
   };
 }
 
+/** Logistic scale — higher = more parity (NBA-like). Was 6 (too swingy toward favorites). */
+export const NBA_WIN_PROB_SCALE = 9.5;
+/** Night-to-night variance in strength points. */
+export const NBA_GAME_VARIANCE = 13;
+/** Home court in strength points (~3–4% win prob at parity). */
+export const NBA_HOME_EDGE = 1.6;
+
+export function nbaWinProbability(strengthDiff: number, variance = NBA_GAME_VARIANCE): number {
+  const adjusted = strengthDiff + (Math.random() - 0.5) * variance;
+  return 1 / (1 + Math.exp(-adjusted / NBA_WIN_PROB_SCALE));
+}
+
 export function simulateTeamGameScores(
   teamStrength: number,
   oppStrength: number,
   homeAdvantage = 0,
+  opts?: { isUserTeam?: boolean; isPlayoffs?: boolean },
 ): {
   teamScore: number;
   oppScore: number;
   won: boolean;
 } {
-  const diff = teamStrength + homeAdvantage - oppStrength;
-  const variance = (Math.random() - 0.5) * 8;
+  let teamStr = teamStrength;
+  let oppStr = oppStrength;
+  if (opts?.isUserTeam) {
+    teamStr -= 2.4;
+    oppStr += 1;
+  }
+  const homeAdv = homeAdvantage + (opts?.isPlayoffs ? 0.4 : 0);
+  const diff = teamStr + homeAdv - oppStr;
+  const variance = (Math.random() - 0.5) * NBA_GAME_VARIANCE;
   const adjusted = diff + variance;
-  const winProb = 1 / (1 + Math.exp(-adjusted / 6));
+  const winProb = 1 / (1 + Math.exp(-adjusted / NBA_WIN_PROB_SCALE));
   const won = Math.random() < winProb;
 
   const base = 108 + (Math.random() - 0.5) * 10;

@@ -66,7 +66,7 @@ export function suggestDealFixes(
   const unusedRoster = franchise.roster.filter(
     (p) => !base.outgoingPlayerIds.includes(p.id) && !p.isStar && !p.injured,
   );
-  const partnerAssets = generatePartnerTradeAssets(partner);
+  const partnerAssets = generatePartnerTradeAssets(partner, league, franchise);
   const unusedIncoming = partnerAssets.filter((p) => !base.incomingPlayers.some((x) => x.id === p.id));
 
   if (!current.salaryMatch) {
@@ -134,6 +134,26 @@ export function suggestDealFixes(
         baseScore,
         'Shed salary',
         `Move ${playerName(expiring)} to avoid creeping into the tax.`,
+      );
+      if (sug) candidates.push(sug);
+    }
+  }
+
+  if (current.stepienWarning && base.outgoingPickKeys.length >= 2) {
+    const firstKeys = base.outgoingPickKeys.filter((k) => {
+      const pick = franchise.draftPicks.find((p) => pickKey(p) === k);
+      return pick?.round === 1;
+    });
+    if (firstKeys.length >= 2) {
+      const next = cloneProposal(base);
+      next.outgoingPickKeys = next.outgoingPickKeys.filter((k) => k !== firstKeys[firstKeys.length - 1]);
+      const sug = trySuggestion(
+        franchise,
+        league,
+        next,
+        baseScore,
+        'Fix Stepien violation',
+        'Drop one consecutive first-round pick — NBA rules freeze back-to-back future firsts.',
       );
       if (sug) candidates.push(sug);
     }

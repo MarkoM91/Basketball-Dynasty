@@ -1,6 +1,6 @@
 import { getStandings } from '../data/league';
 import { franchiseRegularSeasonRecord } from '../engine/regularSeasonRecord';
-import { buildSeasonSchedule, scheduleRecord, SEASON_GAME_COUNT } from '../engine/schedule';
+import { buildSeasonSchedule, scheduleRecord, SEASON_GAME_COUNT, SCHEDULE_WEEKS } from '../engine/schedule';
 import { TeamLogo } from '../components/TeamLogo';
 import { useViewTeamRoster } from '../hooks/useViewTeamRoster';
 import { useGameStore } from '../store/gameStore';
@@ -43,7 +43,7 @@ export function ScheduleScreen() {
           </div>
           <div className="stat-cell">
             <div className="stat-label">Week</div>
-            <div className="stat-value">{franchise.week} / 26</div>
+            <div className="stat-value">{franchise.week} / {SCHEDULE_WEEKS}</div>
           </div>
         </div>
       </Panel>

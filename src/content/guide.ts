@@ -9,7 +9,7 @@ export const GUIDE_SECTIONS = [
     id: 'season',
     title: '2. Run the regular season',
     body:
-      'Each week simulates up to three games on a 78-game schedule. Set your starting five before user games, or sim the week from the office. Track standings, schedule, and league headlines as 29 AI teams compete for the 16 playoff seeds.',
+      'Each week simulates up to two games on an 82-game schedule. Set your starting five before user games, or sim the week from the office. Track standings, schedule, and league headlines as 29 AI teams compete for the 16 playoff seeds.',
   },
   {
     id: 'roster',
@@ -60,7 +60,7 @@ export const GUIDE_TIPS = [
 export const GUIDE_FAQ = [
   {
     question: 'How long is a season?',
-    answer: 'The regular season is 78 games across weekly turns, followed by a 16-team playoff bracket and a full offseason cycle.',
+    answer: 'The regular season is 82 games across weekly turns, followed by a 16-team playoff bracket and a full offseason cycle.',
   },
   {
     question: 'Can I play individual games?',

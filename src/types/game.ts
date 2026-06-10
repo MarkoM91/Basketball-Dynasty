@@ -82,7 +82,10 @@ export interface Player {
   injured?: boolean;
   injuryWeeks?: number;
   isStar?: boolean;
+  /** True OVR used in simulation. When undefined, overall IS the true value. */
   hiddenOverall?: number;
+  /** OVR at start of last offseason — used to show season delta on roster screen. */
+  prevOverall?: number;
   /** Season this player was drafted (rookie year). */
   draftSeason?: number;
   draftPick?: number;
@@ -97,6 +100,8 @@ export interface PlayerSeasonStats {
   apg: number;
   mpg: number;
 }
+
+export type DraftClassStrength = 'Weak' | 'Average' | 'Loaded' | 'Deep';
 
 export interface Prospect {
   id: string;
@@ -119,6 +124,16 @@ export interface Prospect {
   hiddenTraits?: string[];
   trueOverall?: number;
   truePotential?: number;
+  /** Player is playing overseas — can be stashed instead of drafted to roster. */
+  isInternational?: boolean;
+  /** Years until stashed player becomes callable (1 or 2). */
+  stashYears?: 1 | 2;
+}
+
+export interface StashedPlayer {
+  prospect: Prospect;
+  draftSeason: number;
+  yearsRemaining: number;
 }
 
 export interface DraftPick {
@@ -175,6 +190,7 @@ export interface DraftNightState {
   log: DraftNightLogEntry[];
   stakeholderNote: string;
   onClock: boolean;
+  classStrength?: DraftClassStrength;
 }
 
 export interface TradeProposal {
@@ -210,6 +226,8 @@ export interface SubmittedTradeProposal {
   partnerVerdict: string;
   responseNote?: string;
   expiresWeek: number;
+  /** Snapshot of outgoing players at submission time (roster lookup fails after trade). */
+  outgoingSnapshot?: { id: string; name: string }[];
 }
 
 export interface LeagueTradeBlockListing {
@@ -266,6 +284,9 @@ export interface TradeValidation {
   partnerProjectedPayroll: number;
   partnerSalaryMatch: boolean;
   allowedIncoming: number;
+  maxIncomingSalary: number;
+  salaryMatchNote: string;
+  stepienWarning?: string;
   errors: string[];
 }
 
@@ -289,6 +310,8 @@ export interface TradeOffer {
   /** Inbound offer generated when you list a player or pick on your block. */
   blockInquiry?: boolean;
   listedAssetKey?: string;
+  /** Set when the offer is for a multi-asset package listing. */
+  listedAssetKeys?: string[];
 }
 
 export interface Coach {
@@ -408,6 +431,12 @@ export interface FranchiseMemory {
   type: 'trade' | 'draft' | 'playoff' | 'contract' | 'firing' | 'injury' | 'milestone';
 }
 
+export interface CapHold {
+  playerId: string;
+  name: string;
+  amount: number;
+}
+
 export interface CapOutlook {
   payroll: number;
   capLimit: number;
@@ -416,11 +445,23 @@ export interface CapOutlook {
   inLuxuryTax: boolean;
   inSecondApron: boolean;
   projectedRoom: number;
+  /** Room after unsigned Bird-rights holds. */
+  effectiveRoom: number;
+  /** Live roster salary (may differ from cap sheet during renewals). */
+  rosterSalary?: number;
+  /** Payroll counted on the cap sheet (excludes unsigned FA salary). */
+  capSheetPayroll?: number;
+  /** Minimum-salary charge for unfilled roster spots (offseason). */
+  incompleteRosterCharge?: number;
+  capHoldsTotal: number;
+  capHolds: CapHold[];
   deadMoney: number;
   taxBill: number;
   mleAvailable: number;
+  mleUsed: boolean;
   roomAvailable: number;
   baeAvailable: number;
+  baeUsed: boolean;
   hardCapped: boolean;
   warnings: string[];
 }
@@ -515,6 +556,8 @@ export interface LeagueMatchup {
   gameInWeek: number;
   homeTeamId: string;
   awayTeamId: string;
+  /** Set when this league matchup has been applied to team records. */
+  played?: boolean;
 }
 
 export interface League {
@@ -523,6 +566,8 @@ export interface League {
   draftOrder?: DraftOrderEntry[];
   draftLotteryLog?: string[];
   schedule?: LeagueMatchup[];
+  /** Full rosters keyed by city|name — powers league-wide sim. */
+  rosters?: Record<string, Player[]>;
 }
 
 export type FreeAgentPriority = 'winning' | 'money' | 'role' | 'market';
@@ -549,6 +594,8 @@ export interface FreeAgent {
   scoutNote: string;
   archetype: string;
   signed: boolean;
+  /** Where they played last season — league-wide FA pool. */
+  formerTeam?: string;
 }
 
 export type PitchType = 'max_offer' | 'team_friendly' | 'win_now' | 'featured_role';
@@ -595,6 +642,7 @@ export interface Franchise {
   tradeNegotiation?: TradeNegotiation | null;
   draftBoard: Prospect[];
   draftPickNumber?: number;
+  draftStash?: StashedPlayer[];
   gmName: string;
   strategyIdentity: string;
   playoffs?: PlayoffState;
@@ -616,6 +664,16 @@ export interface Franchise {
   ticketPriceBias?: number;
   /** 1–10 scouting / player development spend. */
   scoutingBudget?: number;
+  /** Players released in renewals — enter FA pool when it opens. */
+  pendingFreeAgents?: Player[];
+  /** Scripted career start — drives roster shape and sim difficulty. */
+  scenarioId?: ScenarioId | null;
+  /** Narrative beats already triggered — keyed by beat id. */
+  careerBeatsSeen?: string[];
+  /** Season when this scenario career began — gates window progression. */
+  scenarioStartSeason?: number;
+  /** Last season the competitive window tier was allowed to rise. */
+  scenarioLastWindowSeason?: number;
   /** User team scoring averages from games you actually sim. */
   teamScoring?: { ppgFor: number; ppgAgainst: number; games: number };
 }

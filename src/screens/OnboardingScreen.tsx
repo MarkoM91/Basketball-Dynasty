@@ -124,7 +124,10 @@ export function OnboardingScreen() {
   if (!scenario) return null;
 
   const f = scenario.franchise;
-  const star = f.roster.find((p) => p.isStar);
+  const star =
+    f.roster.find((p) => p.isStar) ??
+    f.roster.find((p) => p.role === 'Franchise Player') ??
+    [...f.roster].filter((p) => p.role === 'Star').sort((a, b) => b.overall - a.overall)[0];
 
   return (
     <div className="page landing-page">

@@ -2,6 +2,8 @@ import type { DraftOrderEntry, League, PlayoffState } from '../types/game';
 import { getStandings } from '../data/league';
 import { PLAYOFF_TEAM_COUNT } from './playoffs';
 
+const DRAFT_TEAM_COUNT = 30;
+
 /** NBA-style lottery weights (top 14 picks). */
 const LOTTERY_WEIGHTS = [140, 140, 140, 125, 105, 90, 75, 65, 55, 45, 35, 25, 18, 17];
 
@@ -11,7 +13,7 @@ export interface DraftOrderResult {
   userPick: number;
 }
 
-function teamKey(city: string, name: string): string {
+export function teamKey(city: string, name: string): string {
   return `${city}|${name}`;
 }
 
@@ -114,6 +116,39 @@ export function buildDraftOrder(
     order,
     lotteryLog,
     userPick: userEntry?.pick ?? 14,
+  };
+}
+
+export function pinUserDraftPick(
+  league: League,
+  city: string,
+  name: string,
+  targetPick: number,
+): League {
+  if (!league.draftOrder?.length) return league;
+
+  const pick = Math.max(1, Math.min(DRAFT_TEAM_COUNT, targetPick));
+  const key = teamKey(city, name);
+  const byPick = [...league.draftOrder].sort((a, b) => a.pick - b.pick);
+  const userIndex = byPick.findIndex((entry) => teamKey(entry.city, entry.name) === key);
+  const targetIndex = pick - 1;
+  if (userIndex < 0 || userIndex === targetIndex) return league;
+
+  const [userEntry] = byPick.splice(userIndex, 1);
+  byPick.splice(targetIndex, 0, userEntry);
+
+  const order = byPick.map((entry, index) => ({
+    ...entry,
+    pick: index + 1,
+  }));
+
+  return {
+    ...league,
+    draftOrder: order,
+    draftLotteryLog: [
+      `${userEntry.teamName} holds the #${pick} pick (scenario).`,
+      ...(league.draftLotteryLog ?? []),
+    ],
   };
 }
 
