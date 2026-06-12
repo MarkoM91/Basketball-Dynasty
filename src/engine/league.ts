@@ -267,8 +267,8 @@ export function generateLeagueTradeOffers(franchise: Franchise, league: League):
         description: 'Two unprotected first-round picks + young core pieces',
         players: [],
         picks: [
-          { year: 2027, round: 1, originalTeam: partner.name },
-          { year: 2029, round: 1, originalTeam: partner.name },
+          { year: 2027, round: 1, originalTeam: partner.fullName },
+          { year: 2029, round: 1, originalTeam: partner.fullName },
         ],
       },
       outgoing: {

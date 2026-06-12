@@ -37,9 +37,31 @@ export function resolveTeamIdentity(city: string, name: string): { city: string;
   return LEGACY_TEAM_ALIASES[`${city}|${name}`] ?? { city, name };
 }
 
+/**
+ * Reverse-lookup table: nickname → "City Nickname".
+ * Built once from the canonical team list so we can normalize draft-pick
+ * originalTeam fields that were seeded with just the nickname (e.g. "Harbor"
+ * from scenarios.ts) to the full canonical form (e.g. "Boston Harbor").
+ *
+ * Without this, two picks for the same logical team end up with different
+ * pickKey identities depending on which code path created them.
+ */
+const NICKNAME_TO_FULLNAME: Record<string, string> = (() => {
+  const map: Record<string, string> = {};
+  for (const v of Object.values(LEGACY_TEAM_ALIASES)) {
+    map[v.name] = `${v.city} ${v.name}`;
+  }
+  return map;
+})();
+
 export function resolveTeamFullName(fullName: string): string {
-  const parts = fullName.trim().split(/\s+/);
-  if (parts.length < 2) return fullName;
+  const trimmed = fullName.trim();
+  if (!trimmed) return fullName;
+  const parts = trimmed.split(/\s+/);
+  if (parts.length < 2) {
+    // Single token — likely a seeded nickname like "Harbor". Expand to "Boston Harbor".
+    return NICKNAME_TO_FULLNAME[parts[0]] ?? trimmed;
+  }
   const oldName = parts.pop()!;
   const city = parts.join(' ');
   const { city: c, name: n } = resolveTeamIdentity(city, oldName);

@@ -539,8 +539,8 @@ export function buildCareerTradeExtras(
         description: '2028 unprotected 1st + 2029 1st (top-8 protected)',
         players: [],
         picks: [
-          { year: 2028, round: 1, originalTeam: partner.name },
-          { year: 2029, round: 1, originalTeam: partner.name, protections: 'top-8 protected' },
+          { year: 2028, round: 1, originalTeam: partner.fullName },
+          { year: 2029, round: 1, originalTeam: partner.fullName, protections: 'top-8 protected' },
         ],
       },
       outgoing: {
@@ -599,9 +599,9 @@ export function buildCareerTradeExtras(
           description: 'Three first-round picks + young starting-caliber wing',
           players: [makePlayer(partner, 'wing')],
           picks: [
-            { year: 2027, round: 1, originalTeam: partner.name },
-            { year: 2028, round: 1, originalTeam: partner.name },
-            { year: 2030, round: 1, originalTeam: partner.name },
+            { year: 2027, round: 1, originalTeam: partner.fullName },
+            { year: 2028, round: 1, originalTeam: partner.fullName },
+            { year: 2030, round: 1, originalTeam: partner.fullName },
           ],
         },
         outgoing: {
