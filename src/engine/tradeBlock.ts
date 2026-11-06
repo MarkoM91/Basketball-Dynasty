@@ -248,6 +248,50 @@ export function createSubmittedProposal(
   };
 }
 
+export function reconcileSubmittedTradeHistory(franchise: Franchise): SubmittedTradeProposal[] {
+  const playerIds = new Set(franchise.roster.map((p) => p.id));
+  const picks = new Set(franchise.draftPicks.map(pickKey));
+  return (franchise.submittedProposals ?? []).map((entry) => {
+    if (entry.status !== 'pending' && entry.status !== 'countered') return entry;
+    const p = entry.proposal;
+    const missingOutgoing = p.outgoingPlayerIds.some((id) => !playerIds.has(id))
+      || p.outgoingPickKeys.some((key) => !picks.has(key));
+    if (!missingOutgoing) return entry;
+    const completed = entry.season === franchise.season
+      && p.outgoingPlayerIds.every((id) => !playerIds.has(id))
+      && p.outgoingPickKeys.every((key) => !picks.has(key))
+      && p.incomingPlayers.every((player) => playerIds.has(player.id))
+      && p.incomingPicks.every((pick) => picks.has(pickKey(pick)))
+      && franchise.memory.some((memory) => memory.type === 'trade' && memory.season === entry.season
+        && memory.week >= entry.submittedWeek && memory.text.startsWith(`Trade completed with ${entry.partnerTeamName}.`));
+    return { ...entry, status: completed ? 'accepted' as const : 'expired' as const,
+      responseNote: completed ? 'Trade completed.' : 'Package no longer available — assets have moved.' };
+  });
+}
+
+export function recordAcceptedTrade(franchise: Franchise, league: League, offer: TradeOffer): SubmittedTradeProposal[] {
+  const proposal: TradeProposal = {
+    partnerTeamId: offer.partnerTeamId ?? league.teams.find((team) => team.fullName === offer.partnerTeam)?.id ?? '',
+    incomingPlayers: offer.incoming.players,
+    incomingPicks: offer.incoming.picks,
+    outgoingPlayerIds: offer.outgoing.players.map((player) => player.id),
+    outgoingPickKeys: offer.outgoing.picks.map(pickKey),
+  };
+  const accepted = { ...createSubmittedProposal(franchise, league, proposal,
+    offer.analysis.partnerAcceptScore ?? 100, 'Trade agreed.', 'accepted', 'Trade completed.'),
+    id: `accepted-${offer.id}` };
+  const previous = (franchise.submittedProposals ?? []).filter((entry) => entry.id !== accepted.id).map((entry) => {
+    if (entry.status !== 'pending' && entry.status !== 'countered') return entry;
+    const samePartner = entry.partnerTeamId === proposal.partnerTeamId;
+    const movedAssets = entry.proposal.outgoingPlayerIds.some((id) => proposal.outgoingPlayerIds.includes(id))
+      || entry.proposal.outgoingPickKeys.some((key) => proposal.outgoingPickKeys.includes(key));
+    return samePartner || movedAssets
+      ? { ...entry, status: 'withdrawn' as const, responseNote: 'Superseded by a completed trade.' }
+      : entry;
+  });
+  return [accepted, ...previous].slice(0, 12);
+}
+
 export function expireSubmittedProposals(franchise: Franchise): SubmittedTradeProposal[] {
   return (franchise.submittedProposals ?? []).map((p) =>
     p.status === 'pending' && franchise.week > p.expiresWeek
