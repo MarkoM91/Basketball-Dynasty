@@ -119,7 +119,7 @@ export function MainMenuScreen() {
         <div className="landing-hero">
           <p className="eyebrow">Free online basketball manager game</p>
           <h1 className="title-lg landing-headline">
-            Build a <span className="landing-headline-accent">dynasty</span>.
+            Build a <span className="landing-headline-accent">dynasty</span>.{' '}
             <br />
             Or get fired trying.
           </h1>

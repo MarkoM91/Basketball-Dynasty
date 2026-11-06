@@ -7,7 +7,7 @@ import { TeamLogo } from './TeamLogo';
 import { useGameStore } from '../store/gameStore';
 import type { ScreenId, SeasonPhase } from '../types/game';
 
-function contextualTab(phase: SeasonPhase): { id: ScreenId; label: string; icon: string } {
+export function contextualTab(phase: SeasonPhase): { id: ScreenId; label: string; icon: string } {
   if (phase === 'playoffs') return { id: 'playoffs', label: 'Playoffs', icon: '▶' };
   if (phase === 'free_agency') return { id: 'free_agency', label: 'Free agency', icon: '✦' };
   if (phase === 'contract_renewals') return { id: 'contract_renewals', label: 'Renewals', icon: '📝' };
@@ -18,14 +18,14 @@ function contextualTab(phase: SeasonPhase): { id: ScreenId; label: string; icon:
   return { id: 'league', label: 'League', icon: '◎' };
 }
 
-const CORE: { id: ScreenId; label: string; icon: string }[] = [
+export const CORE: { id: ScreenId; label: string; icon: string }[] = [
   { id: 'home', label: 'Front office', icon: '◆' },
   { id: 'roster', label: 'Roster', icon: '▤' },
   { id: 'trade', label: 'Trades', icon: '⇄' },
   { id: 'cap', label: 'Cap desk', icon: '$' },
 ];
 
-const MORE: { id: ScreenId; label: string; icon: string }[] = [
+export const MORE: { id: ScreenId; label: string; icon: string }[] = [
   { id: 'schedule', label: 'Schedule', icon: '📅' },
   { id: 'finances', label: 'Finances', icon: '💰' },
   { id: 'league', label: 'League table', icon: '◎' },
@@ -40,24 +40,10 @@ const MORE: { id: ScreenId; label: string; icon: string }[] = [
   { id: 'ghosts', label: 'Ghosts', icon: '◌' },
 ];
 
-export function DesktopSidebar({
-  screen,
-  onNavigate,
-}: {
-  screen: ScreenId;
-  onNavigate: (s: ScreenId) => void;
-}) {
-  const franchise = useGameStore((s) => s.franchise);
-  const league = useGameStore((s) => s.league);
-  const lastSavedAt = useGameStore((s) => s.lastSavedAt);
+/** Export / import save actions — shared by the desktop sidebar and the mobile More sheet. */
+export function useSaveFileActions() {
   const exportSave = useGameStore((s) => s.exportSave);
   const importSave = useGameStore((s) => s.importSave);
-
-  if (!franchise) return null;
-
-  const record = franchiseRegularSeasonRecord(franchise, league ?? undefined);
-  const seasonTab = contextualTab(franchise.phase);
-
   const handleImport = () => {
     const input = document.createElement('input');
     input.type = 'file';
@@ -70,6 +56,25 @@ export function DesktopSidebar({
     };
     input.click();
   };
+  return { exportSave, handleImport };
+}
+
+export function DesktopSidebar({
+  screen,
+  onNavigate,
+}: {
+  screen: ScreenId;
+  onNavigate: (s: ScreenId) => void;
+}) {
+  const franchise = useGameStore((s) => s.franchise);
+  const league = useGameStore((s) => s.league);
+  const lastSavedAt = useGameStore((s) => s.lastSavedAt);
+  const { exportSave, handleImport } = useSaveFileActions();
+
+  if (!franchise) return null;
+
+  const record = franchiseRegularSeasonRecord(franchise, league ?? undefined);
+  const seasonTab = contextualTab(franchise.phase);
 
   const navBtn = (item: { id: ScreenId; label: string; icon: string }) => (
     <button

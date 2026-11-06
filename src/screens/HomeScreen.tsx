@@ -79,8 +79,14 @@ export function HomeScreen() {
       : false;
 
   const fin = computeTeamFinances(franchise);
-  const standings = league ? getStandings(league) : [];
+  // Before the new season tips off, a table of 0–0s says nothing — show last season's final table.
+  const seasonUnderway = Boolean(league?.teams.some((t) => t.wins + t.losses > 0));
+  const lastSeason = !seasonUnderway ? league?.lastSeasonStandings : undefined;
+  const standings = league
+    ? getStandings(lastSeason ? { ...league, teams: lastSeason.teams } : league)
+    : [];
   const userRank = standings.findIndex((t) => t.isUser) + 1;
+  const userLastSeason = lastSeason ? standings.find((t) => t.isUser) : undefined;
   const miniStandings = standings.slice(0, 5);
   const nextGame = league ? nextScheduledGame(franchise, league) : undefined;
 
@@ -160,13 +166,23 @@ export function HomeScreen() {
               <h1 className="title-lg">{franchise.city} {franchise.name}</h1>
             </div>
           </div>
-          <span className="chip chip-gold">{phaseLabel(franchise.phase)}</span>
+          {calendarLabel(franchise) !== phaseLabel(franchise.phase) && (
+            <span className="chip chip-gold">{phaseLabel(franchise.phase)}</span>
+          )}
         </div>
-        <div className="hero-record animate-pulse-glow">
-          <span className="hero-record-label">Record</span>
-          <span className="hero-record-value">{record.wins}–{record.losses}</span>
-          <span className="hero-record-status">{statusFromRecord(franchise)}</span>
-        </div>
+        {userLastSeason ? (
+          <div className="hero-record animate-pulse-glow">
+            <span className="hero-record-label">Last season</span>
+            <span className="hero-record-value">{userLastSeason.wins}–{userLastSeason.losses}</span>
+            <span className="hero-record-status">#{userRank} of {standings.length} · new season ahead</span>
+          </div>
+        ) : (
+          <div className="hero-record animate-pulse-glow">
+            <span className="hero-record-label">Record</span>
+            <span className="hero-record-value">{record.wins}–{record.losses}</span>
+            <span className="hero-record-status">{statusFromRecord(franchise)}</span>
+          </div>
+        )}
       </CourtBackdrop>
 
       {franchise.phase === 'training_camp' ? (
@@ -225,7 +241,7 @@ export function HomeScreen() {
                 Rev {formatFin(fin.revenue.total)} · Exp {formatFin(fin.expenses.total)}
               </p>
             </div>
-            {league && userRank > 0 && (
+            {league && userRank > 0 && !lastSeason && (
               <div className="bbgm-dash-card">
                 <p className="eyebrow">Standings</p>
                 <p className="title-md" style={{ fontSize: 15, margin: '4px 0' }}>#{userRank} · {record.wins}–{record.losses}</p>
@@ -240,7 +256,7 @@ export function HomeScreen() {
 
       {league && miniStandings.length > 0 && (
         <Panel>
-          <p className="eyebrow">League leaders</p>
+          <p className="eyebrow">{lastSeason ? `Season ${lastSeason.season} final — top 5` : 'League leaders'}</p>
           <StandingsTable
             teams={miniStandings}
             userTeamId={franchise.leagueTeamId}
@@ -332,7 +348,7 @@ export function HomeScreen() {
 
       <button
         type="button"
-        className="btn btn-primary"
+        className="btn btn-primary home-repeat-cta"
         style={{ marginTop: 8, marginBottom: 12, display: franchise.phase === 'regular_season' || franchise.phase === 'trade_deadline' ? 'none' : undefined }}
         onClick={advanceWeek}
       >
