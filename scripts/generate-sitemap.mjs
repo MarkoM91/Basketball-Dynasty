@@ -2,29 +2,8 @@ import { writeFileSync } from 'node:fs';
 
 const SITE_URL = 'https://basketballdynasty.com';
 
-const pages = [
-  '/',
-  '/start',
-  '/guide',
-  '/compare',
-  '/office',
-  '/play',
-  '/results',
-  '/roster',
-  '/trades',
-  '/cap',
-  '/schedule',
-  '/finances',
-  '/league',
-  '/coach',
-  '/development',
-  '/draft',
-  '/free-agency',
-  '/playoffs',
-  '/media',
-  '/history',
-  '/ghosts',
-];
+// Only public pages that work without a saved franchise belong in the sitemap.
+const pages = ['/', '/start', '/guide', '/compare'];
 
 const urls = pages
   .map((path) => {
