@@ -8,10 +8,12 @@
     "build": "tsc -b && node scripts/generate-sitemap.mjs && vite build",
     "preview": "npm run build && wrangler dev",
     "typecheck": "tsc -b --noEmit",
-    "compute-ratings": "node scripts/compute-ratings.mjs",
+    "compute-ratings": "node scripts/refresh-current-rosters.mjs",
     "validate:core": "node scripts/validate-core-loop.mjs",
     "validate:draft-trades": "node scripts/validate-draft-pick-trades.mjs",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy",
+    "sync:rosters": "node scripts/refresh-current-rosters.mjs",
+    "validate:rosters": "node scripts/validate-roster-snapshot.mjs"
   },
   "dependencies": {
     "react": "^19.1.0",

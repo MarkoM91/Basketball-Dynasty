@@ -8,7 +8,7 @@
  */
 
 import { readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -49,7 +49,7 @@ const TEAM_MAP = [
   ['San Antonio|Mission', 'SAS'],
 ];
 
-const FIRST_BY_LETTER = {
+export const FIRST_BY_LETTER = {
   A: ['Aaron', 'Adrian', 'Andre', 'Adam', 'Austin', 'Albert', 'Alston'],
   B: ['Blake', 'Brandon', 'Ben', 'Bryce', 'Barry', 'Brooks'],
   C: ['Caleb', 'Colin', 'Cole', 'Connor', 'Charles', 'Chris'],
@@ -197,7 +197,7 @@ function parseName(full) {
   return { firstName, lastName };
 }
 
-function typoSurname(lastName) {
+export function typoSurname(lastName) {
   const m = lastName.match(/^(.+?)(\s+(Jr\.|II|III|IV))$/i);
   if (m) {
     return `${typoSurname(m[1])}${m[2]}`;
@@ -218,7 +218,7 @@ function parodyFirst(realFirst, salt) {
   return options[hash(`${base}-${salt}`) % options.length] ?? options[0];
 }
 
-function toParody(realFull, salt, position) {
+export function toParody(realFull, salt, position) {
   const { firstName, lastName } = parseName(realFull);
   return {
     firstName: parodyFirst(firstName, salt),
@@ -319,6 +319,10 @@ const TEAM_EXCLUSIVE_KEYS = new Set(
   Object.keys(TEAM_PARODY_ROSTERS).flatMap((key) => getTeamParodyRosterByKey(key).map((p) => personNameKey(p.firstName, p.lastName))),
 );
 
+const TEAM_EXCLUSIVE_SURNAMES = new Set(
+  Object.keys(TEAM_PARODY_ROSTERS).flatMap((key) => getTeamParodyRosterByKey(key).map((p) => p.lastName.toLowerCase())),
+);
+
 export function getTeamParodyRoster(city: string, name: string): ParodyPlayerTemplate[] {
   return getTeamParodyRosterByKey(teamParodyKey(city, name));
 }
@@ -370,7 +374,7 @@ export function pickDraftClassParodyName(used: Set<string>, salt: number): Parod
   for (let offset = 0; offset < count; offset += 1) {
     const template = DRAFT_CLASS_PARODIES[(salt + offset) % count];
     const key = personNameKey(template.firstName, template.lastName);
-    if (!used.has(key)) {
+    if (!used.has(key) && !TEAM_EXCLUSIVE_KEYS.has(key) && !TEAM_EXCLUSIVE_SURNAMES.has(template.lastName.toLowerCase())) {
       used.add(key);
       return template;
     }
@@ -469,7 +473,7 @@ async function main() {
   console.log(`\nUpdated src/data/parodyRoster.ts and parodyRosterDepth.ts (${Object.keys(allCore).length} teams)`);
 }
 
-main().catch((err) => {
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
