@@ -3463,6 +3463,12 @@ button.back-link {
   text-align: right;
 }
 
+.standings-table th:first-child,
+.standings-table th:nth-child(n + 3):not(.standings-col-strategy),
+.standings-table .standings-rank {
+  text-align: center;
+}
+
 .standings-table th:nth-child(2) {
   text-align: left;
 }
