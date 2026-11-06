@@ -181,7 +181,6 @@ export function TradeScreen() {
     submitTradeProposal,
     requestTradeCounter,
     submitTradeChain,
-    acceptPendingCounter,
     declinePendingCounter,
     toggleTradeBlockPlayer,
     toggleTradeBlockPick,
@@ -197,12 +196,13 @@ export function TradeScreen() {
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [showRosterDrawer, setShowRosterDrawer] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [showNegotiations, setShowNegotiations] = useState(false);
   const [negotiateOpen, setNegotiateOpen] = useState(false);
   const [negotiatePartnerId, setNegotiatePartnerId] = useState<string | undefined>();
   const [negotiatePrefill, setNegotiatePrefill] = useState<Partial<TradeProposal> | undefined>();
   const [negotiateSourceOffer, setNegotiateSourceOffer] = useState<TradeOffer | undefined>();
   const [tradeResponse, setTradeResponse] = useState<{
-    title: string; detail: string; proposal: TradeProposal; counter?: TradeOffer;
+    title: string; detail: string; proposal: TradeProposal; counter?: TradeOffer; accepted?: boolean;
   } | null>(null);
   const [negotiateKey, setNegotiateKey] = useState(0);
 
@@ -300,17 +300,38 @@ export function TradeScreen() {
     const state = useGameStore.getState();
     const result = state.franchise?.submittedProposals?.[0];
     if (result && result.id !== previous) {
-      if (result.status === 'accepted') return; // Completed trades navigate to the office.
-      const counter = state.franchise?.pendingCounter ?? undefined;
+      const accepted = result.status === 'accepted';
+      if (accepted) setScreen('trade');
+      const counter = accepted ? undefined : state.franchise?.pendingCounter ?? undefined;
       setTradeResponse({
-        title: `${result.partnerTeamName} ${counter ? 'sent a counteroffer' : 'declined your offer'}`,
-        detail: result.responseNote ?? result.partnerVerdict,
+        title: `${result.partnerTeamName} ${accepted ? 'accepted your offer' : counter ? 'sent a counteroffer' : 'declined your offer'}`,
+        accepted,
+        detail: accepted ? state.toast ?? 'Trade completed.' : result.responseNote ?? result.partnerVerdict,
         proposal,
         counter,
       });
     } else {
       setTradeResponse({ title: 'Offer could not be sent', detail: state.toast ?? 'Review the package and try again.', proposal });
     }
+  };
+
+  const acceptOffer = (offer: TradeOffer) => {
+    acceptTrade(offer);
+    const state = useGameStore.getState();
+    const accepted = Boolean(state.toast?.startsWith('Trade completed.'));
+    setScreen('trade');
+    setTradeResponse({ title: accepted ? 'Trade accepted' : 'Trade could not be completed',
+      detail: state.toast ?? 'Review the package and try again.',
+      proposal: tradeOfferToPrefill(offer) as TradeProposal, accepted });
+  };
+
+  const askForCounter = (proposal: TradeProposal) => {
+    const previous = useGameStore.getState().franchise?.pendingCounter;
+    requestTradeCounter(proposal);
+    const state = useGameStore.getState();
+    const counter = state.franchise?.pendingCounter !== previous ? state.franchise?.pendingCounter ?? undefined : undefined;
+    setTradeResponse({ title: counter ? counter.partnerTeam + ' sent a counteroffer' : 'No counteroffer',
+      detail: state.toast ?? 'The partner declined to counter.', proposal, counter });
   };
 
   const blockedPlayers = franchise.roster.filter((p) => isPlayerOnBlock(franchise, p.id));
@@ -441,7 +462,7 @@ export function TradeScreen() {
                         Offer received
                       </span>
                     )}
-                    <button type="button" className="btn btn-primary" style={{ padding: '6px 10px', fontSize: 11 }} onClick={() => acceptTrade(offer)}>
+                    <button type="button" className="btn btn-primary" style={{ padding: '6px 10px', fontSize: 11 }} onClick={() => acceptOffer(offer)}>
                       Accept
                     </button>
                     <button type="button" className="btn btn-secondary" style={{ padding: '6px 10px', fontSize: 11 }} onClick={() => openNegotiateFromOffer(offer)}>
@@ -455,7 +476,12 @@ export function TradeScreen() {
 
           {hasNegotiations && (
             <>
-              <p className="eyebrow trade-inbox-label">Your negotiations</p>
+              {(franchise.pendingCounter || activeProposals.length > 0) && (
+                <button type="button" className="btn btn-secondary trade-disclosure" aria-expanded={showNegotiations} aria-controls="active-negotiations" onClick={() => setShowNegotiations(v => !v)}>
+                  Active negotiations ({counteredProposals.length + pendingOutbound + (franchise.pendingCounter ? 1 : 0)}) · {showNegotiations ? 'Hide' : 'View'}
+                </button>
+              )}
+              {showNegotiations && <div id="active-negotiations" className="trade-active-negotiations">
 
               {franchise.pendingCounter && (
                 <Panel warning accent>
@@ -471,7 +497,7 @@ export function TradeScreen() {
                     {franchise.pendingCounter.analysis.longTerm}
                   </p>
                   <div style={{ display: 'grid', gap: 8, marginTop: 12 }}>
-                    <button type="button" className="btn btn-primary" onClick={acceptPendingCounter}>
+                    <button type="button" className="btn btn-primary" onClick={() => franchise.pendingCounter && acceptOffer(franchise.pendingCounter)}>
                       Accept
                     </button>
                     <button type="button" className="btn btn-secondary" onClick={openReviseCounter}>
@@ -535,15 +561,18 @@ export function TradeScreen() {
                     );
                   })}
 
+              </div>}
+
               {historyProposals.length > 0 && (
                 <Panel>
                   <button
                     type="button"
                     className="btn btn-ghost"
                     style={{ width: '100%', marginBottom: showHistory ? 10 : 0 }}
+                    aria-expanded={showHistory}
                     onClick={() => setShowHistory((v) => !v)}
                   >
-                    {showHistory ? 'Hide history' : `Show history (${historyProposals.length})`}
+                    {showHistory ? 'Hide negotiation history' : `Negotiation history (${historyProposals.length})`}
                   </button>
                   {showHistory &&
                     historyProposals.slice(0, 10).map((p) => {
@@ -731,10 +760,10 @@ export function TradeScreen() {
         initialPartnerId={negotiatePartnerId}
         initialPrefill={negotiatePrefill}
         sourceOffer={negotiateSourceOffer}
-        onAcceptOffer={acceptTrade}
+        onAcceptOffer={acceptOffer}
         negotiation={negotiation ?? undefined}
         onSubmit={sendProposal}
-        onRequestCounter={requestTradeCounter}
+        onRequestCounter={askForCounter}
         onSubmitChain={submitTradeChain}
       />
       {tradeResponse && (
@@ -756,16 +785,15 @@ export function TradeScreen() {
             <div className="trade-response-actions">
               {tradeResponse.counter && (
                 <button type="button" className="btn btn-primary" onClick={() => {
-                  acceptTrade(tradeResponse.counter!);
-                  setTradeResponse(null);
+                  acceptOffer(tradeResponse.counter!);
                 }}>Accept counteroffer</button>
               )}
-              <button type="button" className="btn btn-secondary" onClick={() => {
+              {!tradeResponse.accepted && <button type="button" className="btn btn-secondary" onClick={() => {
                 if (tradeResponse.counter) openNegotiateFromOffer(tradeResponse.counter);
                 else openNegotiate(tradeResponse.proposal.partnerTeamId, tradeResponse.proposal);
                 setTradeResponse(null);
-              }}>{tradeResponse.counter ? 'Review counteroffer' : 'Revise offer'}</button>
-              <button id="trade-response-close" type="button" className="btn btn-ghost" onClick={() => setTradeResponse(null)}>Close</button>
+              }}>{tradeResponse.counter ? 'Review counteroffer' : 'Revise offer'}</button>}
+              <button id="trade-response-close" type="button" className="btn btn-ghost" onClick={() => setTradeResponse(null)}>{tradeResponse.accepted ? 'Done' : 'Close'}</button>
             </div>
           </section>
         </div>

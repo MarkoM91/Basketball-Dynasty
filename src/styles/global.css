@@ -7196,3 +7196,5 @@ h1, h2, h3,
 
 .results-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
 .results-actions .btn { width: auto; flex: 1; min-width: 130px; }
+.trade-disclosure { width: 100%; min-height: 52px; }
+.trade-active-negotiations { display: grid; gap: 16px; }
