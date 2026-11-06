@@ -4,40 +4,41 @@ import { formatSavedAt } from '../lib/saveFile';
 import { calendarLabel, phaseLabel } from '../engine/simulation';
 import { franchiseRegularSeasonRecord } from '../engine/regularSeasonRecord';
 import { TeamLogo } from './TeamLogo';
+import { Icon, type IconName } from './Icon';
 import { useGameStore } from '../store/gameStore';
 import type { ScreenId, SeasonPhase } from '../types/game';
 
-export function contextualTab(phase: SeasonPhase): { id: ScreenId; label: string; icon: string } {
-  if (phase === 'playoffs') return { id: 'playoffs', label: 'Playoffs', icon: '▶' };
-  if (phase === 'free_agency') return { id: 'free_agency', label: 'Free agency', icon: '✦' };
-  if (phase === 'contract_renewals') return { id: 'contract_renewals', label: 'Renewals', icon: '📝' };
-  if (phase === 'draft_scouting' || phase === 'draft_night') return { id: 'draft', label: 'Draft', icon: '▣' };
+export function contextualTab(phase: SeasonPhase): { id: ScreenId; label: string; icon: IconName } {
+  if (phase === 'playoffs') return { id: 'playoffs', label: 'Playoffs', icon: 'playoffs' };
+  if (phase === 'free_agency') return { id: 'free_agency', label: 'Free agency', icon: 'free-agency' };
+  if (phase === 'contract_renewals') return { id: 'contract_renewals', label: 'Renewals', icon: 'renewals' };
+  if (phase === 'draft_scouting' || phase === 'draft_night') return { id: 'draft', label: 'Draft', icon: 'draft' };
   if (phase === 'regular_season' || phase === 'trade_deadline') {
-    return { id: 'play_game', label: 'Play game', icon: '▶' };
+    return { id: 'play_game', label: 'Play game', icon: 'play' };
   }
-  return { id: 'league', label: 'League', icon: '◎' };
+  return { id: 'league', label: 'League', icon: 'league' };
 }
 
-export const CORE: { id: ScreenId; label: string; icon: string }[] = [
-  { id: 'home', label: 'Front office', icon: '◆' },
-  { id: 'roster', label: 'Roster', icon: '▤' },
-  { id: 'trade', label: 'Trades', icon: '⇄' },
-  { id: 'cap', label: 'Cap desk', icon: '$' },
+export const CORE: { id: ScreenId; label: string; icon: IconName }[] = [
+  { id: 'home', label: 'Front office', icon: 'office' },
+  { id: 'roster', label: 'Roster', icon: 'roster' },
+  { id: 'trade', label: 'Trades', icon: 'trade' },
+  { id: 'cap', label: 'Cap desk', icon: 'cap' },
 ];
 
-export const MORE: { id: ScreenId; label: string; icon: string }[] = [
-  { id: 'schedule', label: 'Schedule', icon: '📅' },
-  { id: 'finances', label: 'Finances', icon: '💰' },
-  { id: 'league', label: 'League table', icon: '◎' },
-  { id: 'results', label: 'Box scores', icon: '■' },
-  { id: 'coach', label: 'Coaching', icon: '◉' },
-  { id: 'development', label: 'Development', icon: '↗' },
-  { id: 'draft', label: 'Draft board', icon: '▣' },
-  { id: 'free_agency', label: 'Free agency', icon: '✦' },
-  { id: 'playoffs', label: 'Playoffs', icon: '▶' },
-  { id: 'media', label: 'Media', icon: '◈' },
-  { id: 'history', label: 'History', icon: '⏱' },
-  { id: 'ghosts', label: 'Ghosts', icon: '◌' },
+export const MORE: { id: ScreenId; label: string; icon: IconName }[] = [
+  { id: 'schedule', label: 'Schedule', icon: 'schedule' },
+  { id: 'finances', label: 'Finances', icon: 'finances' },
+  { id: 'league', label: 'League table', icon: 'league' },
+  { id: 'results', label: 'Box scores', icon: 'scores' },
+  { id: 'coach', label: 'Coaching', icon: 'coach' },
+  { id: 'development', label: 'Development', icon: 'development' },
+  { id: 'draft', label: 'Draft board', icon: 'draft' },
+  { id: 'free_agency', label: 'Free agency', icon: 'free-agency' },
+  { id: 'playoffs', label: 'Playoffs', icon: 'playoffs' },
+  { id: 'media', label: 'Media', icon: 'media' },
+  { id: 'history', label: 'History', icon: 'history' },
+  { id: 'ghosts', label: 'Ghosts', icon: 'ghost' },
 ];
 
 /** Export / import save actions — shared by the desktop sidebar and the mobile More sheet. */
@@ -76,14 +77,14 @@ export function DesktopSidebar({
   const record = franchiseRegularSeasonRecord(franchise, league ?? undefined);
   const seasonTab = contextualTab(franchise.phase);
 
-  const navBtn = (item: { id: ScreenId; label: string; icon: string }) => (
+  const navBtn = (item: { id: ScreenId; label: string; icon: IconName }) => (
     <button
       key={item.id}
       type="button"
       className={`desktop-nav-item ${screen === item.id ? 'active' : ''}`}
       onClick={() => onNavigate(item.id)}
     >
-      <span className="desktop-nav-icon">{item.icon}</span>
+      <span className="desktop-nav-icon"><Icon name={item.icon} size={17} /></span>
       {item.label}
     </button>
   );

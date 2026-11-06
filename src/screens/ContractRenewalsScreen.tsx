@@ -12,6 +12,7 @@ import { canOpenFreeAgency } from '../engine/rosterCuts';
 import { CoachAvatar, PlayerAvatar } from '../components/PlayerAvatar';
 import { useGameStore } from '../store/gameStore';
 import { Panel } from '../components/UI';
+import { Icon } from '../components/Icon';
 
 export function ContractRenewalsScreen() {
   const {
@@ -118,7 +119,7 @@ export function ContractRenewalsScreen() {
                     </span>
                   </strong>
                   <span>
-                    {player.position} · {player.age} yrs{player.age >= 32 ? ' ⚠️' : ''} · was {formatMoney(player.contract.annualSalary)}
+                    {player.position} · {player.age} yrs{player.age >= 32 ? <> <Icon name="alert" size={12} title="Aging — decline risk" /></> : ''} · was {formatMoney(player.contract.annualSalary)}
                   </span>
                   <span className="renewal-offer">
                     {terms.years}yr · {formatMoney(terms.salary)}/yr

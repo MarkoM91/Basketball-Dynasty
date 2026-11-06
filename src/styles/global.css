@@ -1,22 +1,29 @@
 :root {
-  --arena-black: #0a0c10;
-  --charcoal: #12151c;
-  --deep-navy: #151b28;
-  --slate: #1c2230;
-  --warm-gray: #2a3040;
-  --hardwood: #8b6914;
-  --bronze: #a67c3d;
-  --gold: #c9a84c;
-  --off-white: #e8eaed;
-  --silver: #9aa3b2;
-  --success: #3d8b6e;
-  --warning: #c4923a;
-  --danger: #c44b4b;
-  --font-sans: 'DM Sans', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
-  --radius: 12px;
-  --radius-sm: 8px;
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  /* Broadcast palette — arena black, hardwood orange for action, amber for honours.
+     Replaces the navy-gradient + bronze "premium AI app" look. */
+  --arena-black: #0b0c0e;
+  --charcoal: #121317;
+  --deep-navy: #16181d;
+  --slate: #1b1d23;
+  --warm-gray: #2a2c33;
+  --hardwood: #b4651e;
+  --bronze: #e8641b;
+  --gold: #f2a33a;
+  --signal: #ff6b1f;
+  --signal-ink: #120a04;
+  --off-white: #f2f0ea;
+  --silver: #9ca1aa;
+  --hairline: rgba(255, 255, 255, 0.08);
+  --success: #3fae7a;
+  --warning: #e0a03a;
+  --danger: #e2524a;
+  --font-sans: 'Barlow', system-ui, sans-serif;
+  --font-display: 'Barlow Condensed', 'Barlow', system-ui, sans-serif;
+  --font-mono: 'Barlow Condensed', 'Barlow', system-ui, sans-serif;
+  --radius: 6px;
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
@@ -5378,6 +5385,1143 @@ button.back-link {
   }
 
   .standings-table-compact .standings-team-btn {
+    min-height: 44px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BROADCAST THEME — the game's own visual identity.
+   Condensed sports type, flat arena surfaces with hairline rules, square tags,
+   hardwood-orange for anything you act on, scoreboard numerals. Replaces the
+   soft navy-gradient cards, pill chips and glowing gradient buttons.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+body {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  background:
+    linear-gradient(180deg, rgba(255, 107, 31, 0.035), transparent 280px),
+    var(--arena-black);
+  color: var(--off-white);
+}
+
+/* Type ─────────────────────────────────────────────────────────────────────── */
+h1, h2, h3,
+.title-lg,
+.title-md,
+.desktop-header-title,
+.landing-headline,
+.play-menu-label {
+  font-family: var(--font-display);
+  letter-spacing: 0.005em;
+}
+
+.title-lg,
+.desktop-header-title {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.02;
+  text-transform: uppercase;
+}
+
+.title-md {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.landing-headline {
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.95;
+}
+
+.landing-headline-accent {
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  color: var(--signal);
+}
+
+.eyebrow,
+.stat-label,
+.hero-record-label,
+.desktop-header-eyebrow,
+.desktop-nav-group,
+.standings-table th,
+.bbgm-table th {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.mono {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}
+
+/* Scoreboard record */
+.hero-record-value {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: 0;
+  color: var(--off-white);
+}
+
+.hero-record-status {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--signal);
+}
+
+/* Surfaces ─────────────────────────────────────────────────────────────────── */
+.panel {
+  background: var(--charcoal);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  box-shadow: none;
+}
+
+.panel-accent {
+  border-left: 3px solid var(--signal);
+}
+
+.landing-feature-card,
+.bbgm-dash-card,
+.more-sheet-item {
+  background: var(--slate);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+}
+
+.landing-cta-card {
+  background: var(--charcoal);
+  border: 1px solid var(--hairline);
+  border-top: 3px solid var(--signal);
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+}
+
+.landing-feature-icon,
+.more-sheet-icon {
+  color: var(--signal);
+  display: inline-flex;
+}
+
+/* Tags ─────────────────────────────────────────────────────────────────────── */
+.chip {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.chip-gold {
+  background: rgba(242, 163, 58, 0.14);
+  color: var(--gold);
+}
+
+/* Buttons ──────────────────────────────────────────────────────────────────── */
+.btn {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+}
+
+.btn-primary {
+  background: var(--signal);
+  color: var(--signal-ink);
+  box-shadow: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #ff8240;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--off-white);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.btn-ghost {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--silver);
+  border: 1px solid var(--hairline);
+}
+
+/* The big "next action" button: solid hardwood, dark ink, no glossy glow. */
+.play-menu-btn {
+  background: var(--signal);
+  color: var(--signal-ink);
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+}
+
+.play-menu-btn:hover:not(:disabled) {
+  filter: none;
+  background: #ff8240;
+}
+
+.play-menu-label {
+  font-size: 22px;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.play-menu-phase {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.play-menu-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.14);
+  font-size: 16px;
+}
+
+/* Tables ───────────────────────────────────────────────────────────────────── */
+.standings-table td,
+.bbgm-table td {
+  font-variant-numeric: tabular-nums;
+}
+
+.standings-user-row td {
+  background: rgba(255, 107, 31, 0.07);
+}
+
+/* Navigation ───────────────────────────────────────────────────────────────── */
+.nav-bar {
+  background: rgba(11, 12, 14, 0.96);
+  border-top: 1px solid var(--hairline);
+}
+
+.nav-item {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+}
+
+.nav-item.active {
+  color: var(--signal);
+}
+
+.nav-item-action {
+  background: var(--signal);
+  border: none;
+  color: var(--signal-ink);
+}
+
+.nav-item-action.active {
+  background: var(--signal);
+  color: var(--signal-ink);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+}
+
+.nav-icon {
+  display: inline-flex;
+  font-size: inherit;
+}
+
+.more-sheet {
+  background: var(--charcoal);
+  border-radius: 6px 6px 0 0;
+  border-top: 3px solid var(--signal);
+}
+
+.more-sheet-item {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.more-sheet-item.active {
+  border-color: var(--signal);
+  color: var(--signal);
+}
+
+.toast {
+  background: var(--slate);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--signal);
+  border-radius: var(--radius-sm);
+}
+
+.icon {
+  flex-shrink: 0;
+  vertical-align: -0.15em;
+}
+
+@media (min-width: 960px) {
+  .desktop-sidebar {
+    background: #0e0f12;
+    border-right: 1px solid var(--hairline);
+    backdrop-filter: none;
+  }
+
+  .desktop-nav-item {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 0;
+    border: none;
+    border-left: 3px solid transparent;
+  }
+
+  .desktop-nav-item.active {
+    background: rgba(255, 107, 31, 0.08);
+    border-color: transparent;
+    border-left-color: var(--signal);
+    color: var(--off-white);
+  }
+
+  .desktop-nav-item.active .desktop-nav-icon {
+    color: var(--signal);
+  }
+
+  .desktop-nav-icon {
+    display: inline-flex;
+    justify-content: center;
+  }
+
+  .desktop-header-title {
+    font-size: 40px;
+  }
+}
+
+/* ═══ Deal builder (trade flow) — full-screen sheet on phones ═══════════════ */
+.deal-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 140;
+  display: flex;
+  flex-direction: column;
+  background: var(--arena-black);
+  animation: sheetUp 0.18s ease;
+}
+
+.deal-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: calc(12px + env(safe-area-inset-top, 0px)) 16px 12px;
+  border-bottom: 1px solid var(--hairline);
+  background: var(--charcoal);
+}
+
+.deal-head > div,
+.deal-partner-head {
+  flex: 1;
+  min-width: 0;
+}
+
+.deal-head .eyebrow {
+  margin: 0;
+  display: block;
+}
+
+.deal-title {
+  display: block;
+  margin: 2px 0 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.deal-partner-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  background: none;
+  border: none;
+  color: inherit;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+}
+
+.deal-partner-head > span:nth-child(2) {
+  min-width: 0;
+  flex: 1;
+}
+
+.deal-change {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--signal);
+}
+
+.deal-close {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  color: var(--off-white);
+  cursor: pointer;
+}
+
+.deal-body {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 12px 16px 24px;
+}
+
+.deal-hint {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--silver);
+}
+
+.deal-section-label {
+  margin: 16px 0 8px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+
+.deal-partner-list,
+.deal-pick-list,
+.deal-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.deal-partner,
+.deal-option,
+.deal-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 60px;
+  padding: 10px 12px;
+  background: var(--charcoal);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  color: var(--off-white);
+  text-align: left;
+}
+
+.deal-partner,
+.deal-option {
+  cursor: pointer;
+}
+
+.deal-option.is-on {
+  border-color: var(--signal);
+  background: rgba(255, 107, 31, 0.08);
+}
+
+.deal-partner-copy,
+.deal-option-copy {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.deal-partner-copy strong,
+.deal-option-copy strong {
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.deal-partner-copy span,
+.deal-option-copy span {
+  font-size: 13px;
+  color: var(--silver);
+}
+
+.deal-chevron {
+  color: var(--silver);
+}
+
+.deal-ovr {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  min-width: 32px;
+  text-align: right;
+}
+
+.deal-check {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-radius: 2px;
+}
+
+.deal-option.is-on .deal-check {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: var(--signal-ink);
+}
+
+.deal-pick-badge {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: rgba(242, 163, 58, 0.14);
+  color: var(--gold);
+  border-radius: 2px;
+}
+
+.deal-side {
+  padding: 12px;
+  background: var(--charcoal);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+}
+
+.deal-side-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.deal-side-head .deal-section-label {
+  margin-top: 0;
+}
+
+.deal-salary {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--silver);
+}
+
+.deal-side .deal-row {
+  background: var(--slate);
+}
+
+.deal-rows + .deal-add {
+  margin-top: 8px;
+}
+
+.deal-remove {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--silver);
+  cursor: pointer;
+}
+
+.deal-add {
+  width: 100%;
+  min-height: 52px;
+  background: none;
+  border: 1.5px dashed rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-sm);
+  color: var(--off-white);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.deal-add:hover {
+  border-color: var(--signal);
+  color: var(--signal);
+}
+
+.deal-swap {
+  display: flex;
+  justify-content: center;
+  margin: -6px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.deal-swap .icon {
+  padding: 6px;
+  width: 32px;
+  height: 32px;
+  background: var(--arena-black);
+  border: 1px solid var(--hairline);
+  border-radius: 50%;
+  color: var(--signal);
+  transform: rotate(90deg);
+}
+
+.deal-fix {
+  margin-top: 14px;
+}
+
+.deal-fix > .btn {
+  width: 100%;
+}
+
+.deal-suggestion {
+  align-items: flex-start;
+}
+
+.deal-suggestion .btn {
+  flex-shrink: 0;
+  min-height: 40px;
+}
+
+.deal-more {
+  margin-top: 16px;
+}
+
+.deal-more summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--silver);
+  cursor: pointer;
+}
+
+.deal-select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 12px;
+  background: var(--charcoal);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  color: var(--off-white);
+  font: inherit;
+}
+
+.deal-foot {
+  padding: 12px 16px calc(12px + var(--safe-bottom));
+  background: var(--charcoal);
+  border-top: 1px solid var(--hairline);
+}
+
+.deal-foot > .btn {
+  width: 100%;
+  min-height: 52px;
+}
+
+.deal-verdict {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 10px;
+  padding-left: 10px;
+  border-left: 3px solid var(--silver);
+}
+
+.deal-verdict strong {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1.05;
+}
+
+.deal-verdict span {
+  font-size: 13px;
+  color: var(--silver);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.deal-verdict--good { border-left-color: var(--success); }
+.deal-verdict--good strong { color: var(--success); }
+.deal-verdict--mid { border-left-color: var(--warning); }
+.deal-verdict--mid strong { color: var(--warning); }
+.deal-verdict--bad { border-left-color: var(--danger); }
+.deal-verdict--bad strong { color: var(--danger); }
+
+.deal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 8px;
+}
+
+.deal-actions .btn {
+  min-height: 52px;
+  width: 100%;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (min-width: 960px) {
+  .deal-sheet {
+    inset: 5vh auto 5vh 50%;
+    width: 560px;
+    transform: translateX(-50%);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    animation: none;
+  }
+}
+
+/* ═══ Mobile-first pass ══════════════════════════════════════════════════════
+   Findings from a 375×812 audit of every screen: duplicate navigation at the
+   top of each page, a 13-column roster table scrolling sideways, standings
+   wider than the screen, a 15-screen development page, 9–10px text and
+   22–31px tap targets. */
+
+.roster-cards {
+  display: none;
+}
+
+.team-logo-wrap--small .team-logo-abbrev {
+  display: none;
+}
+
+.dev-player-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  color: inherit;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+}
+
+.dev-player-toggle .dev-player-identity {
+  flex: 1;
+  min-width: 0;
+}
+
+.dev-player-focus {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--silver);
+}
+
+.dev-player-ovrpot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--font-display);
+  line-height: 1;
+}
+
+.dev-player-ovrpot strong {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.dev-player-ovrpot span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.dev-player-chevron {
+  color: var(--silver);
+  transition: transform 0.15s;
+}
+
+.dev-player-card.is-open .dev-player-chevron {
+  transform: rotate(90deg);
+}
+
+.dev-player-card.is-open .dev-player-toggle {
+  margin-bottom: 14px;
+}
+
+@media (max-width: 959px) {
+  /* Bottom nav + More sheet already cover navigation. */
+  .screen-back,
+  .mobile-game-nav {
+    display: none !important;
+  }
+
+  .page {
+    padding-top: 14px;
+  }
+
+  /* Minimum touch target 44px for every control. */
+  .btn,
+  .btn-ghost,
+  .tab-btn,
+  .standings-team-btn,
+  .dash-opponent-btn,
+  .event-option,
+  select,
+  input[type='number'],
+  input[type='text'] {
+    min-height: 44px;
+  }
+
+  /* Minimum legible text: 12px labels, 13–14px data. */
+  .chip,
+  .stat-label,
+  .eyebrow,
+  .standings-table th,
+  .bbgm-table th,
+  .dev-stat-sub,
+  .dev-rating-caption,
+  .schedule-week {
+    font-size: 12px;
+  }
+
+  .roster-player-meta,
+  .dev-focus-detail {
+    font-size: 13px;
+  }
+
+  .standings-table td,
+  .bbgm-table td {
+    font-size: 14px;
+  }
+
+  /* Roster: cards instead of the wide table. */
+  .roster-table-desktop {
+    display: none;
+  }
+
+  .roster-cards {
+    display: grid;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .roster-card {
+    padding: 12px;
+    background: var(--slate);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+  }
+
+  .roster-card.is-star {
+    border-left: 3px solid var(--gold);
+  }
+
+  .roster-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .roster-card-id {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .roster-card-id strong {
+    font-size: 17px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .roster-card-id > span {
+    font-size: 13px;
+    color: var(--silver);
+  }
+
+  .roster-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 2px;
+  }
+
+  .roster-card-ovr {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-family: var(--font-display);
+    line-height: 1;
+  }
+
+  .roster-card-ovr-num {
+    font-size: 34px;
+    font-weight: 800;
+  }
+
+  .roster-card-pot {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--silver);
+    letter-spacing: 0.04em;
+  }
+
+  .roster-card-pot em {
+    font-style: normal;
+  }
+
+  .roster-card-stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    margin: 10px 0 0;
+    padding: 8px 0;
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .roster-card-stats div {
+    text-align: center;
+  }
+
+  .roster-card-stats dt {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--silver);
+  }
+
+  .roster-card-stats dd {
+    margin: 2px 0 0;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .roster-card-foot {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .roster-card-contract {
+    flex: 1;
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .roster-card-foot .btn {
+    width: auto;
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  /* Standings: #, team, W, L, Win%, GB — no sideways scroll. */
+  .standings-col-score,
+  .standings-col-extra,
+  .standings-col-strategy {
+    display: none;
+  }
+
+  .standings-table {
+    width: 100%;
+  }
+
+  .standings-team-name {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  /* Development focus options: full-width rows, readable. */
+  .dev-focus-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Avatar corner badges: condensed and legible; hidden where the row already shows POS/OVR. */
+.player-avatar-ovr,
+.player-avatar-pos {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  border-radius: 2px;
+}
+
+.roster-card .player-avatar-ovr,
+.roster-card .player-avatar-pos,
+.deal-option .player-avatar-ovr,
+.deal-option .player-avatar-pos,
+.deal-row .player-avatar-ovr,
+.deal-row .player-avatar-pos,
+.dev-player-toggle .player-avatar-ovr,
+.dev-player-toggle .player-avatar-pos {
+  display: none;
+}
+
+/* Starting-five slots: readable at phone width. */
+.lineup-slot-pos {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--signal);
+}
+
+.lineup-slot-name {
+  font-size: 13px;
+  line-height: 1.15;
+}
+
+.lineup-slot-ovr {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--off-white);
+}
+
+.lineup-slot-empty {
+  font-size: 12px;
+}
+
+.lineup-slot-filled {
+  border-color: rgba(255, 107, 31, 0.45);
+  background: rgba(255, 107, 31, 0.07);
+}
+
+.lineup-slot-active {
+  border-color: var(--signal);
+  box-shadow: 0 0 0 2px rgba(255, 107, 31, 0.25);
+}
+
+.lineup-pick {
+  min-height: 56px;
+}
+
+.lineup-pick-active {
+  border-color: rgba(255, 107, 31, 0.5);
+  background: rgba(255, 107, 31, 0.08);
+}
+
+@media (max-width: 959px) {
+  .schedule-team-btn {
+    min-height: 44px;
+  }
+
+  input[type='range'] {
+    min-height: 44px;
+  }
+
+  .standings-col-gb {
+    display: none;
+  }
+
+  .schedule-home,
+  .schedule-result {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 959px) {
+  .standings-table th,
+  .standings-table td {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .standings-team-name {
+    max-width: 112px;
+  }
+
+  .standings-user-row .chip {
+    padding: 2px 4px;
+    margin-left: 4px !important;
+  }
+
+  .trade-tab-btn,
+  .tab-row button {
     min-height: 44px;
   }
 }

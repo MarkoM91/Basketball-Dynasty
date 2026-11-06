@@ -3,6 +3,7 @@ import { ROSTER_SIZE } from '../data/rosterBuilder';
 import { canOpenRegularSeason, rosterOverCount, waiveablePlayers } from '../engine/rosterCuts';
 import { PlayerAvatar } from './PlayerAvatar';
 import type { Franchise } from '../types/game';
+import { Icon } from './Icon';
 
 export function TrainingCampCard({
   franchise,
@@ -87,7 +88,7 @@ export function TrainingCampCard({
           disabled={!ok}
           onClick={onOpenSeason}
         >
-          <span className="tc-cta-icon">▶</span>
+          <span className="tc-cta-icon"><Icon name="play" size={16} /></span>
           <span className="tc-cta-label">Open regular season</span>
         </button>
         <div className="tc-links">

@@ -7,12 +7,13 @@ import { calendarLabel, phaseLabel } from '../engine/simulation';
 import { TeamLogo } from '../components/TeamLogo';
 import { LandingFooter, LandingHeader } from '../components/LandingChrome';
 import { LandingSeoSection } from '../components/LandingSeoSection';
+import { Icon } from '../components/Icon';
 
 const FEATURES = [
-  { icon: '▶', title: 'Set your starting five', body: 'Pick your lineup before every game. Matchups matter — your rotation choices affect the outcome.' },
-  { icon: '🎯', title: 'Imperfect-scouting draft', body: '60 picks, scout ranges, lottery odds, and bust risk on every board.' },
-  { icon: '🔄', title: 'Trade war room', body: 'Block players, counter offers, and negotiate with AI front offices.' },
-  { icon: '🧑‍💼', title: 'Hire & fire coaches', body: 'Sign or cut your head coach each offseason. Development and playoff ratings shape your ceiling.' },
+  { icon: 'play' as const, title: 'Set your starting five', body: 'Pick your lineup before every game. Matchups matter — your rotation choices affect the outcome.' },
+  { icon: 'scout' as const, title: 'Imperfect-scouting draft', body: '60 picks, scout ranges, lottery odds, and bust risk on every board.' },
+  { icon: 'trade' as const, title: 'Trade war room', body: 'Block players, counter offers, and negotiate with AI front offices.' },
+  { icon: 'coach' as const, title: 'Hire & fire coaches', body: 'Sign or cut your head coach each offseason. Development and playoff ratings shape your ceiling.' },
 ];
 
 export function MainMenuScreen() {
@@ -141,7 +142,7 @@ export function MainMenuScreen() {
           <div className="landing-feature-grid">
             {FEATURES.map((feature) => (
               <div key={feature.title} className="landing-feature-card">
-                <span className="landing-feature-icon" aria-hidden>{feature.icon}</span>
+                <span className="landing-feature-icon"><Icon name={feature.icon} size={20} /></span>
                 <p className="landing-feature-title">{feature.title}</p>
                 <p className="body landing-feature-body" style={{ fontSize: 12, margin: 0 }}>{feature.body}</p>
               </div>
@@ -156,7 +157,7 @@ export function MainMenuScreen() {
               Pick a scripted scenario or choose any of 30 franchises — logos, cap sheets, and rosters included.
             </p>
             <button type="button" className="btn btn-primary landing-play-btn" onClick={handleNewGame}>
-              ▶ Start new franchise
+              <Icon name="play" size={16} /> Start new franchise
             </button>
           </div>
         </div>

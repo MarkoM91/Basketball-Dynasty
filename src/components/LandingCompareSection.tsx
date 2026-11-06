@@ -7,12 +7,13 @@ import {
 import type { CompareCell } from '../content/compare';
 import { LandingFooter, LandingHeader } from '../components/LandingChrome';
 import { PUBLIC_PAGES } from '../seo';
+import { Icon } from './Icon';
 
 function CellBadge({ value, us = false }: { value: CompareCell; us?: boolean }) {
   if (value === 'yes') {
     return (
       <span className={`compare-badge compare-badge--yes${us ? ' compare-badge--us' : ''}`}>
-        ✓ Yes
+        <Icon name="check" size={13} /> Yes
       </span>
     );
   }
@@ -20,7 +21,7 @@ function CellBadge({ value, us = false }: { value: CompareCell; us?: boolean }) 
     return <span className="compare-badge compare-badge--partial">~ Partial</span>;
   }
   if (value === 'no') {
-    return <span className="compare-badge compare-badge--no">✕ No</span>;
+    return <span className="compare-badge compare-badge--no"><Icon name="x" size={13} /> No</span>;
   }
   return <span className="compare-badge compare-badge--text">{value}</span>;
 }
