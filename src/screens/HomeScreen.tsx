@@ -94,7 +94,7 @@ export function HomeScreen() {
 
   const draftOnClock = Boolean(franchise.draftNight?.active && franchise.draftNight.onClock);
   const draftNoPicksLeft = Boolean(
-    franchise.draftNight?.active && remainingUserDraftSlots(franchise, league).length === 0,
+    ['draft_scouting', 'draft_night'].includes(franchise.phase) && remainingUserDraftSlots(franchise, league).length === 0,
   );
 
   const playPrimary = () => {
@@ -110,7 +110,7 @@ export function HomeScreen() {
     }
     if (franchise.phase === 'draft_scouting' || franchise.phase === 'draft_night') {
       // No picks left (all drafted or traded away) — finish the draft, don't navigate.
-      if (franchise.draftNight?.active && draftNoPicksLeft) {
+      if (draftNoPicksLeft) {
         finishDraft();
         return;
       }

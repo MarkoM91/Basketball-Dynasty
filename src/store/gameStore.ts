@@ -745,7 +745,7 @@ export const useGameStore = create<GameStore>()(
 
     if (franchise.phase === 'draft_scouting' || franchise.phase === 'draft_night') {
       // No picks remaining (all drafted or traded away) — finish the draft instead of navigating.
-      if (franchise.draftNight?.active && remainingUserDraftSlots(franchise, league).length === 0) {
+      if (remainingUserDraftSlots(franchise, league).length === 0) {
         get().finishDraft();
         return;
       }
@@ -1404,15 +1404,16 @@ export const useGameStore = create<GameStore>()(
 
   finishDraft: () => {
     const { franchise, league } = get();
-    if (!franchise?.draftNight || !league) return;
-    const draftNight = simDraftToEnd(franchise.draftNight, league, franchise);
-    const draftedNames = franchise.draftNight.userDraftedNames ?? [];
+    if (!franchise || !league || !['draft_scouting', 'draft_night'].includes(franchise.phase)) return;
+    const before = franchise.draftNight ?? initDraftNight(franchise, league);
+    const draftNight = simDraftToEnd(before, league, franchise);
+    const draftedNames = before.userDraftedNames ?? [];
     let next: typeof franchise = { ...franchise, draftNight };
     const { franchise: withContracts, summary } = processContractRenewals(next, draftedNames);
     next = rememberRenewals(withContracts, summary);
     next = withDraftRecap({ ...next, draftNight });
     set({
-      league: applyAiDraftSelections(league, franchise.draftNight.log, draftNight, franchise),
+      league: applyAiDraftSelections(league, before.log, draftNight, franchise),
       franchise: refreshCap(next),
       screen: 'contract_renewals',
       toast: `Draft complete. ${formatRenewalHeadline(summary)} Set your renewals, then open free agency.`,
