@@ -3,26 +3,68 @@
   <url>
     <loc>https://basketballdynasty.com/</loc>
     <lastmod>2026-06-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://basketballdynasty.com/start</loc>
     <lastmod>2026-06-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://basketballdynasty.com/guide</loc>
     <lastmod>2026-06-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://basketballdynasty.com/compare</loc>
     <lastmod>2026-06-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/office</loc>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/play</loc>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/results</loc>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/roster</loc>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/trades</loc>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/cap</loc>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/schedule</loc>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/finances</loc>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/league</loc>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/coach</loc>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/development</loc>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/draft</loc>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/free-agency</loc>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/playoffs</loc>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/media</loc>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/history</loc>
+  </url>
+  <url>
+    <loc>https://basketballdynasty.com/ghosts</loc>
   </url>
 </urlset>
-
