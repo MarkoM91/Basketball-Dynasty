@@ -1,19 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import {
-  APP_ROUTE_PATHS,
-  PUBLIC_PAGES,
-  SITE_KEYWORDS,
-  SITE_NAME,
-  SITE_URL,
-  absoluteUrl,
-  faqPageJsonLd,
-  organizationJsonLd,
-  videoGameJsonLd,
-  webApplicationJsonLd,
-} from '../seo';
-import { guideFaqJsonLd, howToJsonLd } from '../content/guide';
-import { compareFaqJsonLd } from '../content/compare';
+import { getPageSeo } from '../lib/pageSeo';
 
 function upsertMeta(name: string, content: string, property = false) {
   const attr = property ? 'property' : 'name';
@@ -51,39 +38,13 @@ function upsertJsonLd(id: string, data: object | null) {
 
 export function SeoHead() {
   const { pathname } = useLocation();
-  const publicPage = PUBLIC_PAGES[pathname];
-  const isAppRoute = APP_ROUTE_PATHS.includes(pathname as (typeof APP_ROUTE_PATHS)[number]);
-
   useEffect(() => {
-    const title = publicPage?.title ?? SITE_NAME;
-    const description = publicPage?.description ?? 'Browser basketball GM simulation.';
-    const url = absoluteUrl(pathname);
-
-    document.title = title;
-    upsertMeta('description', description);
-    upsertMeta('keywords', SITE_KEYWORDS);
-    upsertMeta('robots', isAppRoute ? 'noindex, nofollow' : 'index, follow');
-    upsertLink('canonical', publicPage ? url : `${SITE_URL}/`);
-
-    upsertMeta('og:title', title, true);
-    upsertMeta('og:description', description, true);
-    upsertMeta('og:url', url, true);
-    upsertMeta('og:type', 'website', true);
-    upsertMeta('og:site_name', SITE_NAME, true);
-    upsertMeta('og:locale', 'en_US', true);
-
-    upsertMeta('twitter:card', 'summary_large_image');
-    upsertMeta('twitter:title', title);
-    upsertMeta('twitter:description', description);
-
-    upsertJsonLd('seo-jsonld-app', webApplicationJsonLd());
-    upsertJsonLd('seo-jsonld-org', organizationJsonLd());
-    upsertJsonLd('seo-jsonld-game', videoGameJsonLd());
-    upsertJsonLd('seo-jsonld-faq', pathname === '/' ? faqPageJsonLd() : null);
-    upsertJsonLd('seo-jsonld-howto', pathname === '/guide' ? howToJsonLd() : null);
-    upsertJsonLd('seo-jsonld-guide-faq', pathname === '/guide' ? guideFaqJsonLd() : null);
-    upsertJsonLd('seo-jsonld-compare-faq', pathname === '/compare' ? compareFaqJsonLd() : null);
-  }, [pathname, publicPage, isAppRoute]);
+    const seo = getPageSeo(pathname);
+    document.title = seo.title;
+    upsertLink('canonical', seo.canonical);
+    seo.meta.forEach((meta) => upsertMeta(meta.name ?? meta.property!, meta.content, !!meta.property));
+    Object.entries(seo.jsonLd).forEach(([id, data]) => upsertJsonLd(id, data));
+  }, [pathname]);
 
   return null;
 }

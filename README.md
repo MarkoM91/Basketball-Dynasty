@@ -22,6 +22,13 @@ npm run preview
 
 The static app outputs to `dist/`.
 
+The build prerenders `/`, `/start`, `/guide`, and `/compare` with page-specific content,
+metadata, canonicals, and structured data. It writes flat HTML assets before the PWA
+precache is generated. The live app still loads each player's save in the browser.
+The sitemap contains those four public URLs; existing guide articles remain linked
+from the homepage and guide. `npm run validate:seo` checks the built HTML, sitemap,
+and service worker revisions, and also runs automatically at the end of a build.
+
 ## Deploy
 
 Works on any static host with SPA fallback:
