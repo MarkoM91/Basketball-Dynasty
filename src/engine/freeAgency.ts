@@ -694,30 +694,20 @@ export function simAISignings(
 ): { franchise: Franchise; league: League; headlines: string[] } {
   const headlines: string[] = [];
   const remaining = franchise.freeAgents.filter((a) => !a.signed);
-  const signedIds = new Set<string>();
-
-  for (const fa of remaining) {
+  // Only today's commitments leave the market; others remain available.
+  const committing = remaining.filter((fa) => {
     const tier = faMarketTier(fa.overall);
-    if (!fa.topOfferTeam) continue;
-
-    let commitChance = 0.15;
-    if (tier === 'star') commitChance = 0.62 + (fa.userPitchAttempts ?? 0) * 0.08;
-    else if (tier === 'starter') commitChance = 0.45 + (fa.userPitchAttempts ?? 0) * 0.06;
-    else if (tier === 'rotation') commitChance = 0.28 + (fa.userPitchAttempts ?? 0) * 0.04;
-
-    if (Math.random() < commitChance) {
-      signedIds.add(fa.id);
-      headlines.push(`${playerName(fa)} commits to ${fa.topOfferTeam} — your window closed.`);
-    }
-  }
-
-  const leagueFa = simLeagueFreeAgency(league, franchise.freeAgents, signedIds, franchise);
+    const chance = tier === 'star' ? 0.62 : tier === 'starter' ? 0.45 : tier === 'rotation' ? 0.28 : 0.15;
+    return Math.random() < Math.min(0.95, chance + (fa.userPitchAttempts ?? 0) * 0.04);
+  }).map((fa) => ({ ...fa }));
+  const leagueFa = simLeagueFreeAgency(league, committing, new Set<string>(), franchise);
+  const resolved = new Map(leagueFa.remaining.map((fa) => [fa.id, fa]));
   headlines.push(...leagueFa.headlines.slice(0, 4));
 
   return {
     franchise: {
       ...franchise,
-      freeAgents: leagueFa.remaining,
+      freeAgents: franchise.freeAgents.map((fa) => resolved.get(fa.id) ?? fa),
     },
     league: leagueFa.league,
     headlines,

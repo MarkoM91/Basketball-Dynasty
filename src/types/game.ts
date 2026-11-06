@@ -655,6 +655,7 @@ export interface Franchise {
   strategyIdentity: string;
   playoffs?: PlayoffState;
   freeAgents: FreeAgent[];
+  freeAgencyDay?: number;
   seasonReview?: SeasonReview;
   madePlayoffs: boolean;
   ghosts: FranchiseGhost[];
