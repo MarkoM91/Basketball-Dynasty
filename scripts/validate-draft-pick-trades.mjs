@@ -73,7 +73,7 @@ const entry = `
   function assertTraded(pickNumber, partnerName, label) {
     const { franchise, league } = store();
     const userName = franchise.city + ' ' + franchise.name;
-    const slots = remainingUserDraftSlots(franchise);
+    const slots = remainingUserDraftSlots(franchise, league);
     check(label + ': slot removed from user picks', !slots.includes(pickNumber), 'remaining=' + slots.join(','));
     const key = pickKey(pickForDraftSlot(franchise, pickNumber));
     check(label + ': pick removed from user books', !franchise.draftPicks.some((p) => pickKey(p) === key));
@@ -137,6 +137,10 @@ const entry = `
   const early = cheapOffer(2);
   store().acceptDraftPickTrade(early.offer, 2);
   check('case3: draft order owner is partner', ownerOf(2) === early.partnerTeamName, 'owner=' + ownerOf(2));
+  check('case3: traded pick disappears immediately before draft night', !remainingUserDraftSlots(store().franchise, store().league).includes(2));
+  const receivedBeforeRetry = JSON.stringify(store().franchise.draftPicks);
+  store().acceptDraftPickTrade(early.offer, 2);
+  check('case3: repeating acceptance cannot duplicate incoming assets', JSON.stringify(store().franchise.draftPicks) === receivedBeforeRetry);
   openDraftNight();
   const slots3 = remainingUserDraftSlots(store().franchise);
   check('case3: #2 not restored on draft night', !slots3.includes(2), 'slots=' + slots3.join(','));
@@ -157,6 +161,46 @@ const entry = `
   runDraftToEnd();
   check('case4: draft completes with no user picks', !store().franchise.draftNight?.active, 'phase=' + store().franchise.phase);
   check('case4: no rookies added to user', !store().franchise.roster.some((p) => p.draftPick === 2 || p.draftPick === 32));
+
+  // Case 5: late second-round quick offer before draft night, matching #59 in the UI.
+  startChicago();
+  const lateOrder = store().league.draftOrder;
+  const swap = new Map([[2,29],[29,2],[32,59],[59,32]]);
+  const reordered = lateOrder.map(entry => ({ ...(lateOrder.find(e => e.pick === (swap.get(entry.pick) ?? entry.pick))), pick: entry.pick }));
+  useGameStore.setState({ franchise: { ...store().franchise, draftPickNumber: 29, draftNight: undefined }, league: { ...store().league, draftOrder: reordered } });
+  const late = cheapOffer(59);
+  store().acceptDraftPickTrade(late.offer, 59);
+  assertTraded(59, late.partnerTeamName, 'case5 #59 before draft night');
+  check('case5: #59 immediately disappears from available slots', !remainingUserDraftSlots(store().franchise, store().league).includes(59));
+  check('case5: no offers are regenerated for traded #59', generateDraftPickTradeOffers(store().franchise, store().league, 59).length === 0);
+  check('case5: #29 is still available', remainingUserDraftSlots(store().franchise, store().league).includes(29));
+  const afterLate = JSON.stringify({ picks: store().franchise.draftPicks, order: store().league.draftOrder });
+  store().acceptDraftPickTrade(late.offer, 59);
+  check('case5: repeated acceptance changes nothing', JSON.stringify({ picks: store().franchise.draftPicks, order: store().league.draftOrder }) === afterLate);
+  check('case5: repeat click explains unavailable slot', store().toast.includes('no longer available'));
+
+  // Case 6: opening R2 trading must expose every owned current/future first and preserve them on exit.
+  startChicago();
+  const shoppingOrder = store().league.draftOrder;
+  const shoppingSwap = new Map([[2,29],[29,2],[32,59],[59,32]]);
+  const shoppingDraftOrder = shoppingOrder.map(entry => ({ ...shoppingOrder.find(e => e.pick === (shoppingSwap.get(entry.pick) ?? entry.pick)), pick: entry.pick }));
+  const missingFirst = store().franchise.draftPicks.filter(p => !(p.year === pickForDraftSlot(store().franchise, 29).year && p.round === 1));
+  useGameStore.setState({ franchise: { ...store().franchise, draftPickNumber: 29, draftNight: undefined, draftPicks: missingFirst }, league: { ...store().league, draftOrder: shoppingDraftOrder } });
+  const futureFirst = store().franchise.draftPicks.find(p => p.round === 1);
+  check('case6: future first fixture exists', Boolean(futureFirst));
+  store().addDraftSlotToShoppingList(59);
+  const firstBook = store().franchise.draftPicks.find(p => p.slot === 29);
+  const secondBook = store().franchise.draftPicks.find(p => p.slot === 59);
+  check('case6: owned R1 is booked when opening R2', Boolean(firstBook));
+  check('case6: selected R2 is booked', Boolean(secondBook));
+  if (firstBook) { store().toggleTradeBlockPick(pickKey(firstBook)); check('case6: current R1 can be selected', store().franchise.tradeBlock.pickKeys.includes(pickKey(firstBook))); }
+  if (futureFirst) { store().toggleTradeBlockPick(pickKey(futureFirst)); check('case6: future R1 can be selected', store().franchise.tradeBlock.pickKeys.includes(pickKey(futureFirst))); }
+  store().clearTradeBlock();
+  store().setScreen('draft');
+  check('case6: leaving shopping list does not delete owned R1', store().franchise.draftPicks.some(p => p.slot === 29));
+  check('case6: leaving shopping list does not delete owned R2', store().franchise.draftPicks.some(p => p.slot === 59));
+  store().setScreen('trade');
+  check('case6: general trade entry also retains both slots', store().franchise.draftPicks.some(p => p.slot === 29) && store().franchise.draftPicks.some(p => p.slot === 59));
 
   if (failures.length) {
     console.error('Draft pick trade validation FAILED:\\n  - ' + failures.join('\\n  - '));

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { playerName } from '../data/scenarios';
 import { draftPickSummary } from '../engine/draftOrder';
 import {
@@ -92,10 +92,19 @@ export function DraftScreen() {
 
   const [tradePickNumber, setTradePickNumber] = useState<number | null>(null);
   const [tradePrefill, setTradePrefill] = useState<Partial<TradeProposal> | undefined>();
+  const [quickTradeResult, setQuickTradeResult] = useState<{ title: string; detail: string } | null>(null);
+
+  useEffect(() => {
+    if (!quickTradeResult) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.getElementById('draft-trade-result-close')?.focus();
+    return () => { document.body.style.overflow = previous; };
+  }, [quickTradeResult]);
 
   const tradableSlots = useMemo(
-    () => (franchise ? remainingUserDraftSlots(franchise) : []),
-    [franchise],
+    () => (franchise ? remainingUserDraftSlots(franchise, league) : []),
+    [franchise, league],
   );
   const showPickTradePanel =
     Boolean(franchise && league) &&
@@ -125,7 +134,9 @@ export function DraftScreen() {
       : showProspectBoard && (franchise.draftBoard?.length ?? 0) > 0
         ? franchise.draftBoard ?? []
         : [];
-  const userPickLabel = night ? formatUserPickLabel(night) : pick ? `#${pick} & #${pick + 30}` : '';
+  const userPickLabel = night
+    ? formatUserPickLabel(night)
+    : tradableSlots.map((slot) => `#${slot}`).join(' & ') || 'none — traded away';
 
 
   const closePickTrade = () => {
@@ -192,7 +203,15 @@ export function DraftScreen() {
                     type="button"
                     className="btn btn-primary"
                     style={{ padding: '6px 10px', fontSize: 11 }}
-                    onClick={() => acceptDraftPickTrade(row.offer, row.pickNumber)}
+                    onClick={() => {
+                      acceptDraftPickTrade(row.offer, row.pickNumber);
+                      const state = useGameStore.getState();
+                      const accepted = state.toast?.startsWith('Pick traded.');
+                      setQuickTradeResult({
+                        title: accepted ? `Pick #${row.pickNumber} traded` : 'Pick trade could not be completed',
+                        detail: accepted ? `${row.offer.partnerTeam} receives ${row.pickLabel}. You receive ${row.offer.incoming.description}.` : state.toast ?? 'Review the offer and try again.',
+                      });
+                    }}
                   >
                     Accept for {row.pickLabel}
                   </button>
@@ -449,6 +468,19 @@ export function DraftScreen() {
         }}
         onSubmitChain={submitTradeChain}
       />
+      {quickTradeResult && (
+        <div className="trade-response-overlay" onKeyDown={(event) => {
+          if (event.key === 'Escape') setQuickTradeResult(null);
+          if (event.key === 'Tab') { event.preventDefault(); document.getElementById('draft-trade-result-close')?.focus(); }
+        }}>
+          <section className="trade-response-dialog" role="alertdialog" aria-modal="true" aria-labelledby="draft-trade-result-title" aria-describedby="draft-trade-result-detail">
+            <p className="eyebrow">Draft trade</p>
+            <h2 id="draft-trade-result-title" className="title-md">{quickTradeResult.title}</h2>
+            <p id="draft-trade-result-detail" className="body">{quickTradeResult.detail}</p>
+            <button id="draft-trade-result-close" type="button" className="btn btn-primary" onClick={() => setQuickTradeResult(null)}>Done</button>
+          </section>
+        </div>
+      )}
     </div>
   );
 }

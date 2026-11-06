@@ -712,6 +712,7 @@ export function TradeScreen() {
                     key={p.id}
                     type="button"
                     className={`trade-asset-chip ${onBlock ? 'trade-asset-chip-active' : ''}`}
+                    aria-pressed={onBlock}
                     onClick={() => toggleTradeBlockPlayer(p.id)}
                   >
                     <PlayerAvatar player={p} size={36} />
@@ -730,6 +731,7 @@ export function TradeScreen() {
                     key={key}
                     type="button"
                     className={`trade-asset-chip trade-asset-chip-pick ${onBlock ? 'trade-asset-chip-active' : ''}`}
+                    aria-pressed={onBlock}
                     onClick={() => toggleTradeBlockPick(key)}
                   >
                     <span className="trade-pick-icon">P</span>

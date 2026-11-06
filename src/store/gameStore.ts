@@ -145,7 +145,7 @@ import {
   renewPlayerContract as applyPlayerRenewal,
 } from '../engine/contractRenewals';
 import { canOpenFreeAgency, waiveOffseasonPlayer } from '../engine/rosterCuts';
-import { applyDraftPickTrade, ensurePickOnBooks, pickForDraftSlot, remainingUserDraftSlots } from '../engine/draftPickTrade';
+import { applyDraftPickTrade, ensureOwnedDraftPicksOnBooks, ensurePickOnBooks, pickForDraftSlot, remainingUserDraftSlots } from '../engine/draftPickTrade';
 import { executeTradeChain } from '../engine/tradeChain';
 import {
   generateCounterOffer,
@@ -624,22 +624,13 @@ export const useGameStore = create<GameStore>()(
   },
 
   setScreen: (screen) => {
-    const { stagedDraftSlotKey, franchise, screen: prevScreen } = get();
-    // If leaving the trade screen with a staged-but-unlisted draft slot, prune it
-    if (stagedDraftSlotKey && prevScreen === 'trade' && screen !== 'trade' && franchise) {
-      const blocked = (franchise.tradeBlock?.pickKeys ?? []).includes(stagedDraftSlotKey);
-      if (!blocked) {
-        const pruned = franchise.draftPicks.filter((p) => pickKey(p) !== stagedDraftSlotKey);
-        set({
-          franchise: { ...franchise, draftPicks: pruned },
-          screen,
-          stagedDraftSlotKey: null,
-          lastSavedAt: new Date().toISOString(),
-        });
-        return;
-      }
-    }
-    set({ screen, stagedDraftSlotKey: null, lastSavedAt: new Date().toISOString() });
+    const { franchise, league } = get();
+    const syncDraftBooks = screen === 'trade' && franchise && league
+      && ['draft_scouting', 'draft_night', 'contract_renewals'].includes(franchise.phase);
+    set({
+      ...(syncDraftBooks ? { franchise: ensureOwnedDraftPicksOnBooks(franchise, league) } : {}),
+      screen, stagedDraftSlotKey: null, lastSavedAt: new Date().toISOString(),
+    });
   },
 
   advanceWeek: () => {
@@ -754,7 +745,7 @@ export const useGameStore = create<GameStore>()(
 
     if (franchise.phase === 'draft_scouting' || franchise.phase === 'draft_night') {
       // No picks remaining (all drafted or traded away) — finish the draft instead of navigating.
-      if (franchise.draftNight?.active && remainingUserDraftSlots(franchise).length === 0) {
+      if (franchise.draftNight?.active && remainingUserDraftSlots(franchise, league).length === 0) {
         get().finishDraft();
         return;
       }
@@ -1806,20 +1797,15 @@ export const useGameStore = create<GameStore>()(
   },
 
   addDraftSlotToShoppingList: (pickNumber) => {
-    const { franchise } = get();
-    if (!franchise) return;
-    // Stage the current-year pick AND mark it ephemerally; pruneStagedDraftPicks
-    // removes it on screen-change if the user backs out without completing a trade.
-    const pick = pickForDraftSlot(franchise, pickNumber);
-    const alreadyOnBooks = franchise.draftPicks.some((p) => pickKey(p) === pickKey(pick));
-    const next = ensurePickOnBooks(franchise, pick);
+    const { franchise, league } = get();
+    if (!franchise || !league) return;
+    if (!remainingUserDraftSlots(franchise, league).includes(pickNumber)) {
+      set({ toast: 'That draft pick is no longer available.' });
+      return;
+    }
     set({
-      franchise: next,
-      screen: 'trade',
-      openTradeShopDrawer: true,
-      // Only a pick this action ADDED may be pruned on leaving the screen — pruning a pick that was
-      // already on the books (e.g. the scenario's 2026 1st) deleted the user's real pick.
-      stagedDraftSlotKey: alreadyOnBooks ? null : pickKey(pick),
+      franchise: ensureOwnedDraftPicksOnBooks(franchise, league),
+      screen: 'trade', openTradeShopDrawer: true, stagedDraftSlotKey: null,
     });
   },
 
@@ -1955,6 +1941,10 @@ export const useGameStore = create<GameStore>()(
   acceptDraftPickTrade: (offer, pickNumber) => {
     const { franchise, league } = get();
     if (!franchise || !league) return;
+    if (!remainingUserDraftSlots(franchise, league).includes(pickNumber)) {
+      set({ toast: `Pick #${pickNumber} is no longer available to trade.` });
+      return;
+    }
 
     const incomingSalary = offer.incoming.players.reduce((s, p) => s + p.contract.annualSalary, 0);
     const outgoingSalary = offer.outgoing.players.reduce((s, p) => s + p.contract.annualSalary, 0);
