@@ -3,7 +3,7 @@ import { getTeamById, teamWantsPicks } from '../data/league';
 import { LEAGUE_CALENDAR_YEAR } from '../data/leagueWorld';
 import { playerName, uid } from '../data/scenarios';
 import { pickKey } from './cap';
-import { draftRound, normalizeDraftNight, userPickSlots } from './draftNight';
+import { draftRound, normalizeDraftNight, userPickSlots, userSlotsFromDraftOrder } from './draftNight';
 import { evaluateTradeForTeam } from './league';
 import { generatePartnerTradeAssets, pickDescription, validateProposal } from './tradeBuilder';
 import { executeTrade } from './trades';
@@ -23,6 +23,8 @@ export interface DraftPickTradeOffer {
 }
 
 export function pickForDraftSlot(franchise: Franchise, pickNumber: number): DraftPick {
+  const booked = franchise.draftPicks.find((pick) => pick.year === LEAGUE_CALENDAR_YEAR && pick.slot === pickNumber);
+  if (booked) return booked;
   return {
     year: LEAGUE_CALENDAR_YEAR,
     round: draftRound(pickNumber),
@@ -31,12 +33,16 @@ export function pickForDraftSlot(franchise: Franchise, pickNumber: number): Draf
   };
 }
 
-export function remainingUserDraftSlots(franchise: Franchise): number[] {
+export function remainingUserDraftSlots(franchise: Franchise, league?: League | null): number[] {
   if (Array.isArray(franchise.draftNight?.userPickNumbers)) {
     // Array.isArray distinguishes [] (all picks traded) from undefined (not yet initialized)
     const normalized = normalizeDraftNight(franchise.draftNight!, franchise.draftPickNumber);
     return normalized.userPickNumbers.filter((p) => !normalized.userPicksMade.includes(p));
   }
+  // Before draft night has a state object, current ownership still lives in the draft order.
+  // Never recreate a sold slot from the franchise's original lottery position.
+  const owned = league ? userSlotsFromDraftOrder(franchise, league) : undefined;
+  if (owned) return owned;
   return userPickSlots(franchise.draftPickNumber ?? 14);
 }
 
@@ -54,11 +60,20 @@ export function ensurePickOnBooks(franchise: Franchise, pick: DraftPick): Franch
   return { ...franchise, draftPicks: [...franchise.draftPicks, pick] };
 }
 
+/** All owned draft slots belong in the pick book, not just the slot that opened the picker. */
+export function ensureOwnedDraftPicksOnBooks(franchise: Franchise, league: League): Franchise {
+  return remainingUserDraftSlots(franchise, league).reduce(
+    (next, slot) => ensurePickOnBooks(next, pickForDraftSlot(next, slot)),
+    franchise,
+  );
+}
+
 export function generateDraftPickTradeOffers(
   franchise: Franchise,
   league: League,
   pickNumber: number,
 ): DraftPickTradeOffer[] {
+  if (!remainingUserDraftSlots(franchise, league).includes(pickNumber)) return [];
   const pick = pickForDraftSlot(franchise, pickNumber);
   const key = pickKey(pick);
   // The draft-night slot must be on the books, or validateProposal sees an empty outgoing package

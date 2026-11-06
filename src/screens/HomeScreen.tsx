@@ -94,7 +94,7 @@ export function HomeScreen() {
 
   const draftOnClock = Boolean(franchise.draftNight?.active && franchise.draftNight.onClock);
   const draftNoPicksLeft = Boolean(
-    franchise.draftNight?.active && remainingUserDraftSlots(franchise).length === 0,
+    franchise.draftNight?.active && remainingUserDraftSlots(franchise, league).length === 0,
   );
 
   const playPrimary = () => {
