@@ -1,5 +1,6 @@
-import type { DraftPick, Franchise, FreeAgent, League, LeagueTeam, Player, Prospect, TeamStrategy } from '../types/game';
-import { getTeamById, normalizeLeagueTeam, strategyLabel, teamWantsPicks, teamWantsVeterans } from '../data/league';
+import type { DraftPick, Franchise, FreeAgent, League, LeagueTeam, Player, Prospect } from '../types/game';
+import { getTeamById, normalizeLeagueTeam, strategyForRank, strategyLabel, teamWantsPicks, teamWantsVeterans } from '../data/league';
+import { hashString } from '../lib/visuals/hash';
 import { ROSTER_SIZE } from '../data/rosterBuilder';
 import { uid, playerName } from '../data/scenarios';
 import { evaluateTradeForTeam } from './league';
@@ -10,6 +11,7 @@ import { freeAgentAskingSalary, marketSalary, rookieScaleSalary } from './salari
 import { buildLeagueSchedule } from './leagueSchedule';
 import { initialTeamScoring } from './stats';
 import { seedLeagueRecords } from './leagueSimulation';
+import { teamRegularSeasonRecord } from './regularSeasonRecord';
 import { teamKey } from './draftOrder';
 import { DRAFT_TEAM_COUNT as DRAFT_ROUND_SIZE } from './draftNight';
 
@@ -17,14 +19,14 @@ function clamp(n: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, n));
 }
 
-function pickStrategy(strength: number): TeamStrategy {
-  if (strength >= 86) return Math.random() > 0.5 ? 'all_in' : 'contend';
-  if (strength >= 80) return 'contend';
-  if (strength >= 76) return Math.random() > 0.5 ? 'playin' : 'retool';
-  if (strength >= 72) return 'developing';
-  if (strength >= 68) return 'playin';
-  if (strength >= 64) return 'retool';
-  return Math.random() > 0.4 ? 'rebuild' : 'tank';
+/** Re-rank AI front-office strategies league-wide; deterministic per team + season (no flip-flopping). */
+function rankStrategies(teams: LeagueTeam[], season: number): LeagueTeam[] {
+  const order = [...teams].sort((a, b) => b.strength - a.strength).map((t) => t.id);
+  return teams.map((t) => {
+    if (t.isUser) return t;
+    const coin = (hashString(`${t.id}-${season}`) % 1000) / 1000;
+    return { ...t, strategy: strategyForRank(order.indexOf(t.id), teams.length, coin) };
+  });
 }
 
 export function teamRosterKey(city: string, name: string): string {
@@ -36,17 +38,22 @@ export function rosterPayroll(players: Player[]): number {
 }
 
 /** Top-8 + bench blend — mirrors user team rating logic. */
-export function strengthFromRoster(players: Player[]): number {
+/** Minutes-style weights: stars drive outcomes, the 9th–10th men barely move the needle. */
+const ROTATION_WEIGHTS = [1.6, 1.35, 1.2, 1.05, 1, 0.8, 0.65, 0.5, 0.35, 0.25];
+
+export function strengthFromRoster(players: Player[], presorted = false): number {
   const active = players.filter((p) => !p.injured);
   if (!active.length) return 62;
-  const sorted = [...active].sort((a, b) => b.overall - a.overall);
-  const top8 = sorted.slice(0, 8);
-  const bench = sorted.slice(5, 12);
-  const topAvg = top8.reduce((s, p) => s + p.overall, 0) / top8.length;
-  const benchAvg = bench.length
-    ? bench.reduce((s, p) => s + p.overall, 0) / bench.length
-    : topAvg - 7;
-  return Math.round((topAvg * 0.82 + benchAvg * 0.18) * 10) / 10;
+  const sorted = presorted ? active : [...active].sort((a, b) => b.overall - a.overall);
+  let sum = 0;
+  let weight = 0;
+  ROTATION_WEIGHTS.forEach((w, i) => {
+    // A missing rotation slot is filled by a replacement-level body.
+    const ovr = sorted[i]?.overall ?? 58;
+    sum += ovr * w;
+    weight += w;
+  });
+  return Math.round((sum / weight) * 10) / 10;
 }
 
 export function injuryStrengthPenalty(players: Player[]): number {
@@ -102,7 +109,6 @@ export function refreshTeamFromRoster(team: LeagueTeam, roster: Player[]): Leagu
     strength,
     payroll: rosterPayroll(roster),
     starOverall: clamp(starOverall, 68, 94),
-    strategy: team.isUser ? team.strategy : pickStrategy(strength),
   });
 }
 
@@ -111,7 +117,7 @@ export function syncTeamsFromRosters(league: League, userFranchise?: Franchise |
     const roster = getTeamRoster(league, t, userFranchise);
     return refreshTeamFromRoster(t, roster);
   });
-  return { ...league, teams };
+  return { ...league, teams: rankStrategies(teams, league.season) };
 }
 
 export function ensureLeagueRosters(league: League, userFranchise?: Franchise | null): League {
@@ -142,11 +148,10 @@ export function effectiveGameStrength(
   const team = getTeamById(league, teamId);
   if (!team) return 75;
   const roster = getTeamRoster(league, team, userFranchise);
-  let str = strengthFromRoster(roster) + depthBoost(roster);
-  str -= injuryStrengthPenalty(roster);
-  if (week && week > 0) str -= 0.35;
-  if (team.isUser) return Math.round(clamp(str, 58, 96) * 10) / 10;
-  return Math.round(clamp(str + 0.6, 58, 96) * 10) / 10;
+  // strengthFromRoster already weights depth and skips injured players; no hidden AI bonus.
+  const str = strengthFromRoster(roster);
+  void week;
+  return Math.round(clamp(str, 58, 96) * 10) / 10;
 }
 
 export function tickLeagueRosterContracts(league: League, userFranchise?: Franchise | null): League {
@@ -541,6 +546,16 @@ export function tickLeagueInjuries(league: League, userFranchise?: Franchise | n
   return syncTeamsFromRosters(next, userFranchise);
 }
 
+export function snapshotFinalStandings(prior: League): League['lastSeasonStandings'] {
+  return {
+    season: prior.season,
+    teams: prior.teams.map((t) => {
+      const reg = teamRegularSeasonRecord(t);
+      return { ...t, wins: reg.wins, losses: reg.losses, regularWins: reg.wins, regularLosses: reg.losses };
+    }),
+  };
+}
+
 export function advanceLeagueSeason(
   prior: League,
   franchise: Franchise,
@@ -549,6 +564,7 @@ export function advanceLeagueSeason(
   let league: League = {
     ...prior,
     season,
+    lastSeasonStandings: snapshotFinalStandings(prior),
     draftOrder: [],
     draftLotteryLog: [],
   };

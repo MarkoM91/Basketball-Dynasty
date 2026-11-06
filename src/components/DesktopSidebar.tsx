@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { LogoHex } from './LandingChrome';
 import { formatSavedAt } from '../lib/saveFile';
-import { phaseLabel } from '../engine/simulation';
+import { calendarLabel, phaseLabel } from '../engine/simulation';
 import { franchiseRegularSeasonRecord } from '../engine/regularSeasonRecord';
 import { TeamLogo } from './TeamLogo';
 import { useGameStore } from '../store/gameStore';
@@ -103,7 +103,7 @@ export function DesktopSidebar({
             {franchise.city} {franchise.name}
           </p>
           <p className="desktop-franchise-meta">
-            S{franchise.season} · Wk {franchise.week} · {record.wins}–{record.losses}
+            S{franchise.season} · {calendarLabel(franchise, true)} · {record.wins}–{record.losses}
           </p>
         </div>
       </div>
@@ -152,7 +152,7 @@ export function DesktopHeader() {
     <header className="desktop-header">
       <div>
         <p className="desktop-header-eyebrow">
-          Season {franchise.season} · Week {franchise.week}
+          Season {franchise.season} · {calendarLabel(franchise)}
         </p>
         <h1 className="desktop-header-title">
           {franchise.city} {franchise.name}

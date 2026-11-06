@@ -54,6 +54,27 @@ export function pickStrategy(strength: number): TeamStrategy {
   return Math.random() > 0.4 ? 'rebuild' : 'tank';
 }
 
+/**
+ * Front-office strategy follows where a team sits in the league, not absolute OVR thresholds
+ * (no roster ever reached the old ≥86 "contend" bar, so 25 of 30 teams were "Developing").
+ */
+export function strategyForRank(rank: number, teamCount: number, coinFlip = Math.random()): TeamStrategy {
+  const pct = rank / Math.max(1, teamCount - 1);
+  if (pct <= 0.1) return coinFlip > 0.5 ? 'all_in' : 'contend';
+  if (pct <= 0.27) return 'contend';
+  if (pct <= 0.45) return coinFlip > 0.5 ? 'playin' : 'retool';
+  if (pct <= 0.62) return 'developing';
+  if (pct <= 0.8) return coinFlip > 0.5 ? 'retool' : 'developing';
+  return coinFlip > 0.4 ? 'rebuild' : 'tank';
+}
+
+function assignStrategiesByRank(teams: LeagueTeam[]): void {
+  const ranked = [...teams].sort((a, b) => b.strength - a.strength);
+  ranked.forEach((t, i) => {
+    if (!t.isUser) t.strategy = strategyForRank(i, ranked.length);
+  });
+}
+
 export function createLeague(
   season: number,
   userCity: string,
@@ -104,6 +125,7 @@ export function createLeague(
     };
   });
 
+  assignStrategiesByRank(teams);
   const userTeam = teams.find((t) => t.isUser);
   const balanced = seedLeagueRecords(
     teams,

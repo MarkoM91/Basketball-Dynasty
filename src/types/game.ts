@@ -86,6 +86,8 @@ export interface Player {
   hiddenOverall?: number;
   /** OVR at start of last offseason — used to show season delta on roster screen. */
   prevOverall?: number;
+  /** Real listed height when known (roster data); otherwise derived from ratings. */
+  heightInches?: number;
   /** Season this player was drafted (rookie year). */
   draftSeason?: number;
   draftPick?: number;
@@ -566,6 +568,8 @@ export interface League {
   draftOrder?: DraftOrderEntry[];
   draftLotteryLog?: string[];
   schedule?: LeagueMatchup[];
+  /** Final regular-season table of the previous season — shown until the new season tips off. */
+  lastSeasonStandings?: { season: number; teams: LeagueTeam[] };
   /** Full rosters keyed by city|name — powers league-wide sim. */
   rosters?: Record<string, Player[]>;
 }
@@ -668,6 +672,8 @@ export interface Franchise {
   pendingFreeAgents?: Player[];
   /** Scripted career start — drives roster shape and sim difficulty. */
   scenarioId?: ScenarioId | null;
+  /** True once the scenario roster reshape has been applied — it must only ever run once. */
+  scenarioShaped?: boolean;
   /** Narrative beats already triggered — keyed by beat id. */
   careerBeatsSeen?: string[];
   /** Season when this scenario career began — gates window progression. */

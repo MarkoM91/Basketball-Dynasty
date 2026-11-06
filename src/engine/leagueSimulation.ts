@@ -2,7 +2,7 @@ import type { Franchise, GameResult, League, LeagueMatchup, LeagueTeam } from '.
 import { getTeamById, normalizeLeagueTeam } from '../data/league';
 import { ensureLeagueSchedule, getWeekMatchups } from './leagueSchedule';
 import { buildSeasonSchedule, SEASON_GAME_COUNT } from './schedule';
-import { initialTeamScoring, mergeLeagueTeamScoring, simulateTeamGameScores, NBA_HOME_EDGE } from './stats';
+import { initialTeamScoring, mergeLeagueTeamScoring, simulateTeamGameScores, NBA_HOME_EDGE, NBA_WIN_PROB_SCALE, TALENT_GAP_AMPLIFIER } from './stats';
 import { franchiseRegularSeasonRecord, teamRegularSeasonRecord } from './regularSeasonRecord';
 import { effectiveGameStrength } from './leagueWorld';
 
@@ -115,27 +115,37 @@ export function seedLeagueRecords(
         ...t,
         wins: t.id === userTeamId && userRecord ? userRecord.wins : 0,
         losses: t.id === userTeamId && userRecord ? userRecord.losses : 0,
+        regularWins: t.id === userTeamId && userRecord ? userRecord.wins : 0,
+        regularLosses: t.id === userTeamId && userRecord ? userRecord.losses : 0,
         scoreGames: 0,
       }),
     );
   }
 
   const targetTotalWins = (teams.length * gamesPlayed) / 2;
+  const leagueMean = teams.reduce((sum, t) => sum + t.strength, 0) / Math.max(1, teams.length);
   let seeded = teams.map((t) => {
     if (t.id === userTeamId && userRecord) {
       return normalizeLeagueTeam({
         ...t,
         wins: userRecord.wins,
         losses: userRecord.losses,
+        regularWins: userRecord.wins,
+        regularLosses: userRecord.losses,
         scoreGames: gamesPlayed,
       });
     }
-    const winRate = clamp(1 / (1 + Math.exp(-(t.strength - 75) / 5.5)), 0.22, 0.78);
+    // Same talent-gap model as the game sim (vs a league-average opponent), plus a little luck.
+    const edge = ((t.strength - leagueMean) * TALENT_GAP_AMPLIFIER) / (NBA_WIN_PROB_SCALE * 1.15);
+    const luck = (Math.random() - 0.5) * 0.08;
+    const winRate = clamp(1 / (1 + Math.exp(-edge)) + luck, 0.1, 0.86);
     const wins = clamp(Math.round(gamesPlayed * winRate), 0, gamesPlayed);
     return normalizeLeagueTeam({
       ...t,
       wins,
       losses: gamesPlayed - wins,
+      regularWins: wins,
+      regularLosses: gamesPlayed - wins,
       scoreGames: gamesPlayed,
     });
   });
@@ -164,7 +174,11 @@ export function seedLeagueRecords(
     totalWins -= 1;
   }
 
-  return seeded.map(normalizeLeagueTeam);
+  // Keep the frozen regular-season fields in sync with the seeded record —
+  // normalizeLeagueTeam trusts regularWins over wins, so stale zeros would wipe the seed.
+  return seeded.map((t) =>
+    normalizeLeagueTeam({ ...t, regularWins: t.wins, regularLosses: t.losses }),
+  );
 }
 
 function applyMatchupResult(

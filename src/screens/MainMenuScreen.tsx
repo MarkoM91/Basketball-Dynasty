@@ -3,7 +3,7 @@ import { formatSavedAt } from '../lib/saveFile';
 import { useGameStore } from '../store/gameStore';
 import { SCENARIOS } from '../data/scenarios';
 import { franchiseRegularSeasonRecord } from '../engine/regularSeasonRecord';
-import { phaseLabel } from '../engine/simulation';
+import { calendarLabel, phaseLabel } from '../engine/simulation';
 import { TeamLogo } from '../components/TeamLogo';
 import { LandingFooter, LandingHeader } from '../components/LandingChrome';
 import { LandingSeoSection } from '../components/LandingSeoSection';
@@ -54,7 +54,7 @@ export function MainMenuScreen() {
                 <p className="eyebrow" style={{ marginBottom: 2 }}>Continue dynasty</p>
                 <p className="title-md" style={{ margin: 0 }}>{franchise.city} {franchise.name}</p>
                 <p className="body" style={{ fontSize: 12, marginTop: 4, color: 'var(--silver)' }}>
-                  Season {franchise.season} · Week {franchise.week} · {r.wins}–{r.losses}
+                  Season {franchise.season} · {calendarLabel(franchise)} · {r.wins}–{r.losses}
                 </p>
               </div>
             </div>

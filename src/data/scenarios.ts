@@ -393,7 +393,8 @@ export const SCENARIOS: Record<ScenarioId, Scenario> = {
         },
       },
     ]), {
-      record: { wins: 18, losses: 28 },
+      // Completed prior season — a #2 pick is a bottom-two record over a full 82 games.
+      record: { wins: 21, losses: 61 },
       week: 1,
       phase: 'draft_scouting',
       window: 'Deep Rebuild',
@@ -542,9 +543,12 @@ export const SCENARIOS: Record<ScenarioId, Scenario> = {
 };
 
 export function formatMoney(amount: number): string {
-  if (amount >= 1_000_000) return `$${(amount / 1_000_000).toFixed(1)}M`;
-  if (amount >= 1_000) return `$${(amount / 1_000).toFixed(0)}K`;
-  return `$${amount}`;
+  // Losses used to fall through every branch and print as raw dollars ("$-55462625").
+  const sign = amount < 0 ? '-' : '';
+  const abs = Math.abs(amount);
+  if (abs >= 1_000_000) return `${sign}$${(abs / 1_000_000).toFixed(1)}M`;
+  if (abs >= 1_000) return `${sign}$${(abs / 1_000).toFixed(0)}K`;
+  return `${sign}$${Math.round(abs)}`;
 }
 
 export function playerName(p: { firstName: string; lastName: string }): string {

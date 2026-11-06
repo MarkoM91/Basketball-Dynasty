@@ -46,9 +46,12 @@ function playerStatsRow(p: Player): {
   per: number | null;
   priorPer: number | null;
 } {
-  const stats = p.seasonStats && p.seasonStats.games > 0 ? p.seasonStats : null;
-  const prior =
+  const current = p.seasonStats && p.seasonStats.games > 0 ? p.seasonStats : null;
+  const priorLine =
     p.priorSeasonStats && p.priorSeasonStats.games > 0 ? p.priorSeasonStats : undefined;
+  // Before the new season tips off, show last season's line instead of a wall of dashes.
+  const stats = current ?? priorLine ?? null;
+  const prior = current ? priorLine : undefined;
   return {
     stats,
     prior,
@@ -115,7 +118,9 @@ export function RosterScreen() {
       <Panel accent>
         <div className="header-bar" style={{ marginBottom: 8 }}>
           <p className="body" style={{ margin: 0, flex: 1 }}>
-            Season stats · green/red deltas vs {priorSeason} (when available)
+            {franchise.roster.some((p) => p.seasonStats && p.seasonStats.games > 0)
+              ? <>Season stats · green/red deltas vs {priorSeason} (when available)</>
+              : <>Season {priorSeason} stats · new season not started</>}
           </p>
           <button type="button" className="btn btn-secondary" style={{ padding: '6px 10px' }} onClick={() => setScreen('trade')}>
             Trade block →

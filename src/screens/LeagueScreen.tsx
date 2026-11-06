@@ -13,7 +13,11 @@ export function LeagueScreen() {
   const [tab, setTab] = useState<Tab>('standings');
   if (!league || !franchise) return null;
 
-  const standings = getStandings(league);
+  const seasonUnderway = league.teams.some((t) => t.wins + t.losses > 0);
+  const showingLastSeason = !seasonUnderway && Boolean(league.lastSeasonStandings);
+  const standings = showingLastSeason
+    ? getStandings({ ...league, teams: league.lastSeasonStandings!.teams })
+    : getStandings(league);
   const stats = franchise.leagueStats;
   const userTeam = standings.find((t) => t.isUser);
 
@@ -31,7 +35,7 @@ export function LeagueScreen() {
         <Panel accent>
           <div className="stat-grid">
             <div className="stat-cell">
-              <div className="stat-label">Your rank</div>
+              <div className="stat-label">{showingLastSeason ? 'Last season' : 'Your rank'}</div>
               <div className="stat-value">#{standings.findIndex((t) => t.isUser) + 1}</div>
             </div>
             <div className="stat-cell">
@@ -61,7 +65,11 @@ export function LeagueScreen() {
 
       {tab === 'standings' && (
         <Panel className="standings-panel">
-          <p className="eyebrow">League table — Season {league.season}</p>
+          <p className="eyebrow">
+            {showingLastSeason
+              ? `Final standings — Season ${league.lastSeasonStandings!.season} · new season not started`
+              : `League table — Season ${league.season}`}
+          </p>
           <StandingsTable
             teams={standings}
             userTeamId={franchise.leagueTeamId}

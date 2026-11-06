@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { phaseLabel, statusFromRecord, GAMES_PER_WEEK } from '../engine/simulation';
+import { calendarLabel, phaseLabel, statusFromRecord, GAMES_PER_WEEK } from '../engine/simulation';
 import { franchiseRegularSeasonRecord } from '../engine/regularSeasonRecord';
 import { userPlayoffGamePending } from '../engine/playoffs';
 import { getStandings } from '../data/league';
@@ -156,7 +156,7 @@ export function HomeScreen() {
           <div className="office-hero-title">
             <TeamLogo city={franchise.city} name={franchise.name} size={44} />
             <div>
-              <p className="eyebrow">Season {franchise.season} — Week {franchise.week}</p>
+              <p className="eyebrow">Season {franchise.season} — {calendarLabel(franchise)}</p>
               <h1 className="title-lg">{franchise.city} {franchise.name}</h1>
             </div>
           </div>
@@ -219,7 +219,7 @@ export function HomeScreen() {
             <div className="bbgm-dash-card">
               <p className="eyebrow">Finances</p>
               <p className={`title-md ${fin.profit >= 0 ? 'success-text' : 'danger-text'}`} style={{ fontSize: 15, margin: '4px 0' }}>
-                {formatFin(fin.profit)} profit
+                {formatFin(Math.abs(fin.profit))} {fin.profit >= 0 ? 'profit' : 'loss'}
               </p>
               <p className="body" style={{ fontSize: 12 }}>
                 Rev {formatFin(fin.revenue.total)} · Exp {formatFin(fin.expenses.total)}

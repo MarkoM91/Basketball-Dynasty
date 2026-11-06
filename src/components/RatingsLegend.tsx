@@ -3,6 +3,7 @@ import {
   SKILL_LABELS,
   type SkillBadge,
   ovrTier,
+  OVR_TIERS,
 } from '../lib/playerRatings';
 import { Panel } from './UI';
 
@@ -47,7 +48,7 @@ export function RatingsLegend({ compact = false }: { compact?: boolean }) {
           <div>
             <p className="stat-label">Overall tiers</p>
             <ul className="legend-list legend-list-plain">
-              {[90, 80, 70, 60, 50].map((ovr) => (
+              {OVR_TIERS.filter((t) => t.min > 0).map(({ min: ovr }) => (
                 <li key={ovr}>
                   <strong>{ovr}+</strong>
                   <span>{ovrTier(ovr)}</span>

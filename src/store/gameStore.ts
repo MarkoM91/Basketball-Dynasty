@@ -15,7 +15,9 @@ import type {
   TradeProposal,
   TradeChainProposal,
 } from '../types/game';
-import { createLeague, getTeamById, normalizeLeague, syncUserTeam } from '../data/league';
+import { createLeague, getTeamById, normalizeLeague, normalizeLeagueTeam, syncUserTeam } from '../data/league';
+import { buildLeagueSchedule, SEASON_GAME_COUNT } from '../engine/leagueSchedule';
+import { backfillTakeoverHistory } from '../engine/takeoverHistory';
 import { resolveTeamFullName, resolveTeamIdentity } from '../data/teamNames';
 import { applyRosterSize, fillRosterTo18, normalizeLoadedRoster } from '../data/rosterBuilder';
 import { applyScenarioProfile, strategyForFranchise, teamRatingStrength, ensureScenarioRosterShape } from '../engine/scenarioDifficulty';
@@ -41,6 +43,7 @@ import {
   syncUserRosterToLeague,
   tickLeagueInjuries,
   executeLeagueTrades,
+  snapshotFinalStandings,
 } from '../engine/leagueWorld';
 import {
   generateLeagueTradeOffers,
@@ -90,7 +93,7 @@ import {
   reconcileLeagueRegularSeason,
   userWeekResultsFromGames,
 } from '../engine/leagueSimulation';
-import { buildLeagueStatSnapshot } from '../engine/stats';
+import { buildLeagueStatSnapshot, estimateSeasonLine, initialTeamScoring } from '../engine/stats';
 import { fireCoach, generateCoachMarket, hireCoach } from '../engine/coaches';
 import { clearPartnerTradeAssetCache } from '../engine/tradeBuilder';
 import { declineRFAOffer, matchRFAOffer, seedRFAOffers } from '../engine/rfa';
@@ -402,6 +405,22 @@ function rosterStrength(franchise: Franchise): number {
   return active.reduce((s, p) => s + p.overall, 0) / active.length;
 }
 
+/** New regular season: every team 0–0 with a fresh schedule (mirrors advanceLeagueSeason's reset). */
+function startFreshLeagueSeason(prior: League, season: number): League {
+  const teams = prior.teams.map((t) =>
+    normalizeLeagueTeam({
+      ...t,
+      wins: 0,
+      losses: 0,
+      regularWins: 0,
+      regularLosses: 0,
+      ...initialTeamScoring(t.strength),
+      scoreGames: 0,
+    }),
+  );
+  return { ...prior, season, teams, draftOrder: [], draftLotteryLog: [], schedule: buildLeagueSchedule(teams, season) };
+}
+
 function franchiseRegularSeasonPhase(franchise: Franchise): boolean {
   return franchise.phase === 'regular_season' || franchise.phase === 'trade_deadline';
 }
@@ -468,6 +487,18 @@ export const useGameStore = create<GameStore>()(
     clearPartnerTradeAssetCache();
     let next = cloneFranchise({ ...source, scenarioId: scenarioId ?? source.scenarioId ?? null });
     next = applyScenarioProfile(next, scenarioId);
+    const startsInOffseason = next.phase === 'draft_scouting' || next.phase === 'draft_night';
+    let priorSeasonRecord: { wins: number; losses: number } | undefined;
+    if (startsInOffseason) {
+      // An offseason start means last season is over. Normalise it to a full 82 games so the
+      // prior-season league (used for draft order) is internally consistent.
+      const played = next.record.wins + next.record.losses;
+      priorSeasonRecord = next.record;
+      if (played > 0 && played !== SEASON_GAME_COUNT) {
+        const wins = Math.round((next.record.wins / played) * SEASON_GAME_COUNT);
+        priorSeasonRecord = { wins, losses: SEASON_GAME_COUNT - wins };
+      }
+    }
     let league = createLeague(
       next.season,
       next.city,
@@ -476,16 +507,74 @@ export const useGameStore = create<GameStore>()(
       next.record,
       strategyForFranchise(next),
     );
+    let priorSeasonLeague: League | undefined;
+    if (startsInOffseason) {
+      if (priorSeasonRecord) {
+        league = createLeague(
+          next.season - 1,
+          next.city,
+          next.name,
+          rosterStrength(next),
+          priorSeasonRecord,
+          strategyForFranchise(next),
+        );
+      }
+      // Last season is frozen (draft order comes from it); the new season starts at 0–0 for everyone,
+      // exactly like the regular season_review → draft flow.
+      priorSeasonLeague = linkLeagueToFranchise(next, freezeRegularSeasonRecords(league)).league;
+      league = {
+        ...startFreshLeagueSeason(priorSeasonLeague, next.season),
+        lastSeasonStandings: snapshotFinalStandings(priorSeasonLeague),
+      };
+      next = {
+        ...next,
+        record: { wins: 0, losses: 0 },
+        regularSeasonRecord: undefined,
+        memory: [
+          ...(next.memory ?? []),
+          ...(priorSeasonRecord
+            ? [{
+                id: uid('mem'),
+                season: next.season - 1,
+                week: 0,
+                text: `Inherited a ${priorSeasonRecord.wins}–${priorSeasonRecord.losses} team. Ownership handed you the keys at the draft.`,
+                type: 'milestone' as const,
+              }]
+            : []),
+        ],
+      };
+    }
     const linked = linkLeagueToFranchise(next, league);
     next = withStartingFive(linked.franchise);
     league = linked.league;
 
-    if (next.phase === 'draft_scouting' || next.phase === 'draft_night') {
+    if (!startsInOffseason && next.record.wins + next.record.losses > 0) {
+      league = ensureLeagueRosters(league, next);
+      const history = backfillTakeoverHistory(next, league);
+      next = history.franchise;
+      league = history.league;
+    }
+
+    // Seed stat lines for games the franchise played before the user took over.
+    {
+      const inSeasonGames = startsInOffseason ? 0 : next.record.wins + next.record.losses;
+      const priorGames = startsInOffseason ? (priorSeasonRecord ? SEASON_GAME_COUNT : 0) : 0;
+      next = {
+        ...next,
+        roster: next.roster.map((p) => ({
+          ...p,
+          seasonStats: p.seasonStats?.games ? p.seasonStats : estimateSeasonLine(p, inSeasonGames),
+          priorSeasonStats: p.priorSeasonStats?.games ? p.priorSeasonStats : priorGames ? estimateSeasonLine(p, priorGames) : p.priorSeasonStats,
+        })),
+      };
+    }
+
+    if (startsInOffseason) {
       const pinnedPick = source.draftPickNumber;
       const prepared = prepareDraftScouting(
         next,
         league,
-        undefined,
+        priorSeasonLeague,
         undefined,
         pinnedPick != null ? { pinnedPick } : undefined,
       );
@@ -1938,7 +2027,9 @@ export const useGameStore = create<GameStore>()(
                 Math.max(0, state.franchise.week - 1),
               );
             }
-            if (leagueRecordsNeedReconcile(league)) {
+            // Only replay the schedule once the regular season is supposed to be over — never mid-season
+            // (that silently re-simulated scenario starts on every page reload).
+            if (!franchiseRegularSeasonPhase(state.franchise) && leagueRecordsNeedReconcile(league)) {
               const reconciled = reconcileLeagueRegularSeason(
                 league,
                 state.franchise,
