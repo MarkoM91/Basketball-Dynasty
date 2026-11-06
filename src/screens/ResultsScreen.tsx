@@ -29,7 +29,7 @@ export function ResultsScreen() {
         </p>
         <nav className="results-actions" aria-label="Results navigation">
           {['regular_season', 'trade_deadline', 'playoffs'].includes(franchise.phase) && (
-            <button type="button" className="btn btn-primary" onClick={() => setScreen('play_game')}>Back to game</button>
+            <button type="button" className="btn btn-primary" onClick={() => setScreen('play_game')}>Play more</button>
           )}
           <button type="button" className="btn btn-secondary" onClick={() => setScreen('home')}>Office</button>
         </nav>
