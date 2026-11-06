@@ -247,6 +247,7 @@ export function openFreeAgencyAfterRenewals(franchise: Franchise, league: League
       ...franchise,
       phase: 'free_agency',
       freeAgents: pool,
+      freeAgencyDay: 1,
       pendingFreeAgents: [],
       rfaOffers: seedRFAOffers(franchise, nextLeague),
     },

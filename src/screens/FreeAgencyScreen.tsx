@@ -341,7 +341,7 @@ export function FreeAgencyScreen() {
       {available.length === 0 ? (
         <Panel>
           <p className="body">Market dried up. Close free agency and move to training camp.</p>
-          <button type="button" className="btn btn-primary" style={{ marginTop: 12 }} onClick={advanceFreeAgency}>
+          <button type="button" className="btn btn-primary" style={{ marginTop: 12 }} onClick={() => advanceFreeAgency(true)}>
             Close free agency
           </button>
         </Panel>
@@ -400,10 +400,25 @@ export function FreeAgencyScreen() {
         </Panel>
       )}
 
+      {/* Pinned so the main action is always one tap away — it used to sit below every card. */}
       {available.length > 0 && (
-        <button type="button" className="btn btn-secondary fa-advance" onClick={advanceFreeAgency}>
-          Advance market · rivals make moves
-        </button>
+        <div className="fa-bar">
+          <div className="fa-bar-info">
+            <strong>Day {franchise.freeAgencyDay ?? 1}/3 · {available.length} available</strong>
+            <span>
+              Roster {franchise.roster.length}/{ROSTER_SIZE}
+              {signed.length > 0 ? ` · ${signed.length} signed` : ''}
+            </span>
+          </div>
+          <div className="fa-bar-actions">
+            <button type="button" className="btn btn-primary" onClick={() => advanceFreeAgency()}>
+              {(franchise.freeAgencyDay ?? 1) < 3 ? 'Next day' : 'Finish free agency'}
+            </button>
+            {(franchise.freeAgencyDay ?? 1) < 3 && (
+              <button type="button" className="fa-finish" onClick={() => advanceFreeAgency(true)}>Finish now</button>
+            )}
+          </div>
+        </div>
       )}
 
       {offerAgent && league && (

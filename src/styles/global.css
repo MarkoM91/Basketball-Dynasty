@@ -7119,3 +7119,56 @@ h1, h2, h3,
   background: var(--danger);
   color: #fff;
 }
+
+/* Free agency: pinned "Advance market" bar (above the bottom nav on phones). */
+.fa-bar {
+  position: sticky;
+  bottom: calc(76px + var(--safe-bottom));
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px -16px 0;
+  padding: 10px 16px;
+  background: rgba(11, 12, 14, 0.96);
+  border-top: 1px solid var(--hairline);
+  backdrop-filter: blur(8px);
+}
+
+.fa-bar-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.fa-bar-info strong {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.fa-bar-info span {
+  font-size: 13px;
+  color: var(--silver);
+}
+
+.fa-bar .btn {
+  width: auto;
+  min-height: 52px;
+  padding: 0 22px;
+}
+
+@media (min-width: 960px) {
+  .fa-bar {
+    bottom: 0;
+    margin: 12px 0 0;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+  }
+}
+
+.fa-bar-actions { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.fa-finish { background: none; border: 0; color: var(--silver); text-decoration: underline; cursor: pointer; padding: 6px 12px; }

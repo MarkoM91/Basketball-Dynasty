@@ -213,7 +213,7 @@ interface GameStore {
   assignDevFocus: (playerId: string, focus: DevFocus) => void;
   resolvePendingEvent: (eventId: string, optionId: string) => void;
   pitchAgent: (agentId: string, pitch: PitchType, offeredSalary?: number, offeredYears?: number) => void;
-  advanceFreeAgency: () => void;
+  advanceFreeAgency: (finishNow?: boolean) => void;
   startFreeAgency: () => void;
   dismissToast: () => void;
   resetGame: () => void;
@@ -1591,10 +1591,16 @@ export const useGameStore = create<GameStore>()(
     });
   },
 
-  advanceFreeAgency: () => {
+  advanceFreeAgency: (finishNow = false) => {
     const { franchise, league } = get();
-    if (!franchise || !league) return;
+    if (!franchise || !league || franchise.phase !== 'free_agency') return;
+    const day = franchise.freeAgencyDay ?? 1;
     const ai = simAISignings(franchise, league);
+    if (!finishNow && day < 3 && ai.franchise.freeAgents.some((fa) => !fa.signed)) {
+      const next = refreshCap({ ...ai.franchise, freeAgencyDay: day + 1 });
+      set({ franchise: next, league: syncUserTeam(ai.league, next), toast: ai.headlines[0] ?? 'Next market day: still time to make offers.' });
+      return;
+    }
     let next = refreshCap(ai.franchise);
     next = { ...next, phase: 'training_camp', week: next.week + 1, cap: { ...next.cap, mleUsed: false, baeUsed: false } };
     const nextLeague = syncUserTeam(syncUserRosterToLeague(ai.league, next), next);
