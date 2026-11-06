@@ -23,11 +23,16 @@ export function ResultsScreen() {
             <p className="eyebrow">Box scores</p>
             <h1 className="title-lg">Your results</h1>
           </div>
-          <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('home')}>Back</button>
         </div>
         <p className="body" style={{ marginTop: 8 }}>
           Season record {record.wins}–{record.losses} · {log.length} games logged
         </p>
+        <nav className="results-actions" aria-label="Results navigation">
+          {['regular_season', 'trade_deadline', 'playoffs'].includes(franchise.phase) && (
+            <button type="button" className="btn btn-primary" onClick={() => setScreen('play_game')}>Back to game</button>
+          )}
+          <button type="button" className="btn btn-secondary" onClick={() => setScreen('home')}>Office</button>
+        </nav>
       </CourtBackdrop>
 
       {thisWeekGames.length > 0 && (

@@ -1025,7 +1025,7 @@ export function resolveProposalSubmission(
   }
 
   const counter = generateCounterOffer(franchise, league, proposal);
-  const status: TradeProposalStatus = counter && score < 45 ? 'rejected' : 'countered';
+  const status: TradeProposalStatus = counter ? 'countered' : 'rejected';
 
   return {
     offer,

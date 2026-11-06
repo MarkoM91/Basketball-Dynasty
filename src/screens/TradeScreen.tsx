@@ -200,6 +200,10 @@ export function TradeScreen() {
   const [negotiateOpen, setNegotiateOpen] = useState(false);
   const [negotiatePartnerId, setNegotiatePartnerId] = useState<string | undefined>();
   const [negotiatePrefill, setNegotiatePrefill] = useState<Partial<TradeProposal> | undefined>();
+  const [negotiateSourceOffer, setNegotiateSourceOffer] = useState<TradeOffer | undefined>();
+  const [tradeResponse, setTradeResponse] = useState<{
+    title: string; detail: string; proposal: TradeProposal; counter?: TradeOffer;
+  } | null>(null);
   const [negotiateKey, setNegotiateKey] = useState(0);
 
   const leagueBlockRaw = useMemo(
@@ -227,6 +231,14 @@ export function TradeScreen() {
   useEffect(() => {
     syncBlockListingOffers();
   }, [syncBlockListingOffers, franchise?.tradeBlock?.playerIds, franchise?.tradeBlock?.pickKeys]);
+
+  useEffect(() => {
+    if (!tradeResponse) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.getElementById('trade-response-close')?.focus();
+    return () => { document.body.style.overflow = previous; };
+  }, [tradeResponse]);
 
   useEffect(() => {
     if (openTradeShopDrawer) {
@@ -260,6 +272,7 @@ export function TradeScreen() {
     historyProposals.length > 0;
 
   const openNegotiate = (teamId?: string, prefill?: Partial<TradeProposal>) => {
+    setNegotiateSourceOffer(undefined);
     setNegotiatePartnerId(teamId);
     setNegotiatePrefill(prefill);
     setNegotiateKey((k) => k + 1);
@@ -267,7 +280,9 @@ export function TradeScreen() {
   };
 
   const openReviseCounter = () => {
-    if (negotiation) {
+    if (franchise.pendingCounter) {
+      openNegotiateFromOffer(franchise.pendingCounter);
+    } else if (negotiation) {
       openNegotiate(negotiation.partnerTeamId);
     } else {
       setNegotiateOpen(true);
@@ -276,6 +291,26 @@ export function TradeScreen() {
 
   const openNegotiateFromOffer = (offer: TradeOffer) => {
     openNegotiate(offer.partnerTeamId, tradeOfferToPrefill(offer));
+    setNegotiateSourceOffer(offer);
+  };
+
+  const sendProposal = (proposal: TradeProposal) => {
+    const previous = useGameStore.getState().franchise?.submittedProposals?.[0]?.id;
+    submitTradeProposal(proposal);
+    const state = useGameStore.getState();
+    const result = state.franchise?.submittedProposals?.[0];
+    if (result && result.id !== previous) {
+      if (result.status === 'accepted') return; // Completed trades navigate to the office.
+      const counter = state.franchise?.pendingCounter ?? undefined;
+      setTradeResponse({
+        title: `${result.partnerTeamName} ${counter ? 'sent a counteroffer' : 'declined your offer'}`,
+        detail: result.responseNote ?? result.partnerVerdict,
+        proposal,
+        counter,
+      });
+    } else {
+      setTradeResponse({ title: 'Offer could not be sent', detail: state.toast ?? 'Review the package and try again.', proposal });
+    }
   };
 
   const blockedPlayers = franchise.roster.filter((p) => isPlayerOnBlock(franchise, p.id));
@@ -403,7 +438,7 @@ export function TradeScreen() {
                   <div className="trade-suggestion-meta">
                     {offer.analysis.partnerAcceptScore !== undefined && (
                       <span className={offer.analysis.partnerAcceptScore >= 70 ? 'chip chip-success' : 'chip chip-gold'}>
-                        {offer.analysis.partnerAcceptScore}% interest
+                        Offer received
                       </span>
                     )}
                     <button type="button" className="btn btn-primary" style={{ padding: '6px 10px', fontSize: 11 }} onClick={() => acceptTrade(offer)}>
@@ -695,11 +730,46 @@ export function TradeScreen() {
         league={league}
         initialPartnerId={negotiatePartnerId}
         initialPrefill={negotiatePrefill}
+        sourceOffer={negotiateSourceOffer}
+        onAcceptOffer={acceptTrade}
         negotiation={negotiation ?? undefined}
-        onSubmit={submitTradeProposal}
+        onSubmit={sendProposal}
         onRequestCounter={requestTradeCounter}
         onSubmitChain={submitTradeChain}
       />
+      {tradeResponse && (
+        <div className="trade-response-overlay" onKeyDown={(event) => {
+          if (event.key === 'Escape') setTradeResponse(null);
+          if (event.key === 'Tab') {
+            const buttons = event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not(:disabled)');
+            const first = buttons[0];
+            const last = buttons[buttons.length - 1];
+            if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+            else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+          }
+        }}>
+          <section className="trade-response-dialog" role="alertdialog" aria-modal="true" aria-labelledby="trade-response-title" aria-describedby="trade-response-detail">
+            <p className="eyebrow">Trade response</p>
+            <h2 id="trade-response-title" className="title-md">{tradeResponse.title}</h2>
+            <p id="trade-response-detail" className="body">{tradeResponse.detail}</p>
+            {tradeResponse.counter && <TradeOfferPackageDetail offer={tradeResponse.counter} />}
+            <div className="trade-response-actions">
+              {tradeResponse.counter && (
+                <button type="button" className="btn btn-primary" onClick={() => {
+                  acceptTrade(tradeResponse.counter!);
+                  setTradeResponse(null);
+                }}>Accept counteroffer</button>
+              )}
+              <button type="button" className="btn btn-secondary" onClick={() => {
+                if (tradeResponse.counter) openNegotiateFromOffer(tradeResponse.counter);
+                else openNegotiate(tradeResponse.proposal.partnerTeamId, tradeResponse.proposal);
+                setTradeResponse(null);
+              }}>{tradeResponse.counter ? 'Review counteroffer' : 'Revise offer'}</button>
+              <button id="trade-response-close" type="button" className="btn btn-ghost" onClick={() => setTradeResponse(null)}>Close</button>
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   );
 }

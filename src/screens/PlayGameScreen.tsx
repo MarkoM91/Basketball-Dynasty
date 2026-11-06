@@ -47,7 +47,9 @@ export function PlayGameScreen() {
 
   const isPlayoffs = franchise?.phase === 'playoffs';
   const gamesPlayed = franchise?.gamesThisWeek ?? 0;
-  const gamesLeft = franchise ? GAMES_PER_WEEK - gamesPlayed : 0;
+  const gamesLeft = franchise ? Math.max(0, GAMES_PER_WEEK - gamesPlayed) : 0;
+  const isRegularSeason = franchise?.phase === 'regular_season' || franchise?.phase === 'trade_deadline';
+  const weekComplete = isRegularSeason && gamesLeft === 0;
   const nextRegular = franchise && league && !isPlayoffs ? currentScheduledGame(franchise, league) : null;
   const playoffMatchup =
     isPlayoffs && franchise?.playoffs && league ? getUserPlayoffMatchup(franchise.playoffs, league) : null;
@@ -90,7 +92,7 @@ export function PlayGameScreen() {
     if (picks.length === 5) commit(picks);
   };
 
-  const canPlay = full && (isPlayoffs ? playoffMatchup !== null : gamesLeft > 0 && (franchise.phase === 'regular_season' || franchise.phase === 'trade_deadline'));
+  const canPlay = full && (isPlayoffs ? playoffMatchup !== null : gamesLeft > 0 && isRegularSeason && Boolean(nextRegular));
 
   const handlePlay = () => {
     if (!full) return;
@@ -165,7 +167,9 @@ export function PlayGameScreen() {
         <p className="eyebrow">
           {isPlayoffs
             ? `Playoffs · ${playoffMatchup?.round ?? franchise.playoffs?.round ?? 'Postseason'}`
-            : `Week ${franchise.week} · Game ${Math.min(gamesPlayed + 1, GAMES_PER_WEEK)} of ${GAMES_PER_WEEK}`}
+            : weekComplete
+              ? `Week ${franchise.week} · ${GAMES_PER_WEEK} of ${GAMES_PER_WEEK} games played`
+              : `Week ${franchise.week} · Game ${Math.min(gamesPlayed + 1, GAMES_PER_WEEK)} of ${GAMES_PER_WEEK}`}
         </p>
         {opponent ? (
           <div className="gameday-matchup">
@@ -175,8 +179,9 @@ export function PlayGameScreen() {
             <h1 className="title-lg gameday-opp">{opponent.fullName}</h1>
           </div>
         ) : (
-          <h1 className="title-lg">{isPlayoffs ? 'No active series' : 'No game scheduled'}</h1>
+          <h1 className="title-lg">{isPlayoffs ? 'No active series' : weekComplete ? 'Week complete' : 'No game scheduled'}</h1>
         )}
+        {weekComplete && <p className="gameday-series">Both games are finished. Advance to next week to keep playing.</p>}
         {isPlayoffs && playoffMatchup && <p className="gameday-series">{playoffMatchup.seriesLine}</p>}
         {odds && (
           <div className="gameday-odds">
@@ -251,13 +256,15 @@ export function PlayGameScreen() {
       )}
 
       <div className="gameday-bar">
-        {!isPlayoffs && (
+        {!isPlayoffs && !weekComplete && (
           <button type="button" className="btn btn-secondary" onClick={advanceWeek}>
             {gamesLeft > 0 ? 'Sim week' : 'Next week'}
           </button>
         )}
-        <button type="button" className="btn btn-primary" disabled={!canPlay} onClick={handlePlay}>
-          {!full
+        <button type="button" className="btn btn-primary" disabled={!weekComplete && !canPlay} onClick={weekComplete ? advanceWeek : handlePlay}>
+          {weekComplete
+            ? 'Next week'
+            : !full
             ? 'Fill all 5 slots'
             : isPlayoffs
               ? 'Play playoff game'
