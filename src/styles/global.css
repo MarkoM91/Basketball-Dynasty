@@ -6227,9 +6227,26 @@ h1, h2, h3,
 }
 
 @media (max-width: 959px) {
-  /* Keep Back buttons available alongside the bottom navigation. */
+  /* Keep the main menu visible alongside the bottom navigation. */
   .mobile-game-nav {
-    display: none !important;
+    display: flex;
+    align-items: center;
+    padding: 4px 16px;
+    background: var(--arena-black);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .mobile-game-nav .back-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 12px;
+    margin: 0;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    color: var(--off-white);
+    font-size: 15px;
+    font-weight: 600;
   }
 
   .page {
