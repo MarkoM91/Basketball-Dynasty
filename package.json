@@ -9,6 +9,8 @@
     "preview": "npm run build && wrangler dev",
     "typecheck": "tsc -b --noEmit",
     "compute-ratings": "node scripts/compute-ratings.mjs",
+    "validate:core": "node scripts/validate-core-loop.mjs",
+    "validate:draft-trades": "node scripts/validate-draft-pick-trades.mjs",
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {

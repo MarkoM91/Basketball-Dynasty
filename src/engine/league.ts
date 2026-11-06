@@ -30,7 +30,13 @@ export function playerTradePoints(p: Player): number {
 }
 
 export function pickTradePoints(pick: DraftPick): number {
-  const roundBase = pick.round === 1 ? 28 : 10;
+  // A known slot is worth what's on the board there: #1–3 ≈ a young near-star, #25–30 ≈ a generic 1st.
+  const roundBase =
+    pick.slot != null
+      ? pick.round === 1
+        ? 28 + Math.max(0, 31 - pick.slot) * 2.6
+        : 10 + Math.max(0, 61 - pick.slot) * 0.2
+      : pick.round === 1 ? 28 : 10;
   const protectionPenalty = pick.protections ? 8 : 0;
   const yearPenalty = Math.max(0, pick.year - 2027) * 3;
   return roundBase - protectionPenalty - yearPenalty;

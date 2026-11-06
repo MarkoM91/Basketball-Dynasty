@@ -21,6 +21,17 @@ export function userPickSlots(draftSlot: number): number[] {
   return [slot, slot + DRAFT_TEAM_COUNT].filter((p) => p <= DRAFT_TOTAL_PICKS);
 }
 
+/** Slots the user owns in the league draft order, or undefined when no order has been set. */
+export function userSlotsFromDraftOrder(franchise: Franchise, league: League): number[] | undefined {
+  const order = league.draftOrder ?? [];
+  if (!order.length) return undefined;
+  return order
+    .filter((entry) => entry.city === franchise.city && entry.name === franchise.name)
+    .map((entry) => entry.pick)
+    .filter((pick) => pick <= DRAFT_TOTAL_PICKS)
+    .sort((a, b) => a - b);
+}
+
 export function normalizeDraftNight(
   state: DraftNightState,
   draftPickNumber?: number,
@@ -400,10 +411,11 @@ function migrateDraftBoard(state: DraftNightState): DraftNightState {
   return refreshDuplicateBoardNames(fixSecondRoundBoard(sanitizeLegacyDraftNames(state)));
 }
 
-export function initDraftNight(franchise: Franchise, _league: League): DraftNightState {
-  // Use both rounds as baseline; reconcileDraftNightWithPicks (called on load) will
-  // remove any slots whose picks were traded away before draft night started.
-  const userPickNumbers = userPickSlots(franchise.draftPickNumber ?? 14);
+export function initDraftNight(franchise: Franchise, league: League): DraftNightState {
+  // The draft order is the source of truth for who owns which slot. Rebuilding "#N and #N+30"
+  // from draftPickNumber resurrected picks traded away during draft scouting (the comment here
+  // used to point at a reconcile step that never existed).
+  const userPickNumbers = userSlotsFromDraftOrder(franchise, league) ?? userPickSlots(franchise.draftPickNumber ?? 14);
   const scouted = franchise.draftBoard.length >= 5 ? [...franchise.draftBoard] : [];
   const used = boardNameRegistry(scouted);
   const qualityBias = draftClassQualityBias(franchise);

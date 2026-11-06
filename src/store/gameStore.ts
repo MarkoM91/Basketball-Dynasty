@@ -39,6 +39,7 @@ import {
   advanceLeagueSeason,
   applyUserTradeToLeague,
   addDraftPickToLeague,
+  applyAiDraftSelections,
   ensureLeagueRosters,
   syncUserRosterToLeague,
   tickLeagueInjuries,
@@ -58,6 +59,7 @@ import {
   initDraftNight,
   isUserDraftComplete,
   normalizeDraftNight,
+  userSlotsFromDraftOrder,
   runDraftToUserPick,
   simDraftToEnd,
   simOneDraftPick,
@@ -1213,20 +1215,27 @@ export const useGameStore = create<GameStore>()(
         offer.incoming.picks,
       );
     }
-    // If draft is live and user received picks, add those slots to draftNight
-    if (next.draftNight?.active && offer.incoming.picks.length > 0 && partner) {
-      const updatedOrder = nextLeague.draftOrder ?? [];
-      const userKey = `${next.city}|${next.name}`;
-      const newSlots = updatedOrder
-        .filter((e) => `${e.city}|${e.name}` === userKey)
-        .map((e) => e.pick);
-      const current = next.draftNight.userPickNumbers;
-      const merged = [...new Set([...current, ...newSlots])].sort((a, b) => a - b);
-      if (merged.length !== current.length) {
-        const onClock = merged.includes(next.draftNight.currentPick);
+    // Draft live: the draft order is the source of truth. Re-derive the user's slots in BOTH
+    // directions — this path used to only ADD incoming slots, so a pick traded away from the
+    // Trades screen stayed in userPickNumbers and the user was still put on the clock for it.
+    const movedPicks = offer.incoming.picks.length > 0 || offer.outgoing.picks.length > 0;
+    if (next.draftNight?.active && movedPicks && partner) {
+      const owned = userSlotsFromDraftOrder(next, nextLeague);
+      if (owned) {
+        const night = normalizeDraftNight(next.draftNight, next.draftPickNumber);
+        const userPickNumbers = [...new Set([...owned, ...night.userPicksMade])].sort((a, b) => a - b);
+        const onClock = owned.includes(night.currentPick) && !night.userPicksMade.includes(night.currentPick);
         next = {
           ...next,
-          draftNight: { ...next.draftNight, userPickNumbers: merged, onClock },
+          draftNight: {
+            ...night,
+            userPickNumbers,
+            onClock,
+            stakeholderNote:
+              userPickNumbers.every((p) => night.userPicksMade.includes(p))
+                ? 'Draft picks traded away — no selections remaining.'
+                : night.stakeholderNote,
+          },
         };
       }
     }
@@ -1348,6 +1357,7 @@ export const useGameStore = create<GameStore>()(
         phase: 'draft_night',
         draftNight,
       },
+      league: applyAiDraftSelections(league, base.log, draftNight, franchise),
       screen: 'draft',
       toast: draftNight.onClock
         ? `Round ${draftNight.log.length ? '' : '1 — '}on the clock at pick #${draftNight.currentPick}.`
@@ -1358,14 +1368,12 @@ export const useGameStore = create<GameStore>()(
   runToUserPick: () => {
     const { franchise, league } = get();
     if (!franchise?.draftNight || !league) return;
-    const draftNight = runDraftToUserPick(
-      normalizeDraftNight(franchise.draftNight, franchise.draftPickNumber),
-      league,
-      franchise,
-    );
+    const before = normalizeDraftNight(franchise.draftNight, franchise.draftPickNumber);
+    const draftNight = runDraftToUserPick(before, league, franchise);
     const nextPick = draftNight.userPickNumbers.find((p) => !draftNight.userPicksMade.includes(p));
     set({
       franchise: { ...franchise, draftNight },
+      league: applyAiDraftSelections(league, before.log, draftNight, franchise),
       toast: draftNight.onClock
         ? `Round ${draftNight.currentPick <= 30 ? 1 : 2} — pick #${draftNight.currentPick}. Make your selection.`
         : nextPick
@@ -1404,6 +1412,7 @@ export const useGameStore = create<GameStore>()(
     next = rememberRenewals(withContracts, summary);
     next = withDraftRecap({ ...next, draftNight });
     set({
+      league: applyAiDraftSelections(league, franchise.draftNight.log, draftNight, franchise),
       franchise: refreshCap(next),
       screen: 'contract_renewals',
       toast: `Draft complete. ${formatRenewalHeadline(summary)} Set your renewals, then open free agency.`,
@@ -1438,9 +1447,11 @@ export const useGameStore = create<GameStore>()(
     let draftNight: typeof result.state = { ...result.state, userDraftedNames: draftedNames };
 
     if (!isUserDraftComplete(draftNight)) {
+      const beforeRun = draftNight;
       draftNight = runDraftToUserPick(draftNight, league, next);
       set({
         franchise: { ...next, draftNight },
+        league: applyAiDraftSelections(league, beforeRun.log, draftNight, next),
         screen: 'draft',
         toast: draftNight.onClock
           ? `Round 1 pick secured. On the clock for Round 2 — pick #${draftNight.currentPick}.`
@@ -1449,6 +1460,7 @@ export const useGameStore = create<GameStore>()(
       return;
     }
 
+    const beforeEnd = draftNight;
     draftNight = simDraftToEnd(draftNight, league, next);
 
     const { franchise: withContracts, summary } = processContractRenewals(next, draftedNames);
@@ -1456,6 +1468,7 @@ export const useGameStore = create<GameStore>()(
     next = withDraftRecap({ ...next, draftNight });
 
     set({
+      league: applyAiDraftSelections(league, beforeEnd.log, draftNight, next),
       franchise: refreshCap(next),
       screen: 'contract_renewals',
       toast: `Draft complete. ${formatRenewalHeadline(summary)} Set your renewals, then open free agency.`,
@@ -1488,20 +1501,24 @@ export const useGameStore = create<GameStore>()(
     };
 
     if (!isUserDraftComplete(draftNight)) {
+      const beforeRun = draftNight;
       draftNight = runDraftToUserPick(draftNight, league, next);
       set({
         franchise: { ...next, draftNight },
+        league: applyAiDraftSelections(league, beforeRun.log, draftNight, next),
         screen: 'draft',
         toast: `${playerName(prospect)} stashed overseas for ${stashedPlayer.yearsRemaining} year${stashedPlayer.yearsRemaining > 1 ? 's' : ''}. On the clock for Round 2.`,
       });
       return;
     }
 
+    const beforeEnd = draftNight;
     draftNight = simDraftToEnd(draftNight, league, next);
     const { franchise: withContracts, summary } = processContractRenewals(next, draftedNames);
     next = rememberRenewals(withContracts, summary);
     next = withDraftRecap({ ...next, draftNight });
     set({
+      league: applyAiDraftSelections(league, beforeEnd.log, draftNight, next),
       franchise: refreshCap(next),
       screen: 'contract_renewals',
       toast: `Draft complete. ${playerName(prospect)} stashed overseas. ${formatRenewalHeadline(summary)}`,
@@ -1779,12 +1796,15 @@ export const useGameStore = create<GameStore>()(
     // Stage the current-year pick AND mark it ephemerally; pruneStagedDraftPicks
     // removes it on screen-change if the user backs out without completing a trade.
     const pick = pickForDraftSlot(franchise, pickNumber);
+    const alreadyOnBooks = franchise.draftPicks.some((p) => pickKey(p) === pickKey(pick));
     const next = ensurePickOnBooks(franchise, pick);
     set({
       franchise: next,
       screen: 'trade',
       openTradeShopDrawer: true,
-      stagedDraftSlotKey: pickKey(pick),
+      // Only a pick this action ADDED may be pruned on leaving the screen — pruning a pick that was
+      // already on the books (e.g. the scenario's 2026 1st) deleted the user's real pick.
+      stagedDraftSlotKey: alreadyOnBooks ? null : pickKey(pick),
     });
   },
 

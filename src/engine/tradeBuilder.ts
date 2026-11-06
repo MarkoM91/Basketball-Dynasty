@@ -18,7 +18,8 @@ export function clearPartnerTradeAssetCache(): void {
 }
 
 export function pickDescription(pick: DraftPick): string {
-  return `${pick.year} ${pick.round === 1 ? '1st' : '2nd'}${pick.protections ? ` (${pick.protections})` : ''}`;
+  const slot = pick.slot != null ? ` · #${pick.slot} overall` : '';
+  return `${pick.year} ${pick.round === 1 ? '1st' : '2nd'}${slot}${pick.protections ? ` (${pick.protections})` : ''}`;
 }
 
 export function buildTradeOfferFromProposal(

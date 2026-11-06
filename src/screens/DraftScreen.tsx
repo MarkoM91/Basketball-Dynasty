@@ -143,7 +143,11 @@ export function DraftScreen() {
               : night?.active
                 ? night.onClock
                   ? `ON THE CLOCK — R${draftRound(night.currentPick)} · #${pickInRound(night.currentPick)}`
-                  : `Pick ${night.currentPick} / 60 · yours: ${userPickLabel}`
+                  : `Pick ${night.currentPick} / 60 · yours: ${
+                      userPickLabel === 'Draft complete' && !(night.userPicksMade?.length)
+                        ? 'none — traded away'
+                        : userPickLabel
+                    }`
                 : pick
                   ? `Your picks: ${userPickLabel}`
                   : 'Scouting board'}

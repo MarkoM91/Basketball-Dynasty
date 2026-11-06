@@ -10,6 +10,7 @@ import { PROBALLERS_RATINGS } from './proballersRatings';
 import { teamStarFromRatings, teamStrengthFromRatings } from '../engine/proballersPlayer';
 import { strategyForFranchise, teamRatingStrength } from '../engine/scenarioDifficulty';
 import { ensureLeagueRosters } from '../engine/leagueWorld';
+import { repairDraftOrder } from '../engine/draftOrder';
 
 export const LEAGUE_TEAM_TEMPLATES: { city: string; name: string; market: 'Small' | 'Mid' | 'Large' }[] = [
   { city: 'Boston', name: 'Harbor', market: 'Large' },
@@ -255,10 +256,10 @@ export function normalizeLeague(league: League, userFranchise?: Franchise | null
     ...league,
     teams: league.teams.map(normalizeLeagueTeam),
   });
-  const withRosters = ensureLeagueRosters(withSchedule, userFranchise);
+  const withRosters = repairDraftOrder(ensureLeagueRosters(withSchedule, userFranchise));
   return {
     ...withRosters,
-    draftOrder: (league.draftOrder ?? []).map((entry) => ({
+    draftOrder: (withRosters.draftOrder ?? []).map((entry) => ({
       ...entry,
       teamName: resolveTeamFullName(entry.teamName),
     })),

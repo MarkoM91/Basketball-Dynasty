@@ -1,6 +1,7 @@
-import type { DraftPick, Franchise, FreeAgent, League, LeagueTeam, Player, Prospect } from '../types/game';
+import type { DraftNightLogEntry, DraftNightState, DraftPick, Franchise, FreeAgent, League, LeagueTeam, Player, Prospect } from '../types/game';
 import { getTeamById, normalizeLeagueTeam, strategyForRank, strategyLabel, teamWantsPicks, teamWantsVeterans } from '../data/league';
 import { hashString } from '../lib/visuals/hash';
+import { LEAGUE_CALENDAR_YEAR } from '../data/leagueWorld';
 import { ROSTER_SIZE } from '../data/rosterBuilder';
 import { uid, playerName } from '../data/scenarios';
 import { evaluateTradeForTeam } from './league';
@@ -434,27 +435,48 @@ export function applyUserTradeToLeague(
     const userKey = teamKey(franchise.city, franchise.name);
     const partnerKey = teamKey(partner.city, partner.name);
 
+    const userName = `${franchise.city} ${franchise.name}`;
+    /**
+     * Find the draft-order slot a traded pick refers to. Only picks for the CURRENT draft move a
+     * slot — a future 2nd used to reassign the partner's current 2nd-rounder to the user. A pick
+     * with a known slot moves exactly that slot, not "the first one in the round".
+     */
+    const slotIndex = (pick: DraftPick, ownerKey: string) => {
+      if (pick.year !== LEAGUE_CALENDAR_YEAR) return -1;
+      return order.findIndex(
+        (e) =>
+          teamKey(e.city, e.name) === ownerKey &&
+          (pick.slot != null
+            ? e.pick === pick.slot
+            : pick.round === 1 ? e.pick <= DRAFT_ROUND_SIZE : e.pick > DRAFT_ROUND_SIZE),
+      );
+    };
+
     // Outgoing picks: user's slot → partner
     for (const pick of outgoingPicks ?? []) {
-      const idx = order.findIndex(
-        (e) =>
-          teamKey(e.city, e.name) === userKey &&
-          (pick.round === 1 ? e.pick <= DRAFT_ROUND_SIZE : e.pick > DRAFT_ROUND_SIZE),
-      );
+      const idx = slotIndex(pick, userKey);
       if (idx >= 0) {
-        order[idx] = { ...order[idx], city: partner.city, name: partner.name, teamName: partner.fullName };
+        order[idx] = {
+          ...order[idx],
+          city: partner.city,
+          name: partner.name,
+          teamName: partner.fullName,
+          via: order[idx].via ?? userName,
+        };
       }
     }
 
     // Incoming picks: partner's slot → user
     for (const pick of incomingPicks ?? []) {
-      const idx = order.findIndex(
-        (e) =>
-          teamKey(e.city, e.name) === partnerKey &&
-          (pick.round === 1 ? e.pick <= DRAFT_ROUND_SIZE : e.pick > DRAFT_ROUND_SIZE),
-      );
+      const idx = slotIndex(pick, partnerKey);
       if (idx >= 0) {
-        order[idx] = { ...order[idx], city: franchise.city, name: franchise.name, teamName: `${franchise.city} ${franchise.name}` };
+        order[idx] = {
+          ...order[idx],
+          city: franchise.city,
+          name: franchise.name,
+          teamName: userName,
+          via: order[idx].via ?? partner.fullName,
+        };
       }
     }
 
@@ -509,7 +531,7 @@ export function addDraftPickToLeague(
   userFranchise?: Franchise | null,
 ): League {
   const order = league.draftOrder ?? [];
-  const entry = order[pickNumber - 1];
+  const entry = order.find((e) => e.pick === pickNumber);
   if (!entry) return league;
   const team = league.teams.find((t) => t.city === entry.city && t.name === entry.name);
   if (!team || team.isUser) return league;
@@ -517,9 +539,35 @@ export function addDraftPickToLeague(
   let next = ensureLeagueRosters(league, userFranchise);
   const rookie = prospectToRookie(prospect, pickNumber, team, userFranchise?.season ?? league.season);
   let roster = getTeamRoster(next, team, userFranchise);
+  if (roster.some((p) => p.draftSeason === rookie.draftSeason && p.draftPick === pickNumber)) return league;
+  if (roster.length >= ROSTER_SIZE) {
+    // Full roster: the rookie takes the spot of the lowest-rated veteran (used to be sliced off,
+    // so drafted players silently vanished from full AI rosters).
+    const cut = [...roster]
+      .filter((p) => p.draftSeason !== rookie.draftSeason)
+      .sort((a, b) => a.overall - b.overall || b.age - a.age)[0];
+    if (cut) roster = roster.filter((p) => p.id !== cut.id);
+  }
   roster = [...roster, rookie].slice(0, ROSTER_SIZE);
   next = setTeamRoster(next, team, roster);
   return syncTeamsFromRosters(next, userFranchise);
+}
+
+/** Add every AI selection made since `before` to the drafting team's roster. */
+export function applyAiDraftSelections(
+  league: League,
+  before: DraftNightLogEntry[],
+  state: DraftNightState,
+  userFranchise?: Franchise | null,
+): League {
+  const seen = new Set(before.map((e) => e.pick));
+  let next = league;
+  for (const entry of state.log) {
+    if (entry.isUser || seen.has(entry.pick)) continue;
+    const prospect = state.board.find((p) => `${p.firstName} ${p.lastName}` === entry.prospectName);
+    if (prospect) next = addDraftPickToLeague(next, entry.pick, prospect, userFranchise);
+  }
+  return next;
 }
 
 export function tickLeagueInjuries(league: League, userFranchise?: Franchise | null): League {

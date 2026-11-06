@@ -143,6 +143,8 @@ export interface DraftPick {
   round: 1 | 2;
   originalTeam: string;
   protections?: string;
+  /** Exact overall slot when the draft order is set (current draft) — drives value and ownership. */
+  slot?: number;
 }
 
 export type GhostType = 'passed_pick' | 'traded_pick' | 'traded_player' | 'lost_star' | 'bad_contract';
@@ -550,6 +552,8 @@ export interface DraftOrderEntry {
   source: 'lottery' | 'playoff_record';
   /** Pre-lottery slot among non-playoff teams (1 = worst record). */
   expectedPick?: number;
+  /** Original owner when this slot was traded (e.g. "Chicago Gale"). */
+  via?: string;
 }
 
 export interface LeagueMatchup {

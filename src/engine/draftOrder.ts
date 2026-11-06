@@ -33,7 +33,10 @@ function runLottery(
   const ordered: typeof lotteryTeams = [];
   const log: string[] = [];
 
-  for (let pick = 1; pick <= pool.length; pick += 1) {
+  // Iterate the ORIGINAL count — pool shrinks every draw, so `pick <= pool.length` stopped after
+  // 7 of 14 lottery picks and half the lottery teams never received a first-rounder.
+  const picks = pool.length;
+  for (let pick = 1; pick <= picks; pick += 1) {
     const total = pool.reduce((sum, entry) => sum + entry.weight, 0);
     let roll = Math.random() * total;
     let winner = 0;
@@ -99,6 +102,8 @@ export function buildDraftOrder(
     });
   });
 
+  order.push(...secondRoundFrom(order));
+
   const userKey = userCity && userName ? teamKey(userCity, userName) : undefined;
   const userEntry = userKey
     ? order.find((entry) => teamKey(entry.city, entry.name) === userKey)
@@ -119,6 +124,52 @@ export function buildDraftOrder(
   };
 }
 
+/**
+ * Round 2 (#31–60) mirrors round 1 order — the same rule the game uses for your own picks
+ * (second-rounder = 30 + first-round slot). Having real entries means 2nd-round picks can be
+ * traded and the receiving team actually drafts with them.
+ */
+export function secondRoundFrom(order: DraftOrderEntry[]): DraftOrderEntry[] {
+  return order
+    .filter((entry) => entry.pick <= DRAFT_TEAM_COUNT)
+    .sort((a, b) => a.pick - b.pick)
+    .map((entry) => ({
+      pick: entry.pick + DRAFT_TEAM_COUNT,
+      city: entry.city,
+      name: entry.name,
+      teamName: entry.teamName,
+      source: entry.source,
+    }));
+}
+
+/**
+ * Repair saves made before the lottery/round-2 fixes: fill round-1 holes (lottery teams the old
+ * loop skipped) worst-record-first, then mirror round 2. Leaves a complete order untouched.
+ */
+export function repairDraftOrder(league: League): League {
+  const order = league.draftOrder ?? [];
+  if (!order.length) return league;
+  const roundOne = order.filter((e) => e.pick <= DRAFT_TEAM_COUNT);
+  const hasRoundTwo = order.some((e) => e.pick > DRAFT_TEAM_COUNT);
+  if (roundOne.length >= DRAFT_TEAM_COUNT && hasRoundTwo) return league;
+
+  const filled = [...roundOne];
+  if (filled.length < DRAFT_TEAM_COUNT) {
+    const used = new Set(filled.map((e) => teamKey(e.city, e.name)));
+    const missingTeams = [...getStandings(league)].reverse().filter((t) => !used.has(teamKey(t.city, t.name)));
+    const taken = new Set(filled.map((e) => e.pick));
+    let i = 0;
+    for (let pick = 1; pick <= DRAFT_TEAM_COUNT && i < missingTeams.length; pick += 1) {
+      if (taken.has(pick)) continue;
+      const team = missingTeams[i++];
+      filled.push({ pick, city: team.city, name: team.name, teamName: team.fullName, source: 'lottery' });
+    }
+  }
+  filled.sort((a, b) => a.pick - b.pick);
+  const roundTwo = hasRoundTwo ? order.filter((e) => e.pick > DRAFT_TEAM_COUNT) : secondRoundFrom(filled);
+  return { ...league, draftOrder: [...filled, ...roundTwo] };
+}
+
 export function pinUserDraftPick(
   league: League,
   city: string,
@@ -129,7 +180,9 @@ export function pinUserDraftPick(
 
   const pick = Math.max(1, Math.min(DRAFT_TEAM_COUNT, targetPick));
   const key = teamKey(city, name);
-  const byPick = [...league.draftOrder].sort((a, b) => a.pick - b.pick);
+  const byPick = [...league.draftOrder]
+    .filter((entry) => entry.pick <= DRAFT_TEAM_COUNT)
+    .sort((a, b) => a.pick - b.pick);
   const userIndex = byPick.findIndex((entry) => teamKey(entry.city, entry.name) === key);
   const targetIndex = pick - 1;
   if (userIndex < 0 || userIndex === targetIndex) return league;
@@ -137,10 +190,11 @@ export function pinUserDraftPick(
   const [userEntry] = byPick.splice(userIndex, 1);
   byPick.splice(targetIndex, 0, userEntry);
 
-  const order = byPick.map((entry, index) => ({
+  const roundOne = byPick.map((entry, index) => ({
     ...entry,
     pick: index + 1,
   }));
+  const order = [...roundOne, ...secondRoundFrom(roundOne)];
 
   return {
     ...league,
@@ -182,15 +236,32 @@ export function teamIdForDraftPick(league: League, pick: number): string | undef
 }
 
 export function draftPickSummary(league: League, city: string, name: string): string {
-  const pick = getUserDraftPickNumber(league, city, name);
-  const slot = league.draftOrder?.find((entry) => entry.pick === pick);
-  if (!slot) return `Your pick: #${pick}`;
+  const key = teamKey(city, name);
+  const userName = `${city} ${name}`;
+  const order = [...(league.draftOrder ?? [])].sort((a, b) => a.pick - b.pick);
+  const owned = order.filter((entry) => teamKey(entry.city, entry.name) === key);
+  const tradedAway = order.filter((entry) => entry.via === userName && teamKey(entry.city, entry.name) !== key);
+  const tradedNote = tradedAway.length
+    ? ` Traded: ${tradedAway.map((e) => `#${e.pick} → ${e.teamName}`).join(', ')}.`
+    : '';
 
-  if (slot.source === 'lottery') {
-    const jump = slot.expectedPick && slot.expectedPick > pick
-      ? ` (moved up from #${slot.expectedPick} slot)`
-      : '';
-    return `#${pick} via lottery${jump} — ${slot.teamName}`;
+  // No fallback to "#14" — after trading every pick, the user genuinely holds none.
+  if (!owned.length) {
+    return order.length ? `You hold no picks in this draft.${tradedNote}` : `Your pick: #${getUserDraftPickNumber(league, city, name)}`;
   }
-  return `#${pick} — reverse playoff-team record (${slot.teamName})`;
+
+  const first = owned[0];
+  let lead: string;
+  if (first.via) {
+    lead = `#${first.pick} via ${first.via}`;
+  } else if (first.source === 'lottery') {
+    const jump = first.expectedPick && first.expectedPick > first.pick
+      ? ` (moved up from #${first.expectedPick} slot)`
+      : '';
+    lead = `#${first.pick} via lottery${jump}`;
+  } else {
+    lead = `#${first.pick} — reverse playoff-team record`;
+  }
+  const others = owned.slice(1).map((e) => (e.via ? `#${e.pick} (via ${e.via})` : `#${e.pick}`));
+  return `Your picks: ${[lead, ...others].join(', ')}.${tradedNote}`;
 }
