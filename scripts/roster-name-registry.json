@@ -1,0 +1,3680 @@
+{
+  "jaysontatum": {
+    "name": "Jayson Tatum",
+    "firstName": "Jordan",
+    "lastName": "Tatumm",
+    "position": "PF"
+  },
+  "nikolavucevic": {
+    "name": "Nikola Vucevic",
+    "firstName": "Nolan",
+    "lastName": "Vucevicc",
+    "position": "C"
+  },
+  "jaylenbrown": {
+    "name": "Jaylen Brown",
+    "firstName": "Javon",
+    "lastName": "Brownn",
+    "position": "SG"
+  },
+  "johntonje": {
+    "name": "John Tonje",
+    "firstName": "Jordan",
+    "lastName": "Tonjee",
+    "position": "SF"
+  },
+  "derrickwhite": {
+    "name": "Derrick White",
+    "firstName": "Darius",
+    "lastName": "Whitee",
+    "position": "SG"
+  },
+  "paytonpritchard": {
+    "name": "Payton Pritchard",
+    "firstName": "Peter",
+    "lastName": "Pritchardd",
+    "position": "PG"
+  },
+  "ronharperjr": {
+    "name": "Ron Harper Jr.",
+    "firstName": "Roman",
+    "lastName": "Harperr Jr.",
+    "position": "SG"
+  },
+  "jordanwalsh": {
+    "name": "Jordan Walsh",
+    "firstName": "Jerome",
+    "lastName": "Walshh",
+    "position": "SG"
+  },
+  "hugogonzalez": {
+    "name": "Hugo Gonzalez",
+    "firstName": "Hunter",
+    "lastName": "Gonzalezz",
+    "position": "SG"
+  },
+  "samhauser": {
+    "name": "Sam Hauser",
+    "firstName": "Spencer",
+    "lastName": "Hauserr",
+    "position": "SF"
+  },
+  "maxshulga": {
+    "name": "Max Shulga",
+    "firstName": "Mitchell",
+    "lastName": "Shulgaa",
+    "position": "SG"
+  },
+  "dalanobanton": {
+    "name": "Dalano Banton",
+    "firstName": "Dante",
+    "lastName": "Bantonn",
+    "position": "SF"
+  },
+  "lukagarza": {
+    "name": "Luka Garza",
+    "firstName": "Landon",
+    "lastName": "Garzaa",
+    "position": "C"
+  },
+  "baylorscheierman": {
+    "name": "Baylor Scheierman",
+    "firstName": "Brandon",
+    "lastName": "Scheiermann",
+    "position": "SG"
+  },
+  "amariwilliams": {
+    "name": "Amari Williams",
+    "firstName": "Andre",
+    "lastName": "Williamss",
+    "position": "PF"
+  },
+  "neemiasqueta": {
+    "name": "Neemias Queta",
+    "firstName": "Nate",
+    "lastName": "Quetaa",
+    "position": "C"
+  },
+  "jddavison": {
+    "name": "JD Davison",
+    "firstName": "Jerome",
+    "lastName": "Davisonn",
+    "position": "SF"
+  },
+  "juhannbegarin": {
+    "name": "Juhann Begarin",
+    "firstName": "Jordan",
+    "lastName": "Begarinn",
+    "position": "SF"
+  },
+  "joshminott": {
+    "name": "Josh Minott",
+    "firstName": "Justin",
+    "lastName": "Minottt",
+    "position": "SF"
+  },
+  "ziairewilliams": {
+    "name": "Ziaire Williams",
+    "firstName": "Zane",
+    "lastName": "Williamss",
+    "position": "SF"
+  },
+  "dannywolf": {
+    "name": "Danny Wolf",
+    "firstName": "Derek",
+    "lastName": "Wolff",
+    "position": "PF"
+  },
+  "drakepowell": {
+    "name": "Drake Powell",
+    "firstName": "Derek",
+    "lastName": "Powelll",
+    "position": "SG"
+  },
+  "egordemin": {
+    "name": "Egor Demin",
+    "firstName": "Evan",
+    "lastName": "Deminn",
+    "position": "SG"
+  },
+  "ejliddell": {
+    "name": "E.J. Liddell",
+    "firstName": "Elias",
+    "lastName": "Liddelll",
+    "position": "SF"
+  },
+  "tysonetienne": {
+    "name": "Tyson Etienne",
+    "firstName": "Trevor",
+    "lastName": "Etiennee",
+    "position": "SG"
+  },
+  "terancemann": {
+    "name": "Terance Mann",
+    "firstName": "Trevor",
+    "lastName": "Mannn",
+    "position": "SG"
+  },
+  "michaelporterjr": {
+    "name": "Michael Porter Jr.",
+    "firstName": "Mitchell",
+    "lastName": "Porterr Jr.",
+    "position": "PF"
+  },
+  "malachismith": {
+    "name": "Malachi Smith",
+    "firstName": "Marcus",
+    "lastName": "Smithh",
+    "position": "SG"
+  },
+  "dayronsharpe": {
+    "name": "Day'Ron Sharpe",
+    "firstName": "Damian",
+    "lastName": "Sharpee",
+    "position": "C"
+  },
+  "noahclowney": {
+    "name": "Noah Clowney",
+    "firstName": "Norman",
+    "lastName": "Clowneyy",
+    "position": "PF"
+  },
+  "jalenwilson": {
+    "name": "Jalen Wilson",
+    "firstName": "Jerome",
+    "lastName": "Wilsonn",
+    "position": "SF"
+  },
+  "ochaiagbaji": {
+    "name": "Ochai Agbaji",
+    "firstName": "Orlando",
+    "lastName": "Agbajii",
+    "position": "SG"
+  },
+  "chaneyjohnson": {
+    "name": "Chaney Johnson",
+    "firstName": "Colin",
+    "lastName": "Johnsonn",
+    "position": "SF"
+  },
+  "nicclaxton": {
+    "name": "Nic Claxton",
+    "firstName": "Nate",
+    "lastName": "Claxtonn",
+    "position": "C"
+  },
+  "bensaraf": {
+    "name": "Ben Saraf",
+    "firstName": "Barry",
+    "lastName": "Saraff",
+    "position": "SG"
+  },
+  "nolantraore": {
+    "name": "Nolan Traore",
+    "firstName": "Nate",
+    "lastName": "Traoree",
+    "position": "PG"
+  },
+  "jordanclarkson": {
+    "name": "Jordan Clarkson",
+    "firstName": "Jared",
+    "lastName": "Clarksonn",
+    "position": "SG"
+  },
+  "milesmcbride": {
+    "name": "Miles McBride",
+    "firstName": "Mitchell",
+    "lastName": "McBridee",
+    "position": "PG"
+  },
+  "joshhart": {
+    "name": "Josh Hart",
+    "firstName": "Jerome",
+    "lastName": "Hartt",
+    "position": "SG"
+  },
+  "pacomedadiet": {
+    "name": "Pacome Dadiet",
+    "firstName": "Philip",
+    "lastName": "Dadiett",
+    "position": "SF"
+  },
+  "josealvarado": {
+    "name": "Jose Alvarado",
+    "firstName": "Justin",
+    "lastName": "Alvaradoo",
+    "position": "PG"
+  },
+  "oganunoby": {
+    "name": "OG Anunoby",
+    "firstName": "Omar",
+    "lastName": "Anunobyy",
+    "position": "SF"
+  },
+  "kevinmccullarjr": {
+    "name": "Kevin McCullar Jr.",
+    "firstName": "Keith",
+    "lastName": "McCullarr Jr.",
+    "position": "SG"
+  },
+  "jalenbrunson": {
+    "name": "Jalen Brunson",
+    "firstName": "Jaxon",
+    "lastName": "Brunsonn",
+    "position": "PG"
+  },
+  "tylerkolek": {
+    "name": "Tyler Kolek",
+    "firstName": "Travis",
+    "lastName": "Kolekk",
+    "position": "PG"
+  },
+  "jeremysochan": {
+    "name": "Jeremy Sochan",
+    "firstName": "Justin",
+    "lastName": "Sochann",
+    "position": "SF"
+  },
+  "mitchellrobinson": {
+    "name": "Mitchell Robinson",
+    "firstName": "Malik",
+    "lastName": "Robinsonn",
+    "position": "C"
+  },
+  "mikalbridges": {
+    "name": "Mikal Bridges",
+    "firstName": "Miles",
+    "lastName": "Bridgess",
+    "position": "SG"
+  },
+  "karlanthonytowns": {
+    "name": "Karl-Anthony Towns",
+    "firstName": "Kendrick",
+    "lastName": "Townss",
+    "position": "C"
+  },
+  "dillonjones": {
+    "name": "Dillon Jones",
+    "firstName": "Devin",
+    "lastName": "Joness",
+    "position": "SF"
+  },
+  "landryshamet": {
+    "name": "Landry Shamet",
+    "firstName": "Landon",
+    "lastName": "Shamett",
+    "position": "SG"
+  },
+  "treyjemisoniii": {
+    "name": "Trey Jemison III",
+    "firstName": "Tristan",
+    "lastName": "Jemisonn III",
+    "position": "C"
+  },
+  "mohameddiawara": {
+    "name": "Mohamed Diawara",
+    "firstName": "Miles",
+    "lastName": "Diawaraa",
+    "position": "SF"
+  },
+  "arielhukporti": {
+    "name": "Ariel Hukporti",
+    "firstName": "Alston",
+    "lastName": "Hukportii",
+    "position": "C"
+  },
+  "tyresemaxey": {
+    "name": "Tyrese Maxey",
+    "firstName": "Trevor",
+    "lastName": "Maxeyy",
+    "position": "PG"
+  },
+  "andredrummond": {
+    "name": "Andre Drummond",
+    "firstName": "Adrian",
+    "lastName": "Drummondd",
+    "position": "C"
+  },
+  "quentingrimes": {
+    "name": "Quentin Grimes",
+    "firstName": "Quinn",
+    "lastName": "Grimess",
+    "position": "SG"
+  },
+  "kylelowry": {
+    "name": "Kyle Lowry",
+    "firstName": "Keith",
+    "lastName": "Lowryy",
+    "position": "SG"
+  },
+  "paulgeorge": {
+    "name": "Paul George",
+    "firstName": "Patrick",
+    "lastName": "Georgee",
+    "position": "SF"
+  },
+  "kellyoubrejr": {
+    "name": "Kelly Oubre Jr.",
+    "firstName": "Kevin",
+    "lastName": "Oubree Jr.",
+    "position": "SG"
+  },
+  "justinedwards": {
+    "name": "Justin Edwards",
+    "firstName": "Jonas",
+    "lastName": "Edwardss",
+    "position": "SF"
+  },
+  "trendonwatford": {
+    "name": "Trendon Watford",
+    "firstName": "Tyson",
+    "lastName": "Watfordd",
+    "position": "SF"
+  },
+  "dalenterry": {
+    "name": "Dalen Terry",
+    "firstName": "Damian",
+    "lastName": "Terryy",
+    "position": "SG"
+  },
+  "marjonbeauchamp": {
+    "name": "MarJon Beauchamp",
+    "firstName": "Marcus",
+    "lastName": "Beauchampp",
+    "position": "SF"
+  },
+  "joelembiid": {
+    "name": "Joel Embiid",
+    "firstName": "Jonas",
+    "lastName": "Embiidd",
+    "position": "C"
+  },
+  "johnibroome": {
+    "name": "Johni Broome",
+    "firstName": "Jordan",
+    "lastName": "Broomee",
+    "position": "SF"
+  },
+  "tyresemartin": {
+    "name": "Tyrese Martin",
+    "firstName": "Trevor",
+    "lastName": "Martinn",
+    "position": "SF"
+  },
+  "dominickbarlow": {
+    "name": "Dominick Barlow",
+    "firstName": "Darius",
+    "lastName": "Barloww",
+    "position": "SF"
+  },
+  "adembona": {
+    "name": "Adem Bona",
+    "firstName": "Adrian",
+    "lastName": "Bonaa",
+    "position": "C"
+  },
+  "jabariwalker": {
+    "name": "Jabari Walker",
+    "firstName": "Jerome",
+    "lastName": "Walkerr",
+    "position": "SF"
+  },
+  "vjedgecombe": {
+    "name": "VJ Edgecombe",
+    "firstName": "Vernon",
+    "lastName": "Edgecombee",
+    "position": "SG"
+  },
+  "cameronpayne": {
+    "name": "Cameron Payne",
+    "firstName": "Chris",
+    "lastName": "Paynee",
+    "position": "SF"
+  },
+  "ajlawson": {
+    "name": "A.J. Lawson",
+    "firstName": "Austin",
+    "lastName": "Lawsonn",
+    "position": "SG"
+  },
+  "gradeydick": {
+    "name": "Gradey Dick",
+    "firstName": "Gavin",
+    "lastName": "Dickk",
+    "position": "SG"
+  },
+  "jonathanmogbo": {
+    "name": "Jonathan Mogbo",
+    "firstName": "Jared",
+    "lastName": "Mogboo",
+    "position": "PF"
+  },
+  "brandoningram": {
+    "name": "Brandon Ingram",
+    "firstName": "Blake",
+    "lastName": "Ingramm",
+    "position": "SF"
+  },
+  "scottiebarnes": {
+    "name": "Scottie Barnes",
+    "firstName": "Spencer",
+    "lastName": "Barness",
+    "position": "SF"
+  },
+  "immanuelquickley": {
+    "name": "Immanuel Quickley",
+    "firstName": "Isaiah",
+    "lastName": "Quickleyy",
+    "position": "PG"
+  },
+  "rjbarrett": {
+    "name": "RJ Barrett",
+    "firstName": "Roland",
+    "lastName": "Barrettt",
+    "position": "SF"
+  },
+  "collinmurrayboyles": {
+    "name": "Collin Murray-Boyles",
+    "firstName": "Charles",
+    "lastName": "Murray-Boyless",
+    "position": "SF"
+  },
+  "jakobewalter": {
+    "name": "Ja'Kobe Walter",
+    "firstName": "Justin",
+    "lastName": "Walterr",
+    "position": "SG"
+  },
+  "garretttemple": {
+    "name": "Garrett Temple",
+    "firstName": "George",
+    "lastName": "Templee",
+    "position": "SG"
+  },
+  "jakobpoeltl": {
+    "name": "Jakob Poeltl",
+    "firstName": "Jaxon",
+    "lastName": "Poeltll",
+    "position": "C"
+  },
+  "jamalshead": {
+    "name": "Jamal Shead",
+    "firstName": "Jared",
+    "lastName": "Sheadd",
+    "position": "PG"
+  },
+  "chuckyhepburn": {
+    "name": "Chucky Hepburn",
+    "firstName": "Charles",
+    "lastName": "Hepburnn",
+    "position": "SG"
+  },
+  "traycejacksondavis": {
+    "name": "Trayce Jackson-Davis",
+    "firstName": "Travis",
+    "lastName": "Jackson-Daviss",
+    "position": "PF"
+  },
+  "sandromamukelashvili": {
+    "name": "Sandro Mamukelashvili",
+    "firstName": "Spencer",
+    "lastName": "Mamukelashvilii",
+    "position": "SF"
+  },
+  "alijahmartin": {
+    "name": "Alijah Martin",
+    "firstName": "Aaron",
+    "lastName": "Martinn",
+    "position": "PG"
+  },
+  "jamisonbattle": {
+    "name": "Jamison Battle",
+    "firstName": "Jordan",
+    "lastName": "Battlee",
+    "position": "SF"
+  },
+  "chrispaul": {
+    "name": "Chris Paul",
+    "firstName": "Colin",
+    "lastName": "Paull",
+    "position": "SF"
+  },
+  "joshgiddey": {
+    "name": "Josh Giddey",
+    "firstName": "Justin",
+    "lastName": "Giddeyy",
+    "position": "PG"
+  },
+  "matasbuzelis": {
+    "name": "Matas Buzelis",
+    "firstName": "Mitchell",
+    "lastName": "Buzeliss",
+    "position": "SF"
+  },
+  "jalensmith": {
+    "name": "Jalen Smith",
+    "firstName": "Justin",
+    "lastName": "Smithh",
+    "position": "PF"
+  },
+  "collinsexton": {
+    "name": "Collin Sexton",
+    "firstName": "Cole",
+    "lastName": "Sextonn",
+    "position": "PG"
+  },
+  "macmcclung": {
+    "name": "Mac McClung",
+    "firstName": "Marco",
+    "lastName": "McClungg",
+    "position": "SG"
+  },
+  "robdillingham": {
+    "name": "Rob Dillingham",
+    "firstName": "Rafael",
+    "lastName": "Dillinghamm",
+    "position": "SG"
+  },
+  "yukikawamura": {
+    "name": "Yuki Kawamura",
+    "firstName": "Yusuf",
+    "lastName": "Kawamuraa",
+    "position": "SG"
+  },
+  "leonardmiller": {
+    "name": "Leonard Miller",
+    "firstName": "Landon",
+    "lastName": "Millerr",
+    "position": "PF"
+  },
+  "zachcollins": {
+    "name": "Zach Collins",
+    "firstName": "Zane",
+    "lastName": "Collinss",
+    "position": "PF"
+  },
+  "nickrichards": {
+    "name": "Nick Richards",
+    "firstName": "Nate",
+    "lastName": "Richardss",
+    "position": "C"
+  },
+  "mouhamadougueye": {
+    "name": "Mouhamadou Gueye",
+    "firstName": "Marco",
+    "lastName": "Gueyee",
+    "position": "SF"
+  },
+  "anferneesimons": {
+    "name": "Anfernee Simons",
+    "firstName": "Adam",
+    "lastName": "Simonss",
+    "position": "SG"
+  },
+  "noaessengue": {
+    "name": "Noa Essengue",
+    "firstName": "Nolan",
+    "lastName": "Essenguee",
+    "position": "PF"
+  },
+  "guerschonyabusele": {
+    "name": "Guerschon Yabusele",
+    "firstName": "Gerald",
+    "lastName": "Yabuselee",
+    "position": "SF"
+  },
+  "trejones": {
+    "name": "Tre Jones",
+    "firstName": "Tyler",
+    "lastName": "Joness",
+    "position": "PG"
+  },
+  "isaacokoro": {
+    "name": "Isaac Okoro",
+    "firstName": "Isaiah",
+    "lastName": "Okoroo",
+    "position": "SF"
+  },
+  "patrickwilliams": {
+    "name": "Patrick Williams",
+    "firstName": "Preston",
+    "lastName": "Williamss",
+    "position": "SF"
+  },
+  "lachlanolbrich": {
+    "name": "Lachlan Olbrich",
+    "firstName": "Leandro",
+    "lastName": "Olbrichh",
+    "position": "C"
+  },
+  "jamesharden": {
+    "name": "James Harden",
+    "firstName": "Jared",
+    "lastName": "Hardenn",
+    "position": "PG"
+  },
+  "maxstrus": {
+    "name": "Max Strus",
+    "firstName": "Mitchell",
+    "lastName": "Struss",
+    "position": "SG"
+  },
+  "thomasbryant": {
+    "name": "Thomas Bryant",
+    "firstName": "Tristan",
+    "lastName": "Bryantt",
+    "position": "C"
+  },
+  "evanmobley": {
+    "name": "Evan Mobley",
+    "firstName": "Edgar",
+    "lastName": "Mobleyy",
+    "position": "C"
+  },
+  "sammerrill": {
+    "name": "Sam Merrill",
+    "firstName": "Spencer",
+    "lastName": "Merrilll",
+    "position": "SG"
+  },
+  "dennisschroder": {
+    "name": "Dennis Schroder",
+    "firstName": "Derek",
+    "lastName": "Schroderr",
+    "position": "PG"
+  },
+  "craigporterjr": {
+    "name": "Craig Porter Jr.",
+    "firstName": "Chris",
+    "lastName": "Porterr Jr.",
+    "position": "PG"
+  },
+  "rileyminix": {
+    "name": "Riley Minix",
+    "firstName": "Roman",
+    "lastName": "Minixx",
+    "position": "SF"
+  },
+  "keonellis": {
+    "name": "Keon Ellis",
+    "firstName": "Keith",
+    "lastName": "Elliss",
+    "position": "SG"
+  },
+  "jaylontyson": {
+    "name": "Jaylon Tyson",
+    "firstName": "Jerome",
+    "lastName": "Tysonn",
+    "position": "SG"
+  },
+  "tristanenaruna": {
+    "name": "Tristan Enaruna",
+    "firstName": "Travis",
+    "lastName": "Enarunaa",
+    "position": "SF"
+  },
+  "larrynancejr": {
+    "name": "Larry Nance Jr.",
+    "firstName": "Lance",
+    "lastName": "Nancee Jr.",
+    "position": "SF"
+  },
+  "tyreseproctor": {
+    "name": "Tyrese Proctor",
+    "firstName": "Trevor",
+    "lastName": "Proctorr",
+    "position": "SG"
+  },
+  "jarrettallen": {
+    "name": "Jarrett Allen",
+    "firstName": "Jonas",
+    "lastName": "Allenn",
+    "position": "C"
+  },
+  "deanwade": {
+    "name": "Dean Wade",
+    "firstName": "Derek",
+    "lastName": "Wadee",
+    "position": "SF"
+  },
+  "oliviersarr": {
+    "name": "Olivier Sarr",
+    "firstName": "Owen",
+    "lastName": "Sarrr",
+    "position": "C"
+  },
+  "naeqwantomlin": {
+    "name": "Nae'Qwan Tomlin",
+    "firstName": "Nelson",
+    "lastName": "Tomlinn",
+    "position": "SF"
+  },
+  "donovanmitchell": {
+    "name": "Donovan Mitchell",
+    "firstName": "Derek",
+    "lastName": "Mitchelll",
+    "position": "PG"
+  },
+  "jalenduren": {
+    "name": "Jalen Duren",
+    "firstName": "Justin",
+    "lastName": "Durenn",
+    "position": "C"
+  },
+  "cadecunningham": {
+    "name": "Cade Cunningham",
+    "firstName": "Colin",
+    "lastName": "Cunninghamm",
+    "position": "PG"
+  },
+  "isaacjones": {
+    "name": "Isaac Jones",
+    "firstName": "Immanuel",
+    "lastName": "Joness",
+    "position": "C"
+  },
+  "ronaldhollandii": {
+    "name": "Ronald Holland II",
+    "firstName": "Reid",
+    "lastName": "Hollandd II",
+    "position": "SF"
+  },
+  "paulreed": {
+    "name": "Paul Reed",
+    "firstName": "Patrick",
+    "lastName": "Reedd",
+    "position": "PF"
+  },
+  "carislevert": {
+    "name": "Caris LeVert",
+    "firstName": "Connor",
+    "lastName": "LeVertt",
+    "position": "SG"
+  },
+  "ausarthompson": {
+    "name": "Ausar Thompson",
+    "firstName": "Andre",
+    "lastName": "Thompsonn",
+    "position": "SG"
+  },
+  "tobiasharris": {
+    "name": "Tobias Harris",
+    "firstName": "Tyson",
+    "lastName": "Harriss",
+    "position": "SF"
+  },
+  "wendellmoorejr": {
+    "name": "Wendell Moore Jr.",
+    "firstName": "Wesley",
+    "lastName": "Mooree Jr.",
+    "position": "SG"
+  },
+  "chazlanier": {
+    "name": "Chaz Lanier",
+    "firstName": "Chris",
+    "lastName": "Lanierr",
+    "position": "PG"
+  },
+  "danissjenkins": {
+    "name": "Daniss Jenkins",
+    "firstName": "Devin",
+    "lastName": "Jenkinss",
+    "position": "PG"
+  },
+  "marcussasser": {
+    "name": "Marcus Sasser",
+    "firstName": "Mason",
+    "lastName": "Sasserr",
+    "position": "PG"
+  },
+  "kevinhuerter": {
+    "name": "Kevin Huerter",
+    "firstName": "Keith",
+    "lastName": "Huerterr",
+    "position": "SG"
+  },
+  "isaiahstewart": {
+    "name": "Isaiah Stewart",
+    "firstName": "Ivan",
+    "lastName": "Stewartt",
+    "position": "C"
+  },
+  "javontegreen": {
+    "name": "Javonte Green",
+    "firstName": "Jaxon",
+    "lastName": "Greenn",
+    "position": "SG"
+  },
+  "tolusmith": {
+    "name": "Tolu Smith",
+    "firstName": "Travis",
+    "lastName": "Smithh",
+    "position": "PF"
+  },
+  "duncanrobinson": {
+    "name": "Duncan Robinson",
+    "firstName": "Damian",
+    "lastName": "Robinsonn",
+    "position": "SF"
+  },
+  "ronholland": {
+    "name": "Ron Holland",
+    "firstName": "Ruben",
+    "lastName": "Hollandd",
+    "position": "SF"
+  },
+  "tyresehaliburton": {
+    "name": "Tyrese Haliburton",
+    "firstName": "Trevor",
+    "lastName": "Haliburtonn",
+    "position": "PG"
+  },
+  "obitoppin": {
+    "name": "Obi Toppin",
+    "firstName": "Oscar",
+    "lastName": "Toppinn",
+    "position": "SF"
+  },
+  "andrewnembhard": {
+    "name": "Andrew Nembhard",
+    "firstName": "Adrian",
+    "lastName": "Nembhardd",
+    "position": "PG"
+  },
+  "taelonpeter": {
+    "name": "Taelon Peter",
+    "firstName": "Travis",
+    "lastName": "Peterr",
+    "position": "SG"
+  },
+  "jaracewalker": {
+    "name": "Jarace Walker",
+    "firstName": "Jaxon",
+    "lastName": "Walkerr",
+    "position": "SF"
+  },
+  "kamjones": {
+    "name": "Kam Jones",
+    "firstName": "Kevin",
+    "lastName": "Joness",
+    "position": "PG"
+  },
+  "tjmcconnell": {
+    "name": "T.J. McConnell",
+    "firstName": "Travis",
+    "lastName": "McConnelll",
+    "position": "PG"
+  },
+  "micahpotter": {
+    "name": "Micah Potter",
+    "firstName": "Mitchell",
+    "lastName": "Potterr",
+    "position": "C"
+  },
+  "johnnyfurphy": {
+    "name": "Johnny Furphy",
+    "firstName": "Jaxon",
+    "lastName": "Furphyy",
+    "position": "SG"
+  },
+  "jalenslawson": {
+    "name": "Jalen Slawson",
+    "firstName": "Jerome",
+    "lastName": "Slawsonn",
+    "position": "SF"
+  },
+  "aaronnesmith": {
+    "name": "Aaron Nesmith",
+    "firstName": "Adam",
+    "lastName": "Nesmithh",
+    "position": "SG"
+  },
+  "kobebrown": {
+    "name": "Kobe Brown",
+    "firstName": "Kendrick",
+    "lastName": "Brownn",
+    "position": "SG"
+  },
+  "bensheppard": {
+    "name": "Ben Sheppard",
+    "firstName": "Bryce",
+    "lastName": "Sheppardd",
+    "position": "SG"
+  },
+  "quentonjackson": {
+    "name": "Quenton Jackson",
+    "firstName": "Quincy",
+    "lastName": "Jacksonn",
+    "position": "SG"
+  },
+  "jayhuff": {
+    "name": "Jay Huff",
+    "firstName": "Jonas",
+    "lastName": "Hufff",
+    "position": "C"
+  },
+  "ivicazubac": {
+    "name": "Ivica Zubac",
+    "firstName": "Isaiah",
+    "lastName": "Zubacc",
+    "position": "C"
+  },
+  "pascalsiakam": {
+    "name": "Pascal Siakam",
+    "firstName": "Patrick",
+    "lastName": "Siakamm",
+    "position": "SF"
+  },
+  "ethanthompson": {
+    "name": "Ethan Thompson",
+    "firstName": "Evan",
+    "lastName": "Thompsonn",
+    "position": "SG"
+  },
+  "giannisantetokounmpo": {
+    "name": "Giannis Antetokounmpo",
+    "firstName": "Gideon",
+    "lastName": "Antetokounmpoo",
+    "position": "PF"
+  },
+  "mylesturner": {
+    "name": "Myles Turner",
+    "firstName": "Marcus",
+    "lastName": "Turnerr",
+    "position": "C"
+  },
+  "bobbyportis": {
+    "name": "Bobby Portis",
+    "firstName": "Bryce",
+    "lastName": "Portiss",
+    "position": "PF"
+  },
+  "garytrentjr": {
+    "name": "Gary Trent Jr.",
+    "firstName": "Garrett",
+    "lastName": "Trentt Jr.",
+    "position": "SG"
+  },
+  "kevinporterjr": {
+    "name": "Kevin Porter Jr.",
+    "firstName": "Keith",
+    "lastName": "Porterr Jr.",
+    "position": "SG"
+  },
+  "kylekuzma": {
+    "name": "Kyle Kuzma",
+    "firstName": "Kane",
+    "lastName": "Kuzmaa",
+    "position": "SF"
+  },
+  "garyharris": {
+    "name": "Gary Harris",
+    "firstName": "Gerald",
+    "lastName": "Harriss",
+    "position": "SG"
+  },
+  "taureanprince": {
+    "name": "Taurean Prince",
+    "firstName": "Tyler",
+    "lastName": "Princee",
+    "position": "SF"
+  },
+  "ryanrollins": {
+    "name": "Ryan Rollins",
+    "firstName": "Roland",
+    "lastName": "Rollinss",
+    "position": "PG"
+  },
+  "ajgreen": {
+    "name": "AJ Green",
+    "firstName": "Adam",
+    "lastName": "Greenn",
+    "position": "SG"
+  },
+  "ousmanedieng": {
+    "name": "Ousmane Dieng",
+    "firstName": "Orlando",
+    "lastName": "Diengg",
+    "position": "SF"
+  },
+  "jerichosims": {
+    "name": "Jericho Sims",
+    "firstName": "Jerome",
+    "lastName": "Simss",
+    "position": "C"
+  },
+  "alexantetokounmpo": {
+    "name": "Alex Antetokounmpo",
+    "firstName": "Andre",
+    "lastName": "Antetokounmpoo",
+    "position": "SF"
+  },
+  "cormacryan": {
+    "name": "Cormac Ryan",
+    "firstName": "Cole",
+    "lastName": "Ryann",
+    "position": "SG"
+  },
+  "petenance": {
+    "name": "Pete Nance",
+    "firstName": "Patrick",
+    "lastName": "Nancee",
+    "position": "SF"
+  },
+  "thanasisantetokounmpo": {
+    "name": "Thanasis Antetokounmpo",
+    "firstName": "Terrence",
+    "lastName": "Antetokounmpoo",
+    "position": "SF"
+  },
+  "andrejacksonjr": {
+    "name": "Andre Jackson Jr.",
+    "firstName": "Aaron",
+    "lastName": "Jacksonn Jr.",
+    "position": "SG"
+  },
+  "keshongilbert": {
+    "name": "Keshon Gilbert",
+    "firstName": "Kane",
+    "lastName": "Gilbertt",
+    "position": "SG"
+  },
+  "rayjdennis": {
+    "name": "RayJ Dennis",
+    "firstName": "Rafael",
+    "lastName": "Denniss",
+    "position": "PG"
+  },
+  "jonathankuminga": {
+    "name": "Jonathan Kuminga",
+    "firstName": "Jaxon",
+    "lastName": "Kumingaa",
+    "position": "SF"
+  },
+  "jalenjohnson": {
+    "name": "Jalen Johnson",
+    "firstName": "Jordan",
+    "lastName": "Johnsonn",
+    "position": "PF"
+  },
+  "keatonwallace": {
+    "name": "Keaton Wallace",
+    "firstName": "Kendrick",
+    "lastName": "Wallacee",
+    "position": "SG"
+  },
+  "cjmccollum": {
+    "name": "CJ McCollum",
+    "firstName": "Chris",
+    "lastName": "McCollumm",
+    "position": "PG"
+  },
+  "gabevincent": {
+    "name": "Gabe Vincent",
+    "firstName": "Grant",
+    "lastName": "Vincentt",
+    "position": "SG"
+  },
+  "dysondaniels": {
+    "name": "Dyson Daniels",
+    "firstName": "Dennis",
+    "lastName": "Danielss",
+    "position": "PG"
+  },
+  "nickeilalexanderwalker": {
+    "name": "Nickeil Alexander-Walker",
+    "firstName": "Noah",
+    "lastName": "Alexander-Walkerr",
+    "position": "SG"
+  },
+  "buddyhield": {
+    "name": "Buddy Hield",
+    "firstName": "Barry",
+    "lastName": "Hieldd",
+    "position": "SG"
+  },
+  "zaccharierisacher": {
+    "name": "Zaccharie Risacher",
+    "firstName": "Zane",
+    "lastName": "Risacherr",
+    "position": "SF"
+  },
+  "christiankoloko": {
+    "name": "Christian Koloko",
+    "firstName": "Cole",
+    "lastName": "Kolokoo",
+    "position": "C"
+  },
+  "tonybradley": {
+    "name": "Tony Bradley",
+    "firstName": "Tyler",
+    "lastName": "Bradleyy",
+    "position": "C"
+  },
+  "asanewell": {
+    "name": "Asa Newell",
+    "firstName": "Albert",
+    "lastName": "Newelll",
+    "position": "PF"
+  },
+  "onyekaokongwu": {
+    "name": "Onyeka Okongwu",
+    "firstName": "Orlando",
+    "lastName": "Okongwuu",
+    "position": "PF"
+  },
+  "mouhamedgueye": {
+    "name": "Mouhamed Gueye",
+    "firstName": "Mitchell",
+    "lastName": "Gueyee",
+    "position": "PF"
+  },
+  "coreykispert": {
+    "name": "Corey Kispert",
+    "firstName": "Charles",
+    "lastName": "Kispertt",
+    "position": "SF"
+  },
+  "jocklandale": {
+    "name": "Jock Landale",
+    "firstName": "Jordan",
+    "lastName": "Landalee",
+    "position": "C"
+  },
+  "milesbridges": {
+    "name": "Miles Bridges",
+    "firstName": "Marcus",
+    "lastName": "Bridgess",
+    "position": "SF"
+  },
+  "lameloball": {
+    "name": "LaMelo Ball",
+    "firstName": "Lance",
+    "lastName": "Balll",
+    "position": "PG"
+  },
+  "grantwilliams": {
+    "name": "Grant Williams",
+    "firstName": "George",
+    "lastName": "Williamss",
+    "position": "SF"
+  },
+  "cobywhite": {
+    "name": "Coby White",
+    "firstName": "Colin",
+    "lastName": "Whitee",
+    "position": "SG"
+  },
+  "sionjames": {
+    "name": "Sion James",
+    "firstName": "Spencer",
+    "lastName": "Jamess",
+    "position": "SG"
+  },
+  "konknueppel": {
+    "name": "Kon Knueppel",
+    "firstName": "Klaus",
+    "lastName": "Knueppell",
+    "position": "SG"
+  },
+  "joshgreen": {
+    "name": "Josh Green",
+    "firstName": "Jerome",
+    "lastName": "Greenn",
+    "position": "SG"
+  },
+  "ryankalkbrenner": {
+    "name": "Ryan Kalkbrenner",
+    "firstName": "Roland",
+    "lastName": "Kalkbrennerr",
+    "position": "C"
+  },
+  "antonioreeves": {
+    "name": "Antonio Reeves",
+    "firstName": "Austin",
+    "lastName": "Reevess",
+    "position": "SG"
+  },
+  "moussadiabate": {
+    "name": "Moussa Diabate",
+    "firstName": "Mason",
+    "lastName": "Diabatee",
+    "position": "PF"
+  },
+  "pjhall": {
+    "name": "PJ Hall",
+    "firstName": "Preston",
+    "lastName": "Halll",
+    "position": "C"
+  },
+  "tosanevbuomwan": {
+    "name": "Tosan Evbuomwan",
+    "firstName": "Tyler",
+    "lastName": "Evbuomwann",
+    "position": "SF"
+  },
+  "patconnaughton": {
+    "name": "Pat Connaughton",
+    "firstName": "Patrick",
+    "lastName": "Connaughtonn",
+    "position": "SG"
+  },
+  "tremann": {
+    "name": "Tre Mann",
+    "firstName": "Tyler",
+    "lastName": "Mannn",
+    "position": "SG"
+  },
+  "brandonmiller": {
+    "name": "Brandon Miller",
+    "firstName": "Blake",
+    "lastName": "Millerr",
+    "position": "SF"
+  },
+  "xaviertillman": {
+    "name": "Xavier Tillman",
+    "firstName": "Xander",
+    "lastName": "Tillmann",
+    "position": "SF"
+  },
+  "tidjanesalaun": {
+    "name": "Tidjane Salaun",
+    "firstName": "Tyson",
+    "lastName": "Salaunn",
+    "position": "PF"
+  },
+  "liammcneeley": {
+    "name": "Liam McNeeley",
+    "firstName": "Landon",
+    "lastName": "McNeeleyy",
+    "position": "SG"
+  },
+  "simonefontecchio": {
+    "name": "Simone Fontecchio",
+    "firstName": "Shane",
+    "lastName": "Fontecchioo",
+    "position": "SF"
+  },
+  "trevorkeels": {
+    "name": "Trevor Keels",
+    "firstName": "Terrence",
+    "lastName": "Keelss",
+    "position": "SG"
+  },
+  "nikolajovic": {
+    "name": "Nikola Jovic",
+    "firstName": "Nolan",
+    "lastName": "Jovicc",
+    "position": "PF"
+  },
+  "kelelware": {
+    "name": "Kel'el Ware",
+    "firstName": "Keith",
+    "lastName": "Waree",
+    "position": "C"
+  },
+  "pellelarsson": {
+    "name": "Pelle Larsson",
+    "firstName": "Peter",
+    "lastName": "Larssonn",
+    "position": "SG"
+  },
+  "jaimejaquezjr": {
+    "name": "Jaime Jaquez Jr.",
+    "firstName": "Jerome",
+    "lastName": "Jaquezz Jr.",
+    "position": "SF"
+  },
+  "drusmith": {
+    "name": "Dru Smith",
+    "firstName": "Dante",
+    "lastName": "Smithh",
+    "position": "PG"
+  },
+  "bamadebayo": {
+    "name": "Bam Adebayo",
+    "firstName": "Brandon",
+    "lastName": "Adebayoo",
+    "position": "C"
+  },
+  "tylerherro": {
+    "name": "Tyler Herro",
+    "firstName": "Travis",
+    "lastName": "Herroo",
+    "position": "SG"
+  },
+  "myrongardner": {
+    "name": "Myron Gardner",
+    "firstName": "Marcus",
+    "lastName": "Gardnerr",
+    "position": "PF"
+  },
+  "keshadjohnson": {
+    "name": "Keshad Johnson",
+    "firstName": "Kyle",
+    "lastName": "Johnsonn",
+    "position": "SF"
+  },
+  "jahmiryoung": {
+    "name": "Jahmir Young",
+    "firstName": "Jared",
+    "lastName": "Youngg",
+    "position": "SG"
+  },
+  "andrewwiggins": {
+    "name": "Andrew Wiggins",
+    "firstName": "Aaron",
+    "lastName": "Wigginss",
+    "position": "SF"
+  },
+  "normanpowell": {
+    "name": "Norman Powell",
+    "firstName": "Noah",
+    "lastName": "Powelll",
+    "position": "SG"
+  },
+  "kasparasjakucionis": {
+    "name": "Kasparas Jakucionis",
+    "firstName": "Kane",
+    "lastName": "Jakucioniss",
+    "position": "SG"
+  },
+  "davionmitchell": {
+    "name": "Davion Mitchell",
+    "firstName": "Dante",
+    "lastName": "Mitchelll",
+    "position": "PG"
+  },
+  "vladislavgoldin": {
+    "name": "Vladislav Goldin",
+    "firstName": "Vince",
+    "lastName": "Goldinn",
+    "position": "C"
+  },
+  "terryrozier": {
+    "name": "Terry Rozier",
+    "firstName": "Terrence",
+    "lastName": "Rozierr",
+    "position": "SF"
+  },
+  "alexmorales": {
+    "name": "Alex Morales",
+    "firstName": "Albert",
+    "lastName": "Moraless",
+    "position": "PG"
+  },
+  "anthonyblack": {
+    "name": "Anthony Black",
+    "firstName": "Andre",
+    "lastName": "Blackk",
+    "position": "SG"
+  },
+  "jonathanisaac": {
+    "name": "Jonathan Isaac",
+    "firstName": "Jonas",
+    "lastName": "Isaacc",
+    "position": "PF"
+  },
+  "jevoncarter": {
+    "name": "Jevon Carter",
+    "firstName": "Jerome",
+    "lastName": "Carterr",
+    "position": "PG"
+  },
+  "desmondbane": {
+    "name": "Desmond Bane",
+    "firstName": "Derek",
+    "lastName": "Banee",
+    "position": "SG"
+  },
+  "jalensuggs": {
+    "name": "Jalen Suggs",
+    "firstName": "Jerome",
+    "lastName": "Suggss",
+    "position": "PG"
+  },
+  "paolobanchero": {
+    "name": "Paolo Banchero",
+    "firstName": "Patrick",
+    "lastName": "Bancheroo",
+    "position": "PF"
+  },
+  "jamalcain": {
+    "name": "Jamal Cain",
+    "firstName": "Jared",
+    "lastName": "Cainn",
+    "position": "SF"
+  },
+  "jaserichardson": {
+    "name": "Jase Richardson",
+    "firstName": "Jonas",
+    "lastName": "Richardsonn",
+    "position": "PG"
+  },
+  "jetthoward": {
+    "name": "Jett Howard",
+    "firstName": "Jaxon",
+    "lastName": "Howardd",
+    "position": "SG"
+  },
+  "colincastleton": {
+    "name": "Colin Castleton",
+    "firstName": "Charles",
+    "lastName": "Castletonn",
+    "position": "C"
+  },
+  "moritzwagner": {
+    "name": "Moritz Wagner",
+    "firstName": "Mitchell",
+    "lastName": "Wagnerr",
+    "position": "C"
+  },
+  "franzwagner": {
+    "name": "Franz Wagner",
+    "firstName": "Finn",
+    "lastName": "Wagnerr",
+    "position": "PF"
+  },
+  "tristandasilva": {
+    "name": "Tristan da Silva",
+    "firstName": "Travis",
+    "lastName": "da Silvaa",
+    "position": "SF"
+  },
+  "wendellcarterjr": {
+    "name": "Wendell Carter Jr.",
+    "firstName": "Wesley",
+    "lastName": "Carterr Jr.",
+    "position": "C"
+  },
+  "gogabitadze": {
+    "name": "Goga Bitadze",
+    "firstName": "Grant",
+    "lastName": "Bitadzee",
+    "position": "C"
+  },
+  "noahpenda": {
+    "name": "Noah Penda",
+    "firstName": "Nicolas",
+    "lastName": "Pendaa",
+    "position": "SF"
+  },
+  "julianreese": {
+    "name": "Julian Reese",
+    "firstName": "Jared",
+    "lastName": "Reesee",
+    "position": "PF"
+  },
+  "bilalcoulibaly": {
+    "name": "Bilal Coulibaly",
+    "firstName": "Bryce",
+    "lastName": "Coulibalyy",
+    "position": "SG"
+  },
+  "tristanvukcevic": {
+    "name": "Tristan Vukcevic",
+    "firstName": "Tyler",
+    "lastName": "Vukcevicc",
+    "position": "PF"
+  },
+  "camwhitmore": {
+    "name": "Cam Whitmore",
+    "firstName": "Cole",
+    "lastName": "Whitmoree",
+    "position": "SF"
+  },
+  "traeyoung": {
+    "name": "Trae Young",
+    "firstName": "Travis",
+    "lastName": "Youngg",
+    "position": "PG"
+  },
+  "dangelorussell": {
+    "name": "D'Angelo Russell",
+    "firstName": "Dante",
+    "lastName": "Russelll",
+    "position": "SG"
+  },
+  "jamirwatkins": {
+    "name": "Jamir Watkins",
+    "firstName": "Jared",
+    "lastName": "Watkinss",
+    "position": "SG"
+  },
+  "bubcarrington": {
+    "name": "Bub Carrington",
+    "firstName": "Ben",
+    "lastName": "Carringtonn",
+    "position": "SG"
+  },
+  "jadenhardy": {
+    "name": "Jaden Hardy",
+    "firstName": "Jordan",
+    "lastName": "Hardyy",
+    "position": "PG"
+  },
+  "justinchampagnie": {
+    "name": "Justin Champagnie",
+    "firstName": "Jared",
+    "lastName": "Champagniee",
+    "position": "PF"
+  },
+  "trejohnson": {
+    "name": "Tre Johnson",
+    "firstName": "Tyler",
+    "lastName": "Johnsonn",
+    "position": "SG"
+  },
+  "leakyblack": {
+    "name": "Leaky Black",
+    "firstName": "Liam",
+    "lastName": "Blackk",
+    "position": "SF"
+  },
+  "sharifecooper": {
+    "name": "Sharife Cooper",
+    "firstName": "Shane",
+    "lastName": "Cooperr",
+    "position": "SG"
+  },
+  "anthonygill": {
+    "name": "Anthony Gill",
+    "firstName": "Andre",
+    "lastName": "Gilll",
+    "position": "SF"
+  },
+  "kyshawngeorge": {
+    "name": "Kyshawn George",
+    "firstName": "Kevin",
+    "lastName": "Georgee",
+    "position": "SF"
+  },
+  "alexsarr": {
+    "name": "Alex Sarr",
+    "firstName": "Austin",
+    "lastName": "Sarrr",
+    "position": "C"
+  },
+  "anthonydavis": {
+    "name": "Anthony Davis",
+    "firstName": "Andre",
+    "lastName": "Daviss",
+    "position": "PF"
+  },
+  "willriley": {
+    "name": "Will Riley",
+    "firstName": "Wesley",
+    "lastName": "Rileyy",
+    "position": "SG"
+  },
+  "christianbraun": {
+    "name": "Christian Braun",
+    "firstName": "Charles",
+    "lastName": "Braunn",
+    "position": "SG"
+  },
+  "curtisjones": {
+    "name": "Curtis Jones",
+    "firstName": "Cole",
+    "lastName": "Joness",
+    "position": "SG"
+  },
+  "julianstrawther": {
+    "name": "Julian Strawther",
+    "firstName": "Jordan",
+    "lastName": "Strawtherr",
+    "position": "SG"
+  },
+  "tyusjones": {
+    "name": "Tyus Jones",
+    "firstName": "Trevor",
+    "lastName": "Joness",
+    "position": "PG"
+  },
+  "peytonwatson": {
+    "name": "Peyton Watson",
+    "firstName": "Pierre",
+    "lastName": "Watsonn",
+    "position": "SG"
+  },
+  "timhardawayjr": {
+    "name": "Tim Hardaway Jr.",
+    "firstName": "Tyler",
+    "lastName": "Hardawayy Jr.",
+    "position": "SG"
+  },
+  "brucebrown": {
+    "name": "Bruce Brown",
+    "firstName": "Ben",
+    "lastName": "Brownn",
+    "position": "SG"
+  },
+  "daronholmesii": {
+    "name": "DaRon Holmes II",
+    "firstName": "Derek",
+    "lastName": "Holmess II",
+    "position": "SF"
+  },
+  "nikolajokic": {
+    "name": "Nikola Jokic",
+    "firstName": "Nolan",
+    "lastName": "Jokicc",
+    "position": "C"
+  },
+  "jonasvalanciunas": {
+    "name": "Jonas Valančiūnas",
+    "firstName": "Jared",
+    "lastName": "Valanciūnass",
+    "position": "C"
+  },
+  "spencerjones": {
+    "name": "Spencer Jones",
+    "firstName": "Shane",
+    "lastName": "Joness",
+    "position": "SF"
+  },
+  "zekennaji": {
+    "name": "Zeke Nnaji",
+    "firstName": "Zion",
+    "lastName": "Nnajii",
+    "position": "PF"
+  },
+  "cameronjohnson": {
+    "name": "Cameron Johnson",
+    "firstName": "Chris",
+    "lastName": "Johnsonn",
+    "position": "SF"
+  },
+  "jalenpickett": {
+    "name": "Jalen Pickett",
+    "firstName": "Jerome",
+    "lastName": "Pickettt",
+    "position": "PG"
+  },
+  "kjsimpson": {
+    "name": "KJ Simpson",
+    "firstName": "Kyle",
+    "lastName": "Simpsonn",
+    "position": "SG"
+  },
+  "jamalmurray": {
+    "name": "Jamal Murray",
+    "firstName": "Jared",
+    "lastName": "Murrayy",
+    "position": "PG"
+  },
+  "aarongordon": {
+    "name": "Aaron Gordon",
+    "firstName": "Adam",
+    "lastName": "Gordonn",
+    "position": "SF"
+  },
+  "davidroddy": {
+    "name": "David Roddy",
+    "firstName": "Devin",
+    "lastName": "Roddyy",
+    "position": "SF"
+  },
+  "dontedivincenzo": {
+    "name": "Donte DiVincenzo",
+    "firstName": "Derek",
+    "lastName": "DiVincenzoo",
+    "position": "SG"
+  },
+  "terrenceshannonjr": {
+    "name": "Terrence Shannon Jr.",
+    "firstName": "Trevor",
+    "lastName": "Shannonn Jr.",
+    "position": "SG"
+  },
+  "jadenmcdaniels": {
+    "name": "Jaden McDaniels",
+    "firstName": "Jordan",
+    "lastName": "McDanielss",
+    "position": "SF"
+  },
+  "julianphillips": {
+    "name": "Julian Phillips",
+    "firstName": "Justin",
+    "lastName": "Phillipss",
+    "position": "SF"
+  },
+  "anthonyedwards": {
+    "name": "Anthony Edwards",
+    "firstName": "Andre",
+    "lastName": "Edwardss",
+    "position": "SG"
+  },
+  "joeingles": {
+    "name": "Joe Ingles",
+    "firstName": "Jordan",
+    "lastName": "Ingless",
+    "position": "SF"
+  },
+  "boneshyland": {
+    "name": "Bones Hyland",
+    "firstName": "Brooks",
+    "lastName": "Hylandd",
+    "position": "PG"
+  },
+  "mikeconley": {
+    "name": "Mike Conley",
+    "firstName": "Miles",
+    "lastName": "Conleyy",
+    "position": "PG"
+  },
+  "nazreid": {
+    "name": "Naz Reid",
+    "firstName": "Nelson",
+    "lastName": "Reidd",
+    "position": "C"
+  },
+  "kyleanderson": {
+    "name": "Kyle Anderson",
+    "firstName": "Kane",
+    "lastName": "Andersonn",
+    "position": "SF"
+  },
+  "ayodosunmu": {
+    "name": "Ayo Dosunmu",
+    "firstName": "Adam",
+    "lastName": "Dosunmuu",
+    "position": "SG"
+  },
+  "zyonpullin": {
+    "name": "Zyon Pullin",
+    "firstName": "Zion",
+    "lastName": "Pullinn",
+    "position": "PG"
+  },
+  "joanberinger": {
+    "name": "Joan Beringer",
+    "firstName": "Jonas",
+    "lastName": "Beringerr",
+    "position": "PF"
+  },
+  "jaylenclark": {
+    "name": "Jaylen Clark",
+    "firstName": "Javon",
+    "lastName": "Clarkk",
+    "position": "SG"
+  },
+  "enriquefreeman": {
+    "name": "Enrique Freeman",
+    "firstName": "Ethan",
+    "lastName": "Freemann",
+    "position": "SF"
+  },
+  "rudygobert": {
+    "name": "Rudy Gobert",
+    "firstName": "Roland",
+    "lastName": "Gobertt",
+    "position": "C"
+  },
+  "juliusrandle": {
+    "name": "Julius Randle",
+    "firstName": "Justin",
+    "lastName": "Randlee",
+    "position": "SF"
+  },
+  "roccozikarsky": {
+    "name": "Rocco Zikarsky",
+    "firstName": "Rafael",
+    "lastName": "Zikarskyy",
+    "position": "C"
+  },
+  "shaigilgeousalexander": {
+    "name": "Shai Gilgeous-Alexander",
+    "firstName": "Shane",
+    "lastName": "Gilgeous-Alexanderr",
+    "position": "PG"
+  },
+  "jaredmccain": {
+    "name": "Jared McCain",
+    "firstName": "Jerome",
+    "lastName": "McCainn",
+    "position": "PG"
+  },
+  "luguentzdort": {
+    "name": "Luguentz Dort",
+    "firstName": "Landon",
+    "lastName": "Dortt",
+    "position": "SG"
+  },
+  "jaylinwilliams": {
+    "name": "Jaylin Williams",
+    "firstName": "Justin",
+    "lastName": "Williamss",
+    "position": "PF"
+  },
+  "chetholmgren": {
+    "name": "Chet Holmgren",
+    "firstName": "Charles",
+    "lastName": "Holmgrenn",
+    "position": "C"
+  },
+  "jalenwilliams": {
+    "name": "Jalen Williams",
+    "firstName": "Jerome",
+    "lastName": "Williamss",
+    "position": "PG"
+  },
+  "alexcaruso": {
+    "name": "Alex Caruso",
+    "firstName": "Aaron",
+    "lastName": "Carusoo",
+    "position": "SG"
+  },
+  "isaiahjoe": {
+    "name": "Isaiah Joe",
+    "firstName": "Immanuel",
+    "lastName": "Joee",
+    "position": "SG"
+  },
+  "thomassorber": {
+    "name": "Thomas Sorber",
+    "firstName": "Travis",
+    "lastName": "Sorberr",
+    "position": "C"
+  },
+  "paytonsandfort": {
+    "name": "Payton Sandfort",
+    "firstName": "Peter",
+    "lastName": "Sandfortt",
+    "position": "SF"
+  },
+  "brandencarlson": {
+    "name": "Branden Carlson",
+    "firstName": "Bryce",
+    "lastName": "Carlsonn",
+    "position": "C"
+  },
+  "aaronwiggins": {
+    "name": "Aaron Wiggins",
+    "firstName": "Adam",
+    "lastName": "Wigginss",
+    "position": "SG"
+  },
+  "casonwallace": {
+    "name": "Cason Wallace",
+    "firstName": "Colin",
+    "lastName": "Wallacee",
+    "position": "PG"
+  },
+  "brooksbarnhizer": {
+    "name": "Brooks Barnhizer",
+    "firstName": "Bryce",
+    "lastName": "Barnhizerr",
+    "position": "SF"
+  },
+  "ajaymitchell": {
+    "name": "Ajay Mitchell",
+    "firstName": "Albert",
+    "lastName": "Mitchelll",
+    "position": "SG"
+  },
+  "kenrichwilliams": {
+    "name": "Kenrich Williams",
+    "firstName": "Keith",
+    "lastName": "Williamss",
+    "position": "SG"
+  },
+  "nikolatopic": {
+    "name": "Nikola Topic",
+    "firstName": "Nolan",
+    "lastName": "Topicc",
+    "position": "PG"
+  },
+  "isaiahhartenstein": {
+    "name": "Isaiah Hartenstein",
+    "firstName": "Ivan",
+    "lastName": "Hartensteinn",
+    "position": "C"
+  },
+  "deniavdija": {
+    "name": "Deni Avdija",
+    "firstName": "Derek",
+    "lastName": "Avdijaa",
+    "position": "SF"
+  },
+  "jeramigrant": {
+    "name": "Jerami Grant",
+    "firstName": "Jonas",
+    "lastName": "Grantt",
+    "position": "SF"
+  },
+  "scoothenderson": {
+    "name": "Scoot Henderson",
+    "firstName": "Stefan",
+    "lastName": "Hendersonn",
+    "position": "PG"
+  },
+  "shaedonsharpe": {
+    "name": "Shaedon Sharpe",
+    "firstName": "Sean",
+    "lastName": "Sharpee",
+    "position": "SG"
+  },
+  "toumanicamara": {
+    "name": "Toumani Camara",
+    "firstName": "Tristan",
+    "lastName": "Camaraa",
+    "position": "SF"
+  },
+  "jaysonkent": {
+    "name": "Jayson Kent",
+    "firstName": "Jordan",
+    "lastName": "Kentt",
+    "position": "SG"
+  },
+  "damianlillard": {
+    "name": "Damian Lillard",
+    "firstName": "Dante",
+    "lastName": "Lillardd",
+    "position": "PG"
+  },
+  "blakewesley": {
+    "name": "Blake Wesley",
+    "firstName": "Barry",
+    "lastName": "Wesleyy",
+    "position": "PG"
+  },
+  "caleblove": {
+    "name": "Caleb Love",
+    "firstName": "Colin",
+    "lastName": "Lovee",
+    "position": "PG"
+  },
+  "chrisyoungblood": {
+    "name": "Chris Youngblood",
+    "firstName": "Colin",
+    "lastName": "Youngbloodd",
+    "position": "SG"
+  },
+  "matissethybulle": {
+    "name": "Matisse Thybulle",
+    "firstName": "Miles",
+    "lastName": "Thybullee",
+    "position": "SG"
+  },
+  "jrueholiday": {
+    "name": "Jrue Holiday",
+    "firstName": "Justin",
+    "lastName": "Holidayy",
+    "position": "PG"
+  },
+  "yanghansen": {
+    "name": "Yang Hansen",
+    "firstName": "Yusuf",
+    "lastName": "Hansenn",
+    "position": "C"
+  },
+  "donovanclingan": {
+    "name": "Donovan Clingan",
+    "firstName": "Darius",
+    "lastName": "Clingann",
+    "position": "C"
+  },
+  "krismurray": {
+    "name": "Kris Murray",
+    "firstName": "Kevin",
+    "lastName": "Murrayy",
+    "position": "SF"
+  },
+  "vitkrejci": {
+    "name": "Vit Krejci",
+    "firstName": "Vernon",
+    "lastName": "Krejcii",
+    "position": "SG"
+  },
+  "robertwilliamsiii": {
+    "name": "Robert Williams III",
+    "firstName": "Reid",
+    "lastName": "Williamss III",
+    "position": "C"
+  },
+  "sidycissoko": {
+    "name": "Sidy Cissoko",
+    "firstName": "Samuel",
+    "lastName": "Cissokoo",
+    "position": "SG"
+  },
+  "haydengray": {
+    "name": "Hayden Gray",
+    "firstName": "Harold",
+    "lastName": "Grayy",
+    "position": "SG"
+  },
+  "blakehinson": {
+    "name": "Blake Hinson",
+    "firstName": "Brandon",
+    "lastName": "Hinsonn",
+    "position": "SF"
+  },
+  "keyontegeorge": {
+    "name": "Keyonte George",
+    "firstName": "Keith",
+    "lastName": "Georgee",
+    "position": "PG"
+  },
+  "codywilliams": {
+    "name": "Cody Williams",
+    "firstName": "Chris",
+    "lastName": "Williamss",
+    "position": "SF"
+  },
+  "isaiahcollier": {
+    "name": "Isaiah Collier",
+    "firstName": "Isaac",
+    "lastName": "Collierr",
+    "position": "PG"
+  },
+  "svimykhailiuk": {
+    "name": "Svi Mykhailiuk",
+    "firstName": "Stefan",
+    "lastName": "Mykhailiukk",
+    "position": "SG"
+  },
+  "elijahharkless": {
+    "name": "Elijah Harkless",
+    "firstName": "Ethan",
+    "lastName": "Harklesss",
+    "position": "PG"
+  },
+  "acebailey": {
+    "name": "Ace Bailey",
+    "firstName": "Austin",
+    "lastName": "Baileyy",
+    "position": "SG"
+  },
+  "jarenjacksonjr": {
+    "name": "Jaren Jackson Jr.",
+    "firstName": "Jerome",
+    "lastName": "Jacksonn Jr.",
+    "position": "PF"
+  },
+  "bezmbeng": {
+    "name": "Bez Mbeng",
+    "firstName": "Brooks",
+    "lastName": "Mbengg",
+    "position": "SG"
+  },
+  "kylefilipowski": {
+    "name": "Kyle Filipowski",
+    "firstName": "Kane",
+    "lastName": "Filipowskii",
+    "position": "PF"
+  },
+  "laurimarkkanen": {
+    "name": "Lauri Markkanen",
+    "firstName": "Liam",
+    "lastName": "Markkanenn",
+    "position": "PF"
+  },
+  "walkerkessler": {
+    "name": "Walker Kessler",
+    "firstName": "Warren",
+    "lastName": "Kesslerr",
+    "position": "C"
+  },
+  "bricesensabaugh": {
+    "name": "Brice Sensabaugh",
+    "firstName": "Ben",
+    "lastName": "Sensabaughh",
+    "position": "SF"
+  },
+  "jusufnurkic": {
+    "name": "Jusuf Nurkic",
+    "firstName": "Justin",
+    "lastName": "Nurkicc",
+    "position": "C"
+  },
+  "oscartshiebwe": {
+    "name": "Oscar Tshiebwe",
+    "firstName": "Orlando",
+    "lastName": "Tshiebwee",
+    "position": "C"
+  },
+  "kevinlove": {
+    "name": "Kevin Love",
+    "firstName": "Keith",
+    "lastName": "Lovee",
+    "position": "SF"
+  },
+  "johnkonchar": {
+    "name": "John Konchar",
+    "firstName": "Jordan",
+    "lastName": "Koncharr",
+    "position": "SG"
+  },
+  "garypaytonii": {
+    "name": "Gary Payton II",
+    "firstName": "Gavin",
+    "lastName": "Paytonn II",
+    "position": "PG"
+  },
+  "brandinpodziemski": {
+    "name": "Brandin Podziemski",
+    "firstName": "Bryce",
+    "lastName": "Podziemskii",
+    "position": "SG"
+  },
+  "willrichard": {
+    "name": "Will Richard",
+    "firstName": "Walter",
+    "lastName": "Richardd",
+    "position": "PG"
+  },
+  "mosesmoody": {
+    "name": "Moses Moody",
+    "firstName": "Marcus",
+    "lastName": "Moodyy",
+    "position": "SG"
+  },
+  "kristapsporzingis": {
+    "name": "Kristaps Porzingis",
+    "firstName": "Klaus",
+    "lastName": "Porzingiss",
+    "position": "C"
+  },
+  "deanthonymelton": {
+    "name": "De'Anthony Melton",
+    "firstName": "Dante",
+    "lastName": "Meltonn",
+    "position": "PG"
+  },
+  "jimmybutleriii": {
+    "name": "Jimmy Butler III",
+    "firstName": "Jared",
+    "lastName": "Butlerr III",
+    "position": "SF"
+  },
+  "guisantos": {
+    "name": "Gui Santos",
+    "firstName": "Grant",
+    "lastName": "Santoss",
+    "position": "SF"
+  },
+  "ljcryer": {
+    "name": "LJ Cryer",
+    "firstName": "Landon",
+    "lastName": "Cryerr",
+    "position": "PG"
+  },
+  "natewilliams": {
+    "name": "Nate Williams",
+    "firstName": "Norman",
+    "lastName": "Williamss",
+    "position": "SG"
+  },
+  "alhorford": {
+    "name": "Al Horford",
+    "firstName": "Aaron",
+    "lastName": "Horfordd",
+    "position": "C"
+  },
+  "quintenpost": {
+    "name": "Quinten Post",
+    "firstName": "Quincy",
+    "lastName": "Postt",
+    "position": "C"
+  },
+  "draymondgreen": {
+    "name": "Draymond Green",
+    "firstName": "Derek",
+    "lastName": "Greenn",
+    "position": "SF"
+  },
+  "charlesbassey": {
+    "name": "Charles Bassey",
+    "firstName": "Colin",
+    "lastName": "Basseyy",
+    "position": "C"
+  },
+  "stephencurry": {
+    "name": "Stephen Curry",
+    "firstName": "Stefan",
+    "lastName": "Curryy",
+    "position": "PG"
+  },
+  "sethcurry": {
+    "name": "Seth Curry",
+    "firstName": "Simon",
+    "lastName": "Curryy",
+    "position": "SG"
+  },
+  "malevyleons": {
+    "name": "Malevy Leons",
+    "firstName": "Marco",
+    "lastName": "Leonss",
+    "position": "SF"
+  },
+  "patspencer": {
+    "name": "Pat Spencer",
+    "firstName": "Pierre",
+    "lastName": "Spencerr",
+    "position": "PG"
+  },
+  "kawhileonard": {
+    "name": "Kawhi Leonard",
+    "firstName": "Keith",
+    "lastName": "Leonardd",
+    "position": "SF"
+  },
+  "bradleybeal": {
+    "name": "Bradley Beal",
+    "firstName": "Bryce",
+    "lastName": "Beall",
+    "position": "SG"
+  },
+  "bennedictmathurin": {
+    "name": "Bennedict Mathurin",
+    "firstName": "Brandon",
+    "lastName": "Mathurinn",
+    "position": "SG"
+  },
+  "dariusgarland": {
+    "name": "Darius Garland",
+    "firstName": "Dennis",
+    "lastName": "Garlandd",
+    "position": "PG"
+  },
+  "brooklopez": {
+    "name": "Brook Lopez",
+    "firstName": "Blake",
+    "lastName": "Lopezz",
+    "position": "C"
+  },
+  "derrickjonesjr": {
+    "name": "Derrick Jones Jr.",
+    "firstName": "Damian",
+    "lastName": "Joness Jr.",
+    "position": "SF"
+  },
+  "bogdanbogdanovic": {
+    "name": "Bogdan Bogdanovic",
+    "firstName": "Ben",
+    "lastName": "Bogdanovicc",
+    "position": "SG"
+  },
+  "krisdunn": {
+    "name": "Kris Dunn",
+    "firstName": "Kane",
+    "lastName": "Dunnn",
+    "position": "PG"
+  },
+  "norchadomier": {
+    "name": "Norchad Omier",
+    "firstName": "Norman",
+    "lastName": "Omierr",
+    "position": "C"
+  },
+  "seanpedulla": {
+    "name": "Sean Pedulla",
+    "firstName": "Stefan",
+    "lastName": "Pedullaa",
+    "position": "PG"
+  },
+  "kobesanders": {
+    "name": "Kobe Sanders",
+    "firstName": "Kendrick",
+    "lastName": "Sanderss",
+    "position": "SG"
+  },
+  "camchristie": {
+    "name": "Cam Christie",
+    "firstName": "Caleb",
+    "lastName": "Christiee",
+    "position": "SG"
+  },
+  "tytywashingtonjr": {
+    "name": "TyTy Washington Jr.",
+    "firstName": "Terrence",
+    "lastName": "Washingtonn Jr.",
+    "position": "SG"
+  },
+  "yanickonanniederhauser": {
+    "name": "Yanic Konan Niederhauser",
+    "firstName": "Yusuf",
+    "lastName": "Niederhauserr",
+    "position": "C"
+  },
+  "johncollins": {
+    "name": "John Collins",
+    "firstName": "Jared",
+    "lastName": "Collinss",
+    "position": "SF"
+  },
+  "jordanmiller": {
+    "name": "Jordan Miller",
+    "firstName": "Jared",
+    "lastName": "Millerr",
+    "position": "SG"
+  },
+  "isaiahjackson": {
+    "name": "Isaiah Jackson",
+    "firstName": "Isaac",
+    "lastName": "Jacksonn",
+    "position": "PF"
+  },
+  "nicolasbatum": {
+    "name": "Nicolas Batum",
+    "firstName": "Norman",
+    "lastName": "Batumm",
+    "position": "SG"
+  },
+  "lukadoncic": {
+    "name": "Luka Doncic",
+    "firstName": "Landon",
+    "lastName": "Doncicc",
+    "position": "PG"
+  },
+  "lebronjames": {
+    "name": "LeBron James",
+    "firstName": "Leandro",
+    "lastName": "Jamess",
+    "position": "SF"
+  },
+  "austinreaves": {
+    "name": "Austin Reaves",
+    "firstName": "Alston",
+    "lastName": "Reavess",
+    "position": "SG"
+  },
+  "deandreayton": {
+    "name": "Deandre Ayton",
+    "firstName": "Derek",
+    "lastName": "Aytonn",
+    "position": "C"
+  },
+  "ruihachimura": {
+    "name": "Rui Hachimura",
+    "firstName": "Ruben",
+    "lastName": "Hachimuraa",
+    "position": "SF"
+  },
+  "marcussmart": {
+    "name": "Marcus Smart",
+    "firstName": "Mason",
+    "lastName": "Smartt",
+    "position": "PG"
+  },
+  "jarredvanderbilt": {
+    "name": "Jarred Vanderbilt",
+    "firstName": "Jonas",
+    "lastName": "Vanderbiltt",
+    "position": "SF"
+  },
+  "daltonknecht": {
+    "name": "Dalton Knecht",
+    "firstName": "Derek",
+    "lastName": "Knechtt",
+    "position": "SF"
+  },
+  "jaxsonhayes": {
+    "name": "Jaxson Hayes",
+    "firstName": "Jordan",
+    "lastName": "Hayess",
+    "position": "C"
+  },
+  "bronnyjames": {
+    "name": "Bronny James",
+    "firstName": "Brandon",
+    "lastName": "Jamess",
+    "position": "PG"
+  },
+  "adouthiero": {
+    "name": "Adou Thiero",
+    "firstName": "Andre",
+    "lastName": "Thieroo",
+    "position": "SF"
+  },
+  "lukekennard": {
+    "name": "Luke Kennard",
+    "firstName": "Lance",
+    "lastName": "Kennardd",
+    "position": "SG"
+  },
+  "jakelaravia": {
+    "name": "Jake LaRavia",
+    "firstName": "Jordan",
+    "lastName": "LaRaviaa",
+    "position": "SF"
+  },
+  "maxikleber": {
+    "name": "Maxi Kleber",
+    "firstName": "Mitchell",
+    "lastName": "Kleberr",
+    "position": "SF"
+  },
+  "drewtimme": {
+    "name": "Drew Timme",
+    "firstName": "Derek",
+    "lastName": "Timmee",
+    "position": "PF"
+  },
+  "nicksmithjr": {
+    "name": "Nick Smith Jr.",
+    "firstName": "Nate",
+    "lastName": "Smithh Jr.",
+    "position": "SG"
+  },
+  "chrismanon": {
+    "name": "Chris Manon",
+    "firstName": "Colin",
+    "lastName": "Manonn",
+    "position": "SG"
+  },
+  "kobebufkin": {
+    "name": "Kobe Bufkin",
+    "firstName": "Kyle",
+    "lastName": "Bufkinn",
+    "position": "SG"
+  },
+  "royceoneale": {
+    "name": "Royce O'Neale",
+    "firstName": "Ryan",
+    "lastName": "O'Nealee",
+    "position": "SF"
+  },
+  "ryandunn": {
+    "name": "Ryan Dunn",
+    "firstName": "Roland",
+    "lastName": "Dunnn",
+    "position": "SF"
+  },
+  "devinbooker": {
+    "name": "Devin Booker",
+    "firstName": "Derek",
+    "lastName": "Bookerr",
+    "position": "PG"
+  },
+  "amircoffey": {
+    "name": "Amir Coffey",
+    "firstName": "Adrian",
+    "lastName": "Coffeyy",
+    "position": "SG"
+  },
+  "dillonbrooks": {
+    "name": "Dillon Brooks",
+    "firstName": "Darius",
+    "lastName": "Brookss",
+    "position": "SF"
+  },
+  "jalengreen": {
+    "name": "Jalen Green",
+    "firstName": "Jonas",
+    "lastName": "Greenn",
+    "position": "SG"
+  },
+  "haywoodhighsmith": {
+    "name": "Haywood Highsmith",
+    "firstName": "Hector",
+    "lastName": "Highsmithh",
+    "position": "SF"
+  },
+  "graysonallen": {
+    "name": "Grayson Allen",
+    "firstName": "Gideon",
+    "lastName": "Allenn",
+    "position": "PG"
+  },
+  "khamanmaluach": {
+    "name": "Khaman Maluach",
+    "firstName": "Kevin",
+    "lastName": "Maluachh",
+    "position": "C"
+  },
+  "osoighodaro": {
+    "name": "Oso Ighodaro",
+    "firstName": "Orlando",
+    "lastName": "Ighodaroo",
+    "position": "PF"
+  },
+  "collingillespie": {
+    "name": "Collin Gillespie",
+    "firstName": "Charles",
+    "lastName": "Gillespiee",
+    "position": "PG"
+  },
+  "kobybrea": {
+    "name": "Koby Brea",
+    "firstName": "Kyle",
+    "lastName": "Breaa",
+    "position": "SG"
+  },
+  "markwilliams": {
+    "name": "Mark Williams",
+    "firstName": "Marcus",
+    "lastName": "Williamss",
+    "position": "C"
+  },
+  "jamareebouyea": {
+    "name": "Jamaree Bouyea",
+    "firstName": "Jerome",
+    "lastName": "Bouyeaa",
+    "position": "PG"
+  },
+  "isaiahlivers": {
+    "name": "Isaiah Livers",
+    "firstName": "Isaac",
+    "lastName": "Liverss",
+    "position": "SF"
+  },
+  "rasheerfleming": {
+    "name": "Rasheer Fleming",
+    "firstName": "Rafael",
+    "lastName": "Flemingg",
+    "position": "SF"
+  },
+  "cjhuntley": {
+    "name": "CJ Huntley",
+    "firstName": "Caleb",
+    "lastName": "Huntleyy",
+    "position": "SF"
+  },
+  "jordangoodwin": {
+    "name": "Jordan Goodwin",
+    "firstName": "Jaxon",
+    "lastName": "Goodwinn",
+    "position": "PG"
+  },
+  "malikmonk": {
+    "name": "Malik Monk",
+    "firstName": "Miles",
+    "lastName": "Monkk",
+    "position": "PG"
+  },
+  "niqueclifford": {
+    "name": "Nique Clifford",
+    "firstName": "Nelson",
+    "lastName": "Cliffordd",
+    "position": "SG"
+  },
+  "killianhayes": {
+    "name": "Killian Hayes",
+    "firstName": "Klaus",
+    "lastName": "Hayess",
+    "position": "SG"
+  },
+  "dougmcdermott": {
+    "name": "Doug McDermott",
+    "firstName": "Darius",
+    "lastName": "McDermottt",
+    "position": "SF"
+  },
+  "zachlavine": {
+    "name": "Zach LaVine",
+    "firstName": "Zane",
+    "lastName": "LaVinee",
+    "position": "SG"
+  },
+  "preciousachiuwa": {
+    "name": "Precious Achiuwa",
+    "firstName": "Peter",
+    "lastName": "Achiuwaa",
+    "position": "PF"
+  },
+  "demarderozan": {
+    "name": "DeMar DeRozan",
+    "firstName": "Derek",
+    "lastName": "DeRozann",
+    "position": "SG"
+  },
+  "domantassabonis": {
+    "name": "Domantas Sabonis",
+    "firstName": "Darius",
+    "lastName": "Saboniss",
+    "position": "PF"
+  },
+  "keeganmurray": {
+    "name": "Keegan Murray",
+    "firstName": "Kendrick",
+    "lastName": "Murrayy",
+    "position": "SF"
+  },
+  "deandrehunter": {
+    "name": "De'Andre Hunter",
+    "firstName": "Derek",
+    "lastName": "Hunterr",
+    "position": "SF"
+  },
+  "russellwestbrook": {
+    "name": "Russell Westbrook",
+    "firstName": "Ruben",
+    "lastName": "Westbrookk",
+    "position": "SG"
+  },
+  "dreweubanks": {
+    "name": "Drew Eubanks",
+    "firstName": "Derek",
+    "lastName": "Eubankss",
+    "position": "SF"
+  },
+  "devincarter": {
+    "name": "Devin Carter",
+    "firstName": "Derek",
+    "lastName": "Carterr",
+    "position": "PG"
+  },
+  "patrickbaldwinjr": {
+    "name": "Patrick Baldwin Jr.",
+    "firstName": "Pierre",
+    "lastName": "Baldwinn Jr.",
+    "position": "SF"
+  },
+  "isaiahstevens": {
+    "name": "Isaiah Stevens",
+    "firstName": "Immanuel",
+    "lastName": "Stevenss",
+    "position": "SG"
+  },
+  "daeqwonplowden": {
+    "name": "Daeqwon Plowden",
+    "firstName": "Dante",
+    "lastName": "Plowdenn",
+    "position": "SG"
+  },
+  "dylancardwell": {
+    "name": "Dylan Cardwell",
+    "firstName": "Dante",
+    "lastName": "Cardwelll",
+    "position": "C"
+  },
+  "maximeraynaud": {
+    "name": "Maxime Raynaud",
+    "firstName": "Miles",
+    "lastName": "Raynaudd",
+    "position": "C"
+  },
+  "cooperflagg": {
+    "name": "Cooper Flagg",
+    "firstName": "Connor",
+    "lastName": "Flaggg",
+    "position": "SF"
+  },
+  "kyrieirving": {
+    "name": "Kyrie Irving",
+    "firstName": "Kyle",
+    "lastName": "Irvingg",
+    "position": "PG"
+  },
+  "pjwashington": {
+    "name": "P.J. Washington",
+    "firstName": "Patrick",
+    "lastName": "Washingtonn",
+    "position": "SF"
+  },
+  "danielgafford": {
+    "name": "Daniel Gafford",
+    "firstName": "Dennis",
+    "lastName": "Gaffordd",
+    "position": "PF"
+  },
+  "derecklivelyii": {
+    "name": "Dereck Lively II",
+    "firstName": "Dennis",
+    "lastName": "Livelyy II",
+    "position": "C"
+  },
+  "klaythompson": {
+    "name": "Klay Thompson",
+    "firstName": "Kyle",
+    "lastName": "Thompsonn",
+    "position": "SG"
+  },
+  "najimarshall": {
+    "name": "Naji Marshall",
+    "firstName": "Nate",
+    "lastName": "Marshalll",
+    "position": "SF"
+  },
+  "maxchristie": {
+    "name": "Max Christie",
+    "firstName": "Mitchell",
+    "lastName": "Christiee",
+    "position": "SG"
+  },
+  "khrismiddleton": {
+    "name": "Khris Middleton",
+    "firstName": "Keith",
+    "lastName": "Middletonn",
+    "position": "SF"
+  },
+  "johnpoulakidas": {
+    "name": "John Poulakidas",
+    "firstName": "Jaxon",
+    "lastName": "Poulakidass",
+    "position": "SG"
+  },
+  "dwightpowell": {
+    "name": "Dwight Powell",
+    "firstName": "Derek",
+    "lastName": "Powelllx",
+    "position": "SF"
+  },
+  "ajjohnson": {
+    "name": "AJ Johnson",
+    "firstName": "Adam",
+    "lastName": "Johnsonn",
+    "position": "SG"
+  },
+  "ryannembhard": {
+    "name": "Ryan Nembhard",
+    "firstName": "Roland",
+    "lastName": "Nembhardd",
+    "position": "PG"
+  },
+  "brandonwilliams": {
+    "name": "Brandon Williams",
+    "firstName": "Blake",
+    "lastName": "Williamss",
+    "position": "PG"
+  },
+  "calebmartin": {
+    "name": "Caleb Martin",
+    "firstName": "Colin",
+    "lastName": "Martinn",
+    "position": "SF"
+  },
+  "tylersmith": {
+    "name": "Tyler Smith",
+    "firstName": "Travis",
+    "lastName": "Smithhx",
+    "position": "SF"
+  },
+  "moussacisse": {
+    "name": "Moussa Cisse",
+    "firstName": "Mason",
+    "lastName": "Cissee",
+    "position": "C"
+  },
+  "marvinbagleyiii": {
+    "name": "Marvin Bagley III",
+    "firstName": "Mitchell",
+    "lastName": "Bagleyy III",
+    "position": "PF"
+  },
+  "aaronholiday": {
+    "name": "Aaron Holiday",
+    "firstName": "Adam",
+    "lastName": "Holidayy",
+    "position": "SG"
+  },
+  "amenthompson": {
+    "name": "Amen Thompson",
+    "firstName": "Adam",
+    "lastName": "Thompsonn",
+    "position": "SG"
+  },
+  "dorianfinneysmith": {
+    "name": "Dorian Finney-Smith",
+    "firstName": "Dante",
+    "lastName": "Finney-Smithh",
+    "position": "SF"
+  },
+  "fredvanvleet": {
+    "name": "Fred VanVleet",
+    "firstName": "Frank",
+    "lastName": "VanVleett",
+    "position": "PG"
+  },
+  "kevindurant": {
+    "name": "Kevin Durant",
+    "firstName": "Keith",
+    "lastName": "Durantt",
+    "position": "PF"
+  },
+  "jaeseantate": {
+    "name": "Jae'Sean Tate",
+    "firstName": "Jared",
+    "lastName": "Tatee",
+    "position": "SF"
+  },
+  "jabarismithjr": {
+    "name": "Jabari Smith Jr.",
+    "firstName": "Justin",
+    "lastName": "Smithh Jr.",
+    "position": "PF"
+  },
+  "stevenadams": {
+    "name": "Steven Adams",
+    "firstName": "Samuel",
+    "lastName": "Adamss",
+    "position": "C"
+  },
+  "tristennewton": {
+    "name": "Tristen Newton",
+    "firstName": "Tyler",
+    "lastName": "Newtonn",
+    "position": "SG"
+  },
+  "reedsheppard": {
+    "name": "Reed Sheppard",
+    "firstName": "Reid",
+    "lastName": "Sheppardd",
+    "position": "PG"
+  },
+  "tarieason": {
+    "name": "Tari Eason",
+    "firstName": "Terrence",
+    "lastName": "Easonn",
+    "position": "SF"
+  },
+  "joshokogie": {
+    "name": "Josh Okogie",
+    "firstName": "Jared",
+    "lastName": "Okogiee",
+    "position": "SG"
+  },
+  "isaiahcrawford": {
+    "name": "Isaiah Crawford",
+    "firstName": "Immanuel",
+    "lastName": "Crawfordd",
+    "position": "SF"
+  },
+  "alperensengun": {
+    "name": "Alperen Sengun",
+    "firstName": "Albert",
+    "lastName": "Sengunn",
+    "position": "C"
+  },
+  "clintcapela": {
+    "name": "Clint Capela",
+    "firstName": "Caleb",
+    "lastName": "Capelaa",
+    "position": "C"
+  },
+  "jeffgreen": {
+    "name": "Jeff Green",
+    "firstName": "Justin",
+    "lastName": "Greenn",
+    "position": "SF"
+  },
+  "jahmaimashack": {
+    "name": "Jahmai Mashack",
+    "firstName": "Jared",
+    "lastName": "Mashackk",
+    "position": "PG"
+  },
+  "jaylenwells": {
+    "name": "Jaylen Wells",
+    "firstName": "Javon",
+    "lastName": "Wellss",
+    "position": "SF"
+  },
+  "scottypippenjr": {
+    "name": "Scotty Pippen Jr.",
+    "firstName": "Samuel",
+    "lastName": "Pippenn Jr.",
+    "position": "PG"
+  },
+  "tyjerome": {
+    "name": "Ty Jerome",
+    "firstName": "Tristan",
+    "lastName": "Jeromee",
+    "position": "PG"
+  },
+  "kentaviouscaldwellpope": {
+    "name": "Kentavious Caldwell-Pope",
+    "firstName": "Klaus",
+    "lastName": "Caldwell-Popee",
+    "position": "SG"
+  },
+  "walterclaytonjr": {
+    "name": "Walter Clayton Jr.",
+    "firstName": "Wilson",
+    "lastName": "Claytonn Jr.",
+    "position": "PG"
+  },
+  "santialdama": {
+    "name": "Santi Aldama",
+    "firstName": "Simon",
+    "lastName": "Aldamaa",
+    "position": "PF"
+  },
+  "javonsmall": {
+    "name": "Javon Small",
+    "firstName": "Jordan",
+    "lastName": "Smalll",
+    "position": "PG"
+  },
+  "jamorant": {
+    "name": "Ja Morant",
+    "firstName": "Jared",
+    "lastName": "Morantt",
+    "position": "PG"
+  },
+  "zachedey": {
+    "name": "Zach Edey",
+    "firstName": "Zane",
+    "lastName": "Edeyy",
+    "position": "C"
+  },
+  "brandonclarke": {
+    "name": "Brandon Clarke",
+    "firstName": "Blake",
+    "lastName": "Clarkee",
+    "position": "SF"
+  },
+  "oliviermaxenceprosper": {
+    "name": "Olivier-Maxence Prosper",
+    "firstName": "Oliver",
+    "lastName": "Prosperr",
+    "position": "SF"
+  },
+  "rayanrupert": {
+    "name": "Rayan Rupert",
+    "firstName": "Ruben",
+    "lastName": "Rupertt",
+    "position": "SG"
+  },
+  "taylorhendricks": {
+    "name": "Taylor Hendricks",
+    "firstName": "Tyler",
+    "lastName": "Hendrickss",
+    "position": "SF"
+  },
+  "cedriccoward": {
+    "name": "Cedric Coward",
+    "firstName": "Charles",
+    "lastName": "Cowardd",
+    "position": "SF"
+  },
+  "camspencer": {
+    "name": "Cam Spencer",
+    "firstName": "Cole",
+    "lastName": "Spencerr",
+    "position": "PG"
+  },
+  "ggjackson": {
+    "name": "GG Jackson",
+    "firstName": "Grant",
+    "lastName": "Jacksonn",
+    "position": "SF"
+  },
+  "tajgibson": {
+    "name": "Taj Gibson",
+    "firstName": "Terrence",
+    "lastName": "Gibsonn",
+    "position": "SF"
+  },
+  "joshoduro": {
+    "name": "Josh Oduro",
+    "firstName": "Jonas",
+    "lastName": "Oduroo",
+    "position": "C"
+  },
+  "jeremiahfears": {
+    "name": "Jeremiah Fears",
+    "firstName": "Jerome",
+    "lastName": "Fearss",
+    "position": "PG"
+  },
+  "zionwilliamson": {
+    "name": "Zion Williamson",
+    "firstName": "Zane",
+    "lastName": "Williamsonn",
+    "position": "SF"
+  },
+  "herbertjones": {
+    "name": "Herbert Jones",
+    "firstName": "Hugo",
+    "lastName": "Joness",
+    "position": "SF"
+  },
+  "jordanpoole": {
+    "name": "Jordan Poole",
+    "firstName": "Jared",
+    "lastName": "Poolee",
+    "position": "SG"
+  },
+  "hunterdickinson": {
+    "name": "Hunter Dickinson",
+    "firstName": "Hector",
+    "lastName": "Dickinsonn",
+    "position": "C"
+  },
+  "dejountemurray": {
+    "name": "Dejounte Murray",
+    "firstName": "Derek",
+    "lastName": "Murrayy",
+    "position": "PG"
+  },
+  "deandrejordan": {
+    "name": "DeAndre Jordan",
+    "firstName": "Dennis",
+    "lastName": "Jordann",
+    "position": "C"
+  },
+  "brycemcgowens": {
+    "name": "Bryce McGowens",
+    "firstName": "Brooks",
+    "lastName": "McGowenss",
+    "position": "SG"
+  },
+  "micahpeavy": {
+    "name": "Micah Peavy",
+    "firstName": "Mason",
+    "lastName": "Peavyy",
+    "position": "SG"
+  },
+  "karlomatkovic": {
+    "name": "Karlo Matkovic",
+    "firstName": "Kane",
+    "lastName": "Matkovicc",
+    "position": "PF"
+  },
+  "yvesmissi": {
+    "name": "Yves Missi",
+    "firstName": "Yusuf",
+    "lastName": "Missii",
+    "position": "C"
+  },
+  "derikqueen": {
+    "name": "Derik Queen",
+    "firstName": "Dennis",
+    "lastName": "Queenn",
+    "position": "C"
+  },
+  "treyalexander": {
+    "name": "Trey Alexander",
+    "firstName": "Trevor",
+    "lastName": "Alexanderr",
+    "position": "SG"
+  },
+  "jordanhawkins": {
+    "name": "Jordan Hawkins",
+    "firstName": "Jared",
+    "lastName": "Hawkinss",
+    "position": "SG"
+  },
+  "treymurphyiii": {
+    "name": "Trey Murphy III",
+    "firstName": "Tyson",
+    "lastName": "Murphyy III",
+    "position": "SF"
+  },
+  "saddiqbey": {
+    "name": "Saddiq Bey",
+    "firstName": "Simon",
+    "lastName": "Beyy",
+    "position": "SF"
+  },
+  "kevonlooney": {
+    "name": "Kevon Looney",
+    "firstName": "Keith",
+    "lastName": "Looneyy",
+    "position": "PF"
+  },
+  "jordanmclaughlin": {
+    "name": "Jordan McLaughlin",
+    "firstName": "Jared",
+    "lastName": "McLaughlinn",
+    "position": "PG"
+  },
+  "victorwembanyama": {
+    "name": "Victor Wembanyama",
+    "firstName": "Vincent",
+    "lastName": "Wembanyamaa",
+    "position": "PF"
+  },
+  "dylanharper": {
+    "name": "Dylan Harper",
+    "firstName": "Dante",
+    "lastName": "Harperr",
+    "position": "PG"
+  },
+  "keldonjohnson": {
+    "name": "Keldon Johnson",
+    "firstName": "Kendrick",
+    "lastName": "Johnsonn",
+    "position": "SF"
+  },
+  "deaaronfox": {
+    "name": "De'Aaron Fox",
+    "firstName": "Dennis",
+    "lastName": "Foxx",
+    "position": "PG"
+  },
+  "stephoncastle": {
+    "name": "Stephon Castle",
+    "firstName": "Sean",
+    "lastName": "Castlee",
+    "position": "PG"
+  },
+  "lukekornet": {
+    "name": "Luke Kornet",
+    "firstName": "Lance",
+    "lastName": "Kornett",
+    "position": "C"
+  },
+  "kellyolynyk": {
+    "name": "Kelly Olynyk",
+    "firstName": "Kendrick",
+    "lastName": "Olynykk",
+    "position": "SF"
+  },
+  "carterbryant": {
+    "name": "Carter Bryant",
+    "firstName": "Charles",
+    "lastName": "Bryantt",
+    "position": "SF"
+  },
+  "emanuelmiller": {
+    "name": "Emanuel Miller",
+    "firstName": "Eric",
+    "lastName": "Millerr",
+    "position": "SF"
+  },
+  "bismackbiyombo": {
+    "name": "Bismack Biyombo",
+    "firstName": "Blake",
+    "lastName": "Biyomboo",
+    "position": "C"
+  },
+  "devinvassell": {
+    "name": "Devin Vassell",
+    "firstName": "Derek",
+    "lastName": "Vasselll",
+    "position": "SG"
+  },
+  "davidjonesgarcia": {
+    "name": "David Jones Garcia",
+    "firstName": "Devin",
+    "lastName": "Jones Garciaa",
+    "position": "SF"
+  },
+  "julianchampagnie": {
+    "name": "Julian Champagnie",
+    "firstName": "Justin",
+    "lastName": "Champagniee",
+    "position": "SF"
+  },
+  "harrisonbarnes": {
+    "name": "Harrison Barnes",
+    "firstName": "Harold",
+    "lastName": "Barness",
+    "position": "SF"
+  },
+  "lindywatersiii": {
+    "name": "Lindy Waters III",
+    "firstName": "Leandro",
+    "lastName": "Waterss III",
+    "position": "SF"
+  },
+  "masonplumlee": {
+    "name": "Mason Plumlee",
+    "firstName": "Malik",
+    "lastName": "Plumleee",
+    "position": "SF"
+  },
+  "harrisoningram": {
+    "name": "Harrison Ingram",
+    "firstName": "Hunter",
+    "lastName": "Ingramm",
+    "position": "SF"
+  },
+  "dillonmitchell": {
+    "name": "Dillon Mitchell",
+    "firstName": "Darius",
+    "lastName": "Mitchelll",
+    "position": "SF"
+  },
+  "grantnelson": {
+    "name": "Grant Nelson",
+    "firstName": "Gavin",
+    "lastName": "Nelsonn",
+    "position": "PF"
+  },
+  "joshuajefferson": {
+    "name": "Joshua Jefferson",
+    "firstName": "Jonas",
+    "lastName": "Jeffersonn",
+    "position": "SF"
+  },
+  "mikelbrownjr": {
+    "name": "Mikel Brown Jr.",
+    "firstName": "Mason",
+    "lastName": "Brownn Jr.",
+    "position": "SG"
+  },
+  "tylerbilodeau": {
+    "name": "Tyler Bilodeau",
+    "firstName": "Travis",
+    "lastName": "Bilodeauu",
+    "position": "SF"
+  },
+  "jameswiseman": {
+    "name": "James Wiseman",
+    "firstName": "Jared",
+    "lastName": "Wisemann",
+    "position": "C"
+  },
+  "jadenakins": {
+    "name": "Jaden Akins",
+    "firstName": "Jordan",
+    "lastName": "Akinss",
+    "position": "SG"
+  },
+  "tylernickel": {
+    "name": "Tyler Nickel",
+    "firstName": "Travis",
+    "lastName": "Nickell",
+    "position": "SF"
+  },
+  "tackofall": {
+    "name": "Tacko Fall",
+    "firstName": "Tyler",
+    "lastName": "Falll",
+    "position": "C"
+  },
+  "labaronphilonjr": {
+    "name": "Labaron Philon Jr.",
+    "firstName": "Lance",
+    "lastName": "Philonn Jr.",
+    "position": "PG"
+  },
+  "allengraves": {
+    "name": "Allen Graves",
+    "firstName": "Austin",
+    "lastName": "Gravess",
+    "position": "SF"
+  },
+  "jadenbradley": {
+    "name": "Jaden Bradley",
+    "firstName": "Jordan",
+    "lastName": "Bradleyy",
+    "position": "PG"
+  },
+  "natebittle": {
+    "name": "Nate Bittle",
+    "firstName": "Noah",
+    "lastName": "Bittlee",
+    "position": "C"
+  },
+  "calebwilson": {
+    "name": "Caleb Wilson",
+    "firstName": "Colin",
+    "lastName": "Wilsonn",
+    "position": "SF"
+  },
+  "dailynswain": {
+    "name": "Dailyn Swain",
+    "firstName": "Devin",
+    "lastName": "Swainn",
+    "position": "SG"
+  },
+  "jaylinsellers": {
+    "name": "Jaylin Sellers",
+    "firstName": "Justin",
+    "lastName": "Sellerss",
+    "position": "SG"
+  },
+  "tobeawaka": {
+    "name": "Tobe Awaka",
+    "firstName": "Tyson",
+    "lastName": "Awakaa",
+    "position": "SF"
+  },
+  "mariohezonja": {
+    "name": "Mario Hezonja",
+    "firstName": "Mitchell",
+    "lastName": "Hezonjaa",
+    "position": "SF"
+  },
+  "ernestudehjr": {
+    "name": "Ernest Udeh Jr.",
+    "firstName": "Ethan",
+    "lastName": "Udehh Jr.",
+    "position": "C"
+  },
+  "meleekthomas": {
+    "name": "Meleek Thomas",
+    "firstName": "Marco",
+    "lastName": "Thomass",
+    "position": "PG"
+  },
+  "ebukaokorie": {
+    "name": "Ebuka Okorie",
+    "firstName": "Elias",
+    "lastName": "Okoriee",
+    "position": "PG"
+  },
+  "ugonnaonyenso": {
+    "name": "Ugonna Onyenso",
+    "firstName": "Ulysses",
+    "lastName": "Onyensoo",
+    "position": "C"
+  },
+  "bradensmith": {
+    "name": "Braden Smith",
+    "firstName": "Bryce",
+    "lastName": "Smithh",
+    "position": "PG"
+  },
+  "bogoljubmarkovic": {
+    "name": "Bogoljub Markovic",
+    "firstName": "Brandon",
+    "lastName": "Markovicc",
+    "position": "PF"
+  },
+  "braydenburries": {
+    "name": "Brayden Burries",
+    "firstName": "Brooks",
+    "lastName": "Burriess",
+    "position": "SG"
+  },
+  "nateament": {
+    "name": "Nate Ament",
+    "firstName": "Nicolas",
+    "lastName": "Amentt",
+    "position": "PF"
+  },
+  "henriveesaar": {
+    "name": "Henri Veesaar",
+    "firstName": "Hunter",
+    "lastName": "Veesaarr",
+    "position": "C"
+  },
+  "kingstonflemings": {
+    "name": "Kingston Flemings",
+    "firstName": "Kyle",
+    "lastName": "Flemingss",
+    "position": "PG"
+  },
+  "zubyejiofor": {
+    "name": "Zuby Ejiofor",
+    "firstName": "Zion",
+    "lastName": "Ejioforr",
+    "position": "SF"
+  },
+  "christiananderson": {
+    "name": "Christian Anderson",
+    "firstName": "Connor",
+    "lastName": "Andersonn",
+    "position": "PG"
+  },
+  "hannessteinbach": {
+    "name": "Hannes Steinbach",
+    "firstName": "Hugo",
+    "lastName": "Steinbachh",
+    "position": "PF"
+  },
+  "kylanboswell": {
+    "name": "Kylan Boswell",
+    "firstName": "Kyle",
+    "lastName": "Boswelll",
+    "position": "PG"
+  },
+  "michaelajayi": {
+    "name": "Michael Ajayi",
+    "firstName": "Mitchell",
+    "lastName": "Ajayii",
+    "position": "SF"
+  },
+  "ryanconwell": {
+    "name": "Ryan Conwell",
+    "firstName": "Roland",
+    "lastName": "Conwelll",
+    "position": "PG"
+  },
+  "tredonaldson": {
+    "name": "Tre Donaldson",
+    "firstName": "Travis",
+    "lastName": "Donaldsonn",
+    "position": "PG"
+  },
+  "izaiyahnelson": {
+    "name": "Izaiyah Nelson",
+    "firstName": "Ivan",
+    "lastName": "Nelsonn",
+    "position": "SF"
+  },
+  "reecebeekman": {
+    "name": "Reece Beekman",
+    "firstName": "Roland",
+    "lastName": "Beekmann",
+    "position": "PG"
+  },
+  "ajdybantsa": {
+    "name": "AJ Dybantsa",
+    "firstName": "Adam",
+    "lastName": "Dybantsaa",
+    "position": "SF"
+  },
+  "felixokpara": {
+    "name": "Felix Okpara",
+    "firstName": "Frank",
+    "lastName": "Okparaa",
+    "position": "PF"
+  },
+  "alphadiallo": {
+    "name": "Alpha Diallo",
+    "firstName": "Adam",
+    "lastName": "Dialloo",
+    "position": "SF"
+  },
+  "brycehopkins": {
+    "name": "Bryce Hopkins",
+    "firstName": "Brandon",
+    "lastName": "Hopkinss",
+    "position": "SF"
+  },
+  "trevonbrazile": {
+    "name": "Trevon Brazile",
+    "firstName": "Trevor",
+    "lastName": "Brazilee",
+    "position": "PF"
+  },
+  "treylyles": {
+    "name": "Trey Lyles",
+    "firstName": "Terrence",
+    "lastName": "Lyless",
+    "position": "SF"
+  },
+  "isaiahevans": {
+    "name": "Isaiah Evans",
+    "firstName": "Isaac",
+    "lastName": "Evanss",
+    "position": "SF"
+  },
+  "adaymara": {
+    "name": "Aday Mara",
+    "firstName": "Albert",
+    "lastName": "Maraa",
+    "position": "C"
+  },
+  "bennettstirtz": {
+    "name": "Bennett Stirtz",
+    "firstName": "Barry",
+    "lastName": "Stirtzz",
+    "position": "SG"
+  },
+  "joshdix": {
+    "name": "Josh Dix",
+    "firstName": "Jordan",
+    "lastName": "Dixx",
+    "position": "SG"
+  },
+  "mobamba": {
+    "name": "Mo Bamba",
+    "firstName": "Marcus",
+    "lastName": "Bambaa",
+    "position": "C"
+  },
+  "darrynpeterson": {
+    "name": "Darryn Peterson",
+    "firstName": "Damian",
+    "lastName": "Petersonn",
+    "position": "SG"
+  },
+  "georgesniang": {
+    "name": "Georges Niang",
+    "firstName": "George",
+    "lastName": "Niangg",
+    "position": "SF"
+  },
+  "grahamike": {
+    "name": "Graham Ike",
+    "firstName": "Gavin",
+    "lastName": "Ikee",
+    "position": "SF"
+  },
+  "yaxellendeborg": {
+    "name": "Yaxel Lendeborg",
+    "firstName": "Yosef",
+    "lastName": "Lendeborgg",
+    "position": "SF"
+  },
+  "babamiller": {
+    "name": "Baba Miller",
+    "firstName": "Brandon",
+    "lastName": "Millerr",
+    "position": "PF"
+  },
+  "keatonwagler": {
+    "name": "Keaton Wagler",
+    "firstName": "Kendrick",
+    "lastName": "Waglerr",
+    "position": "SG"
+  },
+  "lawsonlovering": {
+    "name": "Lawson Lovering",
+    "firstName": "Liam",
+    "lastName": "Loveringg",
+    "position": "C"
+  },
+  "arthurkaluma": {
+    "name": "Arthur Kaluma",
+    "firstName": "Adam",
+    "lastName": "Kalumaa",
+    "position": "SF"
+  },
+  "akokereke": {
+    "name": "AK Okereke",
+    "firstName": "Andre",
+    "lastName": "Okerekee",
+    "position": "SF"
+  },
+  "duopreath": {
+    "name": "Duop Reath",
+    "firstName": "Dennis",
+    "lastName": "Reathh",
+    "position": "C"
+  },
+  "koapeat": {
+    "name": "Koa Peat",
+    "firstName": "Kendrick",
+    "lastName": "Peatt",
+    "position": "SF"
+  },
+  "bensimmons": {
+    "name": "Ben Simmons",
+    "firstName": "Brooks",
+    "lastName": "Simmonss",
+    "position": "PG"
+  },
+  "alexkaraban": {
+    "name": "Alex Karaban",
+    "firstName": "Aaron",
+    "lastName": "Karabann",
+    "position": "SF"
+  },
+  "dariusacuffjr": {
+    "name": "Darius Acuff Jr.",
+    "firstName": "Dennis",
+    "lastName": "Acufff Jr.",
+    "position": "PG"
+  },
+  "emanuelsharp": {
+    "name": "Emanuel Sharp",
+    "firstName": "Edgar",
+    "lastName": "Sharpp",
+    "position": "PG"
+  },
+  "morezjohnsonjr": {
+    "name": "Morez Johnson Jr.",
+    "firstName": "Miles",
+    "lastName": "Johnsonn Jr.",
+    "position": "SF"
+  },
+  "sergiodelarrea": {
+    "name": "Sergio de Larrea",
+    "firstName": "Spencer",
+    "lastName": "de Larreaa",
+    "position": "SF"
+  },
+  "tarikbiberovic": {
+    "name": "Tarik Biberovic",
+    "firstName": "Travis",
+    "lastName": "Biberovicc",
+    "position": "SF"
+  },
+  "tobilawal": {
+    "name": "Tobi Lawal",
+    "firstName": "Trevor",
+    "lastName": "Lawall",
+    "position": "SF"
+  },
+  "quadircopeland": {
+    "name": "Quadir Copeland",
+    "firstName": "Quentin",
+    "lastName": "Copelandd",
+    "position": "SG"
+  },
+  "cameronboozer": {
+    "name": "Cameron Boozer",
+    "firstName": "Colin",
+    "lastName": "Boozerr",
+    "position": "SF"
+  },
+  "carsoncooper": {
+    "name": "Carson Cooper",
+    "firstName": "Caleb",
+    "lastName": "Cooperr",
+    "position": "C"
+  },
+  "karimlopez": {
+    "name": "Karim Lopez",
+    "firstName": "Kendrick",
+    "lastName": "Lopezz",
+    "position": "SF"
+  },
+  "jaronpierrejr": {
+    "name": "Jaron Pierre Jr.",
+    "firstName": "Jaxon",
+    "lastName": "Pierree Jr.",
+    "position": "SG"
+  },
+  "malikdia": {
+    "name": "Malik Dia",
+    "firstName": "Mason",
+    "lastName": "Diaa",
+    "position": "SF"
+  },
+  "jakobigillespie": {
+    "name": "Ja'Kobi Gillespie",
+    "firstName": "Jared",
+    "lastName": "Gillespiee",
+    "position": "PG"
+  },
+  "jaydenquaintance": {
+    "name": "Jayden Quaintance",
+    "firstName": "Justin",
+    "lastName": "Quaintancee",
+    "position": "PF"
+  },
+  "maliqbrown": {
+    "name": "Maliq Brown",
+    "firstName": "Miles",
+    "lastName": "Brownn",
+    "position": "SF"
+  },
+  "tarrisreedjr": {
+    "name": "Tarris Reed Jr.",
+    "firstName": "Terrence",
+    "lastName": "Reedd Jr.",
+    "position": "C"
+  }
+}

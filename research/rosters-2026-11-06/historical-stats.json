@@ -1,0 +1,167 @@
+[
+  {
+    "name": "Tyrese Haliburton",
+    "source": "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/4396993/stats",
+    "season": "2024-25",
+    "year": 2025,
+    "ppg": 18.6,
+    "rpg": 3.5,
+    "apg": 9.2,
+    "games": 73,
+    "mpg": 33.6
+  },
+  {
+    "name": "Tacko Fall",
+    "source": "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/3904625/stats",
+    "season": "2021-22",
+    "year": 2022,
+    "ppg": 1.1,
+    "rpg": 2.1,
+    "apg": 0.2,
+    "games": 11,
+    "mpg": 5.4
+  },
+  {
+    "name": "RayJ Dennis",
+    "source": "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/4431941/stats",
+    "season": "2025-26",
+    "year": 2026,
+    "ppg": 4.4,
+    "rpg": 1.5,
+    "apg": 1.9,
+    "games": 17,
+    "mpg": 12.1
+  },
+  {
+    "name": "Mario Hezonja",
+    "source": "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/2995706/stats",
+    "season": "2019-20",
+    "year": 2020,
+    "ppg": 4.8,
+    "rpg": 3.5,
+    "apg": 0.9,
+    "games": 53,
+    "mpg": 16.4
+  },
+  {
+    "name": "Ben Saraf",
+    "source": "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/5242502/stats",
+    "season": "2025-26",
+    "year": 2026,
+    "ppg": 7.5,
+    "rpg": 2.1,
+    "apg": 3.3,
+    "games": 44,
+    "mpg": 20.8
+  },
+  {
+    "name": "Reece Beekman",
+    "source": "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/4432187/stats",
+    "season": "2024-25",
+    "year": 2025,
+    "ppg": 2.6,
+    "rpg": 1.1,
+    "apg": 1.8,
+    "games": 36,
+    "mpg": 13
+  },
+  {
+    "name": "Trey Lyles",
+    "source": "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/3136196/stats",
+    "season": "2024-25",
+    "year": 2025,
+    "ppg": 6.5,
+    "rpg": 4.6,
+    "apg": 1.2,
+    "games": 69,
+    "mpg": 19.6
+  },
+  {
+    "name": "Yang Hansen",
+    "source": "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/5217746/stats",
+    "season": "2025-26",
+    "year": 2026,
+    "ppg": 2.2,
+    "rpg": 1.5,
+    "apg": 0.5,
+    "games": 43,
+    "mpg": 7
+  },
+  {
+    "name": "Damian Lillard",
+    "source": "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/6606/stats",
+    "season": "2024-25",
+    "year": 2025,
+    "ppg": 24.9,
+    "rpg": 4.7,
+    "apg": 7.1,
+    "games": 58,
+    "mpg": 36.1
+  },
+  {
+    "name": "Mo Bamba",
+    "source": "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/4277919/stats",
+    "season": "2025-26",
+    "year": 2026,
+    "ppg": 2.5,
+    "rpg": 5.5,
+    "apg": 0.3,
+    "games": 4,
+    "mpg": 11
+  },
+  {
+    "name": "Yanic Konan Niederhauser",
+    "source": "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/5108024/stats",
+    "season": "2025-26",
+    "year": 2026,
+    "ppg": 4.3,
+    "rpg": 2.9,
+    "apg": 0.3,
+    "games": 41,
+    "mpg": 10.3
+  },
+  {
+    "name": "Kyrie Irving",
+    "source": "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/6442/stats",
+    "season": "2024-25",
+    "year": 2025,
+    "ppg": 24.7,
+    "rpg": 4.8,
+    "apg": 4.6,
+    "games": 50,
+    "mpg": 36.1
+  },
+  {
+    "name": "Ben Simmons",
+    "source": "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/3907387/stats",
+    "season": "2024-25",
+    "year": 2025,
+    "ppg": 5,
+    "rpg": 4.7,
+    "apg": 5.6,
+    "games": 51,
+    "mpg": 22
+  },
+  {
+    "name": "Georges Niang",
+    "source": "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/2990969/stats",
+    "season": "2024-25",
+    "year": 2025,
+    "ppg": 9.9,
+    "rpg": 3.4,
+    "apg": 1.4,
+    "games": 79,
+    "mpg": 21.5
+  },
+  {
+    "name": "Fred VanVleet",
+    "source": "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/2991230/stats",
+    "season": "2024-25",
+    "year": 2025,
+    "ppg": 14.1,
+    "rpg": 3.7,
+    "apg": 5.6,
+    "games": 60,
+    "mpg": 35.2
+  }
+]
