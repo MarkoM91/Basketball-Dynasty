@@ -19,6 +19,7 @@ import { useGameStore } from '../store/gameStore';
 import type { DraftRecapPick, TradeProposal } from '../types/game';
 import { Panel } from '../components/UI';
 import { TradeNegotiateModal } from '../components/TradeNegotiateModal';
+import { Icon } from '../components/Icon';
 
 function DraftRecapPanel({ recap }: { recap: DraftRecapPick[] }) {
   const round1 = recap.filter((p) => p.round === 1);
@@ -153,7 +154,7 @@ export function DraftScreen() {
                   : 'Scouting board'}
           </h1>
         </div>
-        <button type="button" className="btn btn-ghost" onClick={() => setScreen('home')}>Back</button>
+        <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('home')}>Back</button>
       </div>
 
       {showPickTradePanel && (
@@ -358,7 +359,7 @@ export function DraftScreen() {
                     <span className="chip chip-gold">{pr.archetype}</span>
                     {pr.isInternational && (
                       <span className="chip" style={{ background: 'rgba(59,130,246,0.15)', color: '#60a5fa', border: '1px solid rgba(59,130,246,0.3)' }}>
-                        🌍 Intl · {pr.stashYears}yr stash
+                        <Icon name="globe" size={12} /> Intl · {pr.stashYears}yr stash
                       </span>
                     )}
                   </div>
@@ -408,7 +409,7 @@ export function DraftScreen() {
                       onClick={() => stashOnDraftClock(pr.id)}
                       title={`Stash overseas for ${pr.stashYears} year${(pr.stashYears ?? 1) > 1 ? 's' : ''} — develops before joining roster`}
                     >
-                      🌍 Stash
+                      <Icon name="globe" size={15} /> Stash
                     </button>
                   )}
                 </div>

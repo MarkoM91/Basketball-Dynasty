@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Icon } from './Icon';
 
 type LandingChromeProps = {
   /** When false, logo is not a link (guide/compare subpages). */
@@ -213,7 +214,7 @@ export function LogoPicker() {
           >
             <div className="logo-picker-svg"><Logo /></div>
             <span className="logo-picker-name">{label}</span>
-            {active === id && <span className="logo-picker-check">✓</span>}
+            {active === id && <span className="logo-picker-check"><Icon name="check" size={12} /></span>}
           </button>
         ))}
       </div>

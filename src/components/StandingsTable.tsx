@@ -36,12 +36,12 @@ export function StandingsTable({
             <th>W</th>
             <th>L</th>
             <th>Win%</th>
-            {!compact && <th>GB</th>}
+            {!compact && <th className="standings-col-gb">GB</th>}
             <th className="standings-col-score" title="Points scored per game">PS</th>
             <th className="standings-col-score" title="Points allowed per game">PA</th>
-            {!compact && <th title="Point differential per game">MOV</th>}
-            {!compact && <th>STR</th>}
-            <th>{compact ? 'Mode' : 'Strategy'}</th>
+            {!compact && <th className="standings-col-extra" title="Point differential per game">MOV</th>}
+            {!compact && <th className="standings-col-extra">STR</th>}
+            <th className="standings-col-strategy">{compact ? 'Mode' : 'Strategy'}</th>
           </tr>
         </thead>
         <tbody>
@@ -71,16 +71,16 @@ export function StandingsTable({
                 <td className="standings-num success">{t.wins}</td>
                 <td className="standings-num">{t.losses}</td>
                 <td className="standings-num mono">{formatWinPct(t.wins, t.losses)}</td>
-                {!compact && <td className="standings-num mono">{leader ? gamesBack(leader, t) : '—'}</td>}
+                {!compact && <td className="standings-num mono standings-col-gb">{leader ? gamesBack(leader, t) : '—'}</td>}
                 <td className="standings-num mono standings-col-score">{t.ppgFor.toFixed(1)}</td>
                 <td className="standings-num mono standings-col-score">{t.ppgAgainst.toFixed(1)}</td>
                 {!compact && (
-                  <td className={`standings-num mono ${mov > 0 ? 'success' : mov < 0 ? 'danger' : ''}`}>
+                  <td className={`standings-num mono standings-col-extra ${mov > 0 ? 'success' : mov < 0 ? 'danger' : ''}`}>
                     {mov > 0 ? '+' : ''}{mov.toFixed(1)}
                   </td>
                 )}
-                {!compact && <td className="standings-num mono">{Math.round(t.strength)}</td>}
-                <td className="standings-strategy">{strategyLabel(t.strategy)}</td>
+                {!compact && <td className="standings-num mono standings-col-extra">{Math.round(t.strength)}</td>}
+                <td className="standings-strategy standings-col-strategy">{strategyLabel(t.strategy)}</td>
               </tr>
             );
           })}

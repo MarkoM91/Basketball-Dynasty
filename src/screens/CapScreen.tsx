@@ -19,7 +19,7 @@ export function CapScreen() {
           <p className="eyebrow">Salary cap office</p>
           <h1 className="title-lg">CBA cap sheet</h1>
         </div>
-        <button type="button" className="btn btn-ghost" onClick={() => setScreen('home')}>Back</button>
+        <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('home')}>Back</button>
       </div>
 
       <Panel accent={!cap.inLuxuryTax && !cap.inSecondApron} danger={cap.inSecondApron} warning={cap.inLuxuryTax && !cap.inSecondApron}>

@@ -6,6 +6,7 @@ import { PlayerAvatar } from './PlayerAvatar';
 import { Panel } from './UI';
 import type { Franchise, Player } from '../types/game';
 import { ovrTier } from '../lib/playerRatings';
+import { Icon } from './Icon';
 
 export function RosterCutsPanel({
   franchise,
@@ -88,7 +89,7 @@ export function RosterCutsPanel({
       {/* Header */}
       <div className="cut-day-header">
         <div className="cut-day-header-left">
-          <span className="cut-day-icon">✂</span>
+          <span className="cut-day-icon"><Icon name="scissors" size={18} /></span>
           <div>
             <p className="cut-day-title">
               {inFreeAgency ? 'Roster Full' : 'Cut Day'}
@@ -140,7 +141,7 @@ export function RosterCutsPanel({
               <SliderCard player={current} />
               <div className="cut-day-actions">
                 <button type="button" className="cut-day-btn-release" onClick={() => handleRelease(current)}>
-                  ✕ Release
+                  <Icon name="x" size={13} /> Release
                 </button>
                 <button type="button" className="cut-day-btn-keep" onClick={() => handleSkip(current)}>
                   Keep →

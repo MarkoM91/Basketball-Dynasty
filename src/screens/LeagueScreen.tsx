@@ -28,7 +28,7 @@ export function LeagueScreen() {
           <p className="eyebrow">League intelligence</p>
           <h1 className="title-lg">30-team board</h1>
         </div>
-        <button type="button" className="btn btn-ghost" onClick={() => setScreen('home')}>Back</button>
+        <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('home')}>Back</button>
       </div>
 
       {userTeam && (

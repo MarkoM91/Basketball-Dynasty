@@ -1,5 +1,6 @@
 import type { SeasonPhase } from '../types/game';
 import { phaseLabel } from '../engine/simulation';
+import { Icon } from './Icon';
 
 export function PlayMenu({
   phase,
@@ -26,7 +27,7 @@ export function PlayMenu({
     <div className="play-menu">
       <div className="play-menu-main">
         <button type="button" className="play-menu-btn" onClick={onPrimary} disabled={primaryDisabled}>
-          <span className="play-menu-icon">▶</span>
+          <span className="play-menu-icon"><Icon name="play" size={18} /></span>
           <span style={{ textAlign: 'left' }}>
             <span className="play-menu-label">{primaryLabel}</span>
             <span className="play-menu-phase">{primaryDisabled && primaryDisabledReason ? primaryDisabledReason : phaseLabel(phase)}</span>

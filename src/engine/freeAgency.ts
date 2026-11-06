@@ -1,7 +1,7 @@
 import type { FreeAgent, Franchise, League, LeagueTeam, PitchType } from '../types/game';
 import { takeUniqueName } from '../data/names';
 import { uid, playerName, formatMoney } from '../data/scenarios';
-import { rosterFullMessage, rosterHasRoom } from './rosterCuts';
+import { canAddPlayer, rosterFullMessage } from './rosterCuts';
 import { strategyLabel } from '../data/league';
 import { canSignFreeAgent, applySigningToCap } from './cap';
 import { freeAgentAskingSalary, isMaxContract } from './salaries';
@@ -581,10 +581,12 @@ export function pitchFreeAgent(
     };
   }
 
-  if (!rosterHasRoom(franchise)) {
+  // Offseason rosters may run over 18 (cuts happen at training camp) — the offer screen already
+  // promised "you'll cut before the season", so the signing check must agree.
+  if (!canAddPlayer(franchise)) {
     return {
       franchise,
-      message: rosterFullMessage(),
+      message: rosterFullMessage(franchise),
       signed: false,
     };
   }

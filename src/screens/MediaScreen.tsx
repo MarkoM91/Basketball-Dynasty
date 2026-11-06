@@ -14,7 +14,7 @@ export function MediaScreen() {
           <p className="eyebrow">Ownership & media</p>
           <h1 className="title-lg">Pressure machine</h1>
         </div>
-        <button type="button" className="btn btn-ghost" onClick={() => setScreen('cap')}>Back</button>
+        <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('cap')}>Back</button>
       </div>
 
       <Panel accent>

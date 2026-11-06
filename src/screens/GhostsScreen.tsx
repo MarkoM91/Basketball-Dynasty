@@ -20,7 +20,7 @@ export function GhostsScreen() {
           <p className="eyebrow">Franchise ghosts</p>
           <h1 className="title-lg">What you gave up</h1>
         </div>
-        <button type="button" className="btn btn-ghost" onClick={() => setScreen('history')}>Back</button>
+        <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('history')}>Back</button>
       </div>
 
       <Panel accent>

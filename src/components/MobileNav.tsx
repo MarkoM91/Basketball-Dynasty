@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { ScreenId, SeasonPhase } from '../types/game';
 import { CORE, MORE, contextualTab, useSaveFileActions } from './DesktopSidebar';
+import { Icon, type IconName } from './Icon';
 
-type NavItem = { id: ScreenId; label: string; icon: string };
+type NavItem = { id: ScreenId; label: string; icon: IconName };
 
 /**
  * Mobile bottom navigation. The desktop sidebar (hidden < 960px) is the only place most screens
@@ -24,10 +25,10 @@ export function MobileNav({
   const action = contextualTab(phase);
 
   const tabs: NavItem[] = [
-    { id: 'home', label: 'Office', icon: '◆' },
-    { id: 'roster', label: 'Roster', icon: '▤' },
+    { id: 'home', label: 'Office', icon: 'office' },
+    { id: 'roster', label: 'Roster', icon: 'roster' },
     { ...action, label: shortLabel(action.label) },
-    { id: 'trade', label: 'Trades', icon: '⇄' },
+    { id: 'trade', label: 'Trades', icon: 'trade' },
   ];
   const tabIds = new Set(tabs.map((t) => t.id));
   const sheetItems: NavItem[] = [...CORE, ...MORE].filter(
@@ -72,7 +73,7 @@ export function MobileNav({
                   className={`more-sheet-item ${screen === item.id ? 'active' : ''}`}
                   onClick={() => go(item.id)}
                 >
-                  <span className="more-sheet-icon" aria-hidden="true">{item.icon}</span>
+                  <span className="more-sheet-icon"><Icon name={item.icon} size={22} /></span>
                   {item.label}
                 </button>
               ))}
@@ -96,7 +97,7 @@ export function MobileNav({
             className={`nav-item ${i === 2 ? 'nav-item-action' : ''} ${screen === item.id ? 'active' : ''}`}
             onClick={() => go(item.id)}
           >
-            <span className="nav-icon" aria-hidden="true">{item.icon}</span>
+            <span className="nav-icon"><Icon name={item.icon} size={20} /></span>
             {item.label}
           </button>
         ))}
@@ -106,7 +107,7 @@ export function MobileNav({
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
-          <span className="nav-icon" aria-hidden="true">☰</span>
+          <span className="nav-icon"><Icon name="more" size={20} /></span>
           More
         </button>
       </nav>

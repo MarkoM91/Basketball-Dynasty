@@ -3,7 +3,7 @@ import { uid } from '../data/scenarios';
 import { rookieScaleSalary } from './salaries';
 import { computeCapOutlook } from './cap';
 import { opponentStrength, scheduledGameAt, type ScheduleGame, SCHEDULE_GAMES_PER_WEEK, SEASON_GAME_COUNT } from './schedule';
-import { applyGameStats, mergeTeamScoring, simulateTeamGameScores, NBA_HOME_EDGE } from './stats';
+import { applyGameStats, mergeTeamScoring, simulateTeamGameScores, NBA_HOME_EDGE, NBA_WIN_PROB_SCALE, TALENT_GAP_AMPLIFIER } from './stats';
 import { lineupSimAdjustment, ensureScenarioRosterShape, evolveFranchiseWindow, refreshScenarioOdds, windowSeasonBump } from './scenarioDifficulty';
 import { evaluateJobSecurity } from './careerMode';
 import { strengthFromRoster } from './leagueWorld';
@@ -98,6 +98,25 @@ export function lineupModifiers(franchise: Franchise, starterIds: string[]): num
     franchise.starHappiness === 'Happy' ? 1 : franchise.starHappiness === 'Angry' ? -2 : 0;
   const starBoost = starters.some((p) => p.isStar) ? 0.5 : 0;
   return moraleBonus + coachBonus + chemistry + starBoost + lineupSimAdjustment(franchise);
+}
+
+/**
+ * Pre-game win chance (0–100) using the same model as simulateSingleGame: amplified talent gap,
+ * unamplified situational modifiers, home edge — with the game-night variance folded into a
+ * slightly flatter logistic. Shown on the game-day screen so lineup choices have visible stakes.
+ */
+export function estimateWinChance(
+  franchise: Franchise,
+  starterIds: string[],
+  opponentStrengthValue: number,
+  home: boolean,
+): number {
+  const ids = starterIds.length === 5 ? starterIds : autoStartingFive(franchise);
+  const diff =
+    (lineupTalent(franchise, ids) - opponentStrengthValue) * TALENT_GAP_AMPLIFIER +
+    lineupModifiers(franchise, ids) +
+    (home ? NBA_HOME_EDGE : 0);
+  return Math.round(100 / (1 + Math.exp(-diff / (NBA_WIN_PROB_SCALE * 1.15))));
 }
 
 export function lineupStrength(franchise: Franchise, starterIds: string[]): number {

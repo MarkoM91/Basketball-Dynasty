@@ -1,16 +1,27 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { playerName } from '../data/scenarios';
+import { getTeamById } from '../data/league';
 import { getUserPlayoffMatchup } from '../engine/playoffs';
-import { currentScheduledGame } from '../engine/schedule';
-import { autoStartingFive, GAMES_PER_WEEK, lineupStrength } from '../engine/simulation';
+import { currentScheduledGame, opponentStrength } from '../engine/schedule';
+import { autoStartingFive, estimateWinChance, GAMES_PER_WEEK, lineupTalent } from '../engine/simulation';
 import { PlayerAvatar } from '../components/PlayerAvatar';
+import { TeamLogo } from '../components/TeamLogo';
 import { CourtBackdrop } from '../components/CourtBackdrop';
+import { Icon } from '../components/Icon';
 import { useGameStore } from '../store/gameStore';
-import { Panel } from '../components/UI';
-import type { Position } from '../types/game';
+import type { Player, Position } from '../types/game';
 
-const SLOT_LABELS: Position[] = ['PG', 'SG', 'SF', 'PF', 'C'];
+const SLOTS: Position[] = ['PG', 'SG', 'SF', 'PF', 'C'];
+const EMPTY: string[] = ['', '', '', '', ''];
 
+/**
+ * Game day. Fixes and simplifications:
+ * - Lineup is five FIXED slots (PG→C). The old packed array shifted everyone left when a starter
+ *   was removed, so removing your SG moved the SF into the SG slot.
+ * - Tap a slot → picker with natural-position players first; picking a current starter swaps.
+ * - The matchup shows both sides' strength and a win chance, so lineup choices have stakes.
+ * - Play / Sim week are pinned above the nav instead of under an 18-row list.
+ */
 export function PlayGameScreen() {
   const {
     franchise,
@@ -20,216 +31,240 @@ export function PlayGameScreen() {
     playPlayoffGame,
     advanceWeek,
     advanceToPlayoffs,
-    setScreen,
   } = useGameStore();
-  const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
-  const [lineup, setLineup] = useState<string[]>([]);
+  const [slots, setSlots] = useState<string[]>(EMPTY);
+  const [pickingSlot, setPickingSlot] = useState<number | null>(null);
+  const [confirmSkip, setConfirmSkip] = useState(false);
 
+  // Initialise once per franchise from the saved five (or the best auto lineup).
   useEffect(() => {
-    if (franchise?.startingFive?.length === 5) {
-      setLineup(franchise.startingFive);
-    }
-  }, [franchise?.startingFive]);
+    if (!franchise) return;
+    const healthy = new Set(franchise.roster.filter((p) => !p.injured).map((p) => p.id));
+    const saved = franchise.startingFive?.length === 5 ? franchise.startingFive : autoStartingFive(franchise);
+    setSlots(saved.map((id) => (healthy.has(id) ? id : '')).concat(EMPTY).slice(0, 5));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [franchise?.id]);
 
   const isPlayoffs = franchise?.phase === 'playoffs';
-  const gamesLeft = franchise ? GAMES_PER_WEEK - (franchise.gamesThisWeek ?? 0) : 0;
-  const nextRegular =
-    franchise && league && !isPlayoffs ? currentScheduledGame(franchise, league) : null;
-  const matchup =
-    isPlayoffs && franchise?.playoffs && league
-      ? getUserPlayoffMatchup(franchise.playoffs, league)
-      : null;
+  const gamesPlayed = franchise?.gamesThisWeek ?? 0;
+  const gamesLeft = franchise ? GAMES_PER_WEEK - gamesPlayed : 0;
+  const nextRegular = franchise && league && !isPlayoffs ? currentScheduledGame(franchise, league) : null;
+  const playoffMatchup =
+    isPlayoffs && franchise?.playoffs && league ? getUserPlayoffMatchup(franchise.playoffs, league) : null;
 
-  const strength =
-    franchise && lineup.length === 5 ? Math.round(lineupStrength(franchise, lineup)) : 0;
+  const opponentId = isPlayoffs ? playoffMatchup?.opponentId : nextRegular?.opponentId;
+  const opponent = opponentId && league ? getTeamById(league, opponentId) : undefined;
+  const home = isPlayoffs ? false : Boolean(nextRegular?.home);
+  const full = slots.every(Boolean);
+
+  const odds = useMemo(() => {
+    if (!franchise || !league || !opponentId || !full) return null;
+    const opp = opponentStrength(league, opponentId, franchise, franchise.week);
+    return {
+      you: Math.round(lineupTalent(franchise, slots)),
+      them: Math.round(opp),
+      win: estimateWinChance(franchise, slots, opp, home),
+    };
+  }, [franchise, league, opponentId, slots, full, home]);
 
   if (!franchise) return null;
 
-  const canPlayRegular =
-    (franchise.phase === 'regular_season' || franchise.phase === 'trade_deadline') &&
-    gamesLeft > 0 &&
-    lineup.length === 5;
+  const byId = (id: string) => franchise.roster.find((p) => p.id === id);
 
-  const canPlayPlayoffs = isPlayoffs && lineup.length === 5 && matchup !== null;
-
-  const commitLineup = (next: string[]) => {
-    setLineup(next);
-    if (next.length === 5) setStartingFive(next);
+  const commit = (next: string[]) => {
+    setSlots(next);
+    if (next.every(Boolean)) setStartingFive(next);
   };
 
-  const togglePlayer = (playerId: string) => {
-    if (lineup.includes(playerId)) {
-      commitLineup(lineup.filter((id) => id !== playerId));
-      return;
-    }
-    if (selectedSlot !== null) {
-      const next = [...lineup];
-      while (next.length <= selectedSlot) next.push('');
-      next[selectedSlot] = playerId;
-      commitLineup(next.filter(Boolean).slice(0, 5));
-      setSelectedSlot(null);
-      return;
-    }
-    if (lineup.length >= 5) return;
-    commitLineup([...lineup, playerId]);
+  const assign = (slot: number, playerId: string) => {
+    const next = [...slots];
+    const from = next.indexOf(playerId);
+    if (from >= 0) next[from] = next[slot]; // swap with whoever held the target slot
+    next[slot] = playerId;
+    commit(next);
+    setPickingSlot(null);
   };
 
-  const resetLineup = () => {
-    setSelectedSlot(null);
+  const bestLineup = () => {
     const picks = autoStartingFive(franchise);
-    if (picks.length === 5) commitLineup(picks);
+    if (picks.length === 5) commit(picks);
   };
 
-  const clearLineup = () => {
-    setSelectedSlot(null);
-    setLineup([]);
-  };
+  const canPlay = full && (isPlayoffs ? playoffMatchup !== null : gamesLeft > 0 && (franchise.phase === 'regular_season' || franchise.phase === 'trade_deadline'));
 
   const handlePlay = () => {
-    if (lineup.length === 5) setStartingFive(lineup);
-    if (isPlayoffs) {
-      playPlayoffGame();
-      return;
-    }
-    playGame();
+    if (!full) return;
+    setStartingFive(slots);
+    if (isPlayoffs) playPlayoffGame();
+    else playGame();
   };
 
-  const handleBack = () => {
-    setScreen(isPlayoffs ? 'playoffs' : 'home');
-  };
+  const winTone = !odds ? '' : odds.win >= 60 ? 'good' : odds.win >= 45 ? 'mid' : 'bad';
 
-  const rosterSorted = [...(franchise.roster ?? [])]
-    .filter((p) => !p.injured)
-    .sort((a, b) => b.overall - a.overall);
-
-  return (
-    <div className="page page-court">
-      <CourtBackdrop compact>
-        <div className="header-bar" style={{ marginBottom: 0 }}>
+  // ── Slot picker ─────────────────────────────────────────────────────────────
+  if (pickingSlot !== null) {
+    const pos = SLOTS[pickingSlot];
+    const healthy = franchise.roster.filter((p) => !p.injured);
+    const natural = healthy.filter((p) => p.position === pos).sort((a, b) => b.overall - a.overall);
+    const others = healthy.filter((p) => p.position !== pos).sort((a, b) => b.overall - a.overall);
+    const injured = franchise.roster.filter((p) => p.injured);
+    const row = (p: Player) => {
+      const at = slots.indexOf(p.id);
+      const current = at === pickingSlot;
+      return (
+        <li key={p.id}>
+          <button
+            type="button"
+            className={`deal-option ${current ? 'is-on' : ''}`}
+            onClick={() => assign(pickingSlot, p.id)}
+          >
+            <PlayerAvatar player={p} size={40} showOverall={false} />
+            <span className="deal-option-copy">
+              <strong>{playerName(p)}</strong>
+              <span>
+                {p.position} · {p.age}
+                {at >= 0 && !current ? ` · starting at ${SLOTS[at]} (swap)` : ''}
+                {current ? ' · current starter' : ''}
+              </span>
+            </span>
+            <span className="deal-ovr">{p.overall}</span>
+          </button>
+        </li>
+      );
+    };
+    return (
+      <div className="deal-sheet" role="dialog" aria-modal="true" aria-label={`Choose your ${pos}`}>
+        <header className="deal-head">
           <div>
-            <p className="eyebrow">
-              {isPlayoffs
-                ? `Playoffs — ${matchup?.round ?? franchise.playoffs?.round ?? 'Postseason'}`
-                : `Game day — Week ${franchise.week}`}
-            </p>
-            <h1 className="title-lg">Set your starting five</h1>
+            <p className="eyebrow">Starting five</p>
+            <h2 className="deal-title">Choose your {pos}</h2>
           </div>
-          <button type="button" className="btn btn-ghost" onClick={handleBack}>Back</button>
-        </div>
-        <p className="body" style={{ marginTop: 8 }}>
-          {isPlayoffs ? (
-            matchup ? (
-              <>
-                vs <strong>{matchup.opponentName}</strong> · {matchup.seriesLine}
-                {lineup.length === 5 && (
-                  <> · Lineup strength <strong style={{ color: 'var(--gold)' }}>{strength}</strong></>
-                )}
-              </>
-            ) : (
-              'No active series — return to the playoff center.'
-            )
-          ) : (
-            <>
-              {nextRegular ? (
-                <>
-                  {nextRegular.home ? 'vs' : '@'} <strong>{nextRegular.opponentName}</strong>
-                  {' · '}
-                </>
-              ) : null}
-              Games this week: {franchise.gamesThisWeek ?? 0}/{GAMES_PER_WEEK}
-              {lineup.length === 5 && (
-                <> · Lineup strength <strong style={{ color: 'var(--gold)' }}>{strength}</strong></>
-              )}
-            </>
+          <button type="button" className="deal-close" onClick={() => setPickingSlot(null)} aria-label="Close">
+            <Icon name="x" size={22} />
+          </button>
+        </header>
+        <div className="deal-body">
+          {natural.length > 0 && <p className="deal-section-label">Natural {pos}s</p>}
+          <ul className="deal-pick-list">{natural.map(row)}</ul>
+          <p className="deal-section-label">Everyone else</p>
+          <ul className="deal-pick-list">{others.map(row)}</ul>
+          {injured.length > 0 && (
+            <p className="deal-hint" style={{ marginTop: 16 }}>
+              Out injured: {injured.map((p) => `${playerName(p)} (${p.injuryWeeks ?? '?'}w)`).join(', ')}
+            </p>
           )}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Game day ────────────────────────────────────────────────────────────────
+  return (
+    <div className="page page-court gameday">
+      <CourtBackdrop compact>
+        <p className="eyebrow">
+          {isPlayoffs
+            ? `Playoffs · ${playoffMatchup?.round ?? franchise.playoffs?.round ?? 'Postseason'}`
+            : `Week ${franchise.week} · Game ${Math.min(gamesPlayed + 1, GAMES_PER_WEEK)} of ${GAMES_PER_WEEK}`}
         </p>
+        {opponent ? (
+          <div className="gameday-matchup">
+            <TeamLogo city={franchise.city} name={franchise.name} size={44} />
+            <span className="gameday-vs">{home ? 'vs' : '@'}</span>
+            <TeamLogo city={opponent.city} name={opponent.name} size={44} />
+            <h1 className="title-lg gameday-opp">{opponent.fullName}</h1>
+          </div>
+        ) : (
+          <h1 className="title-lg">{isPlayoffs ? 'No active series' : 'No game scheduled'}</h1>
+        )}
+        {isPlayoffs && playoffMatchup && <p className="gameday-series">{playoffMatchup.seriesLine}</p>}
+        {odds && (
+          <div className="gameday-odds">
+            <div>
+              <span>Your five</span>
+              <strong>{odds.you}</strong>
+            </div>
+            <div>
+              <span>{opponent?.abbrev ?? 'Them'}</span>
+              <strong>{odds.them}</strong>
+            </div>
+            <div className={`gameday-win gameday-win--${winTone}`}>
+              <span>Win chance</span>
+              <strong>{odds.win}%</strong>
+            </div>
+          </div>
+        )}
       </CourtBackdrop>
 
-      <Panel accent>
-        <div className="lineup-court">
-          {SLOT_LABELS.map((pos, i) => {
-            const player = (franchise.roster ?? []).find((p) => p.id === lineup[i]);
+      <section className="panel gameday-five">
+        <div className="gameday-five-head">
+          <p className="eyebrow" style={{ margin: 0 }}>Starting five</p>
+          <button type="button" className="btn btn-ghost" onClick={bestLineup}>
+            Best lineup
+          </button>
+        </div>
+        <ul className="gameday-slots">
+          {SLOTS.map((pos, i) => {
+            const p = slots[i] ? byId(slots[i]) : undefined;
+            const outOfPosition = p && p.position !== pos;
             return (
-              <button
-                key={pos}
-                type="button"
-                className={`lineup-slot ${selectedSlot === i ? 'lineup-slot-active' : ''} ${player ? 'lineup-slot-filled' : ''}`}
-                onClick={() => setSelectedSlot(selectedSlot === i ? null : i)}
-              >
-                <span className="lineup-slot-pos">{pos}</span>
-                {player ? (
-                  <>
-                    <PlayerAvatar player={player} size={44} showOverall={false} />
-                    <span className="lineup-slot-name">{player.lastName}</span>
-                    <span className="lineup-slot-ovr">{player.overall}</span>
-                  </>
-                ) : (
-                  <span className="lineup-slot-empty">Tap slot, then player</span>
-                )}
-              </button>
+              <li key={pos}>
+                <button type="button" className={`gameday-slot ${p ? '' : 'is-empty'}`} onClick={() => setPickingSlot(i)}>
+                  <span className="gameday-slot-pos">{pos}</span>
+                  {p ? (
+                    <>
+                      <PlayerAvatar player={p} size={40} showOverall={false} />
+                      <span className="deal-option-copy">
+                        <strong>{playerName(p)}</strong>
+                        <span>{outOfPosition ? `Natural ${p.position} · playing ${pos}` : `${p.age} yrs`}</span>
+                      </span>
+                      <span className="deal-ovr">{p.overall}</span>
+                    </>
+                  ) : (
+                    <span className="deal-option-copy">
+                      <strong>Pick a {pos}</strong>
+                      <span>Tap to choose</span>
+                    </span>
+                  )}
+                  <Icon name="chevron-right" size={18} className="deal-chevron" />
+                </button>
+              </li>
             );
           })}
-        </div>
-        <div style={{ display: 'grid', gap: 8, marginTop: 12 }}>
-          <button type="button" className="btn btn-secondary" style={{ width: '100%' }} onClick={resetLineup}>
-            Reset lineup
-            <small style={{ display: 'block', fontSize: 11, opacity: 0.75, marginTop: 2 }}>
-              Auto-pick your best available starters by position
-            </small>
-          </button>
-          {lineup.length > 0 && (
-            <button type="button" className="btn btn-ghost" style={{ width: '100%' }} onClick={clearLineup}>
-              Clear all slots
+        </ul>
+      </section>
+
+      {!isPlayoffs && (
+        <div className="gameday-skip">
+          {confirmSkip ? (
+            <>
+              <span>Sim the whole regular season?</span>
+              <button type="button" className="btn btn-ghost" onClick={() => setConfirmSkip(false)}>Cancel</button>
+              <button type="button" className="btn btn-secondary" onClick={advanceToPlayoffs}>Yes, skip</button>
+            </>
+          ) : (
+            <button type="button" className="btn btn-ghost" onClick={() => setConfirmSkip(true)}>
+              Skip to playoffs
             </button>
           )}
         </div>
-      </Panel>
+      )}
 
-      <Panel>
-        <p className="eyebrow">Available players</p>
-        {rosterSorted.map((p) => {
-          const inLineup = lineup.includes(p.id);
-          return (
-            <button
-              key={p.id}
-              type="button"
-              className={`lineup-pick ${inLineup ? 'lineup-pick-active' : ''}`}
-              onClick={() => togglePlayer(p.id)}
-            >
-              <PlayerAvatar player={p} size={40} showOverall={false} />
-              <span>{playerName(p)}</span>
-              <strong>{p.overall}</strong>
-              {inLineup && <span className="chip chip-gold">START</span>}
-            </button>
-          );
-        })}
-      </Panel>
-
-      <div style={{ display: 'grid', gap: 8 }}>
-        <button
-          type="button"
-          className="btn btn-primary"
-          disabled={isPlayoffs ? !canPlayPlayoffs : !canPlayRegular}
-          onClick={handlePlay}
-        >
-          {isPlayoffs
-            ? canPlayPlayoffs
-              ? 'Play playoff game'
-              : 'Pick 5 starters to play'
-            : canPlayRegular
-              ? `Play game (${gamesLeft} left this week)`
-              : 'Pick 5 starters to play'}
-        </button>
+      <div className="gameday-bar">
         {!isPlayoffs && (
-          <>
-            <button type="button" className="btn btn-secondary" onClick={advanceWeek}>
-              Advance week {gamesLeft > 0 ? `(auto-sim ${gamesLeft} remaining)` : ''}
-            </button>
-            <button type="button" className="btn btn-ghost" onClick={advanceToPlayoffs}>
-              Skip to playoffs
-            </button>
-          </>
+          <button type="button" className="btn btn-secondary" onClick={advanceWeek}>
+            {gamesLeft > 0 ? 'Sim week' : 'Next week'}
+          </button>
         )}
+        <button type="button" className="btn btn-primary" disabled={!canPlay} onClick={handlePlay}>
+          {!full
+            ? 'Fill all 5 slots'
+            : isPlayoffs
+              ? 'Play playoff game'
+              : gamesLeft > 0
+                ? `Play game · ${gamesLeft} left`
+                : 'Week done'}
+        </button>
       </div>
     </div>
   );

@@ -24,7 +24,7 @@ export function CoachScreen() {
           <p className="eyebrow">Coaching staff</p>
           <h1 className="title-lg">Sideline control</h1>
         </div>
-        <button type="button" className="btn btn-ghost" onClick={() => setScreen('roster')}>Back</button>
+        <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('roster')}>Back</button>
       </div>
 
       <Panel accent className="coach-card">
