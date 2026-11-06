@@ -87,7 +87,7 @@ export function RosterScreen() {
             {' · '}{rookies.length} rookie{rookies.length === 1 ? '' : 's'}
           </p>
         </div>
-        <button type="button" className="btn btn-ghost" onClick={() => setScreen('home')}>Back</button>
+        <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('home')}>Back</button>
       </div>
 
       {rookies.length === 0 && preDraft && (
@@ -127,7 +127,71 @@ export function RosterScreen() {
           </button>
         </div>
 
-        <div className="bbgm-table-wrap">
+        {/* Phones: one card per player — no 13-column sideways-scrolling table. */}
+        <ul className="roster-cards">
+          {sorted.map((p) => {
+            const { stats } = playerStatsRow(p);
+            const onBlock = isPlayerOnBlock(franchise, p.id);
+            const rookie = isRookie(p, franchise.season);
+            const delta = p.prevOverall !== undefined ? p.overall - p.prevOverall : 0;
+            const fmt = (v: number | undefined) => (v == null ? '—' : v.toFixed(1));
+            return (
+              <li key={p.id} className={`roster-card ${p.isStar ? 'is-star' : ''}`}>
+                <div className="roster-card-top">
+                  <PlayerAvatar player={p} size={44} />
+                  <div className="roster-card-id">
+                    <strong>{playerName(p)}</strong>
+                    <span>{p.position} · {p.age} · {playerHeightLabel(p)} · {ovrTier(p.overall)}</span>
+                    {(rookie || p.injured || p.contract.isRestricted) && (
+                      <span className="roster-card-tags">
+                        {rookie && <span className="chip chip-rookie">Rookie</span>}
+                        {p.injured && <span className="chip chip-danger">Out {p.injuryWeeks}w</span>}
+                        {p.contract.isRestricted && <span className="chip chip-warning">RFA</span>}
+                      </span>
+                    )}
+                  </div>
+                  <div className="roster-card-ovr">
+                    <span className="roster-card-ovr-num">
+                      {p.hiddenOverall !== undefined ? `~${p.hiddenOverall}` : p.overall}
+                    </span>
+                    <span className="roster-card-pot">
+                      POT {p.potential}
+                      {delta !== 0 && (
+                        <em className={delta > 0 ? 'stat-delta-up' : 'stat-delta-down'}> {delta > 0 ? '+' : ''}{delta}</em>
+                      )}
+                    </span>
+                  </div>
+                </div>
+                <dl className="roster-card-stats">
+                  <div><dt>G</dt><dd>{stats?.games ?? '—'}</dd></div>
+                  <div><dt>Min</dt><dd>{fmt(stats?.mpg)}</dd></div>
+                  <div><dt>Pts</dt><dd>{fmt(stats?.ppg)}</dd></div>
+                  <div><dt>Reb</dt><dd>{fmt(stats?.rpg)}</dd></div>
+                  <div><dt>Ast</dt><dd>{fmt(stats?.apg)}</dd></div>
+                </dl>
+                <div className="roster-card-foot">
+                  <span className="roster-card-contract">
+                    {formatMoney(p.contract.annualSalary)} · {p.contract.yearsRemaining}yr
+                  </span>
+                  <button
+                    type="button"
+                    className={`btn ${onBlock ? 'btn-primary' : 'btn-secondary'}`}
+                    onClick={() => toggleTradeBlockPlayer(p.id)}
+                  >
+                    {onBlock ? 'On block' : 'Shop'}
+                  </button>
+                  {releaseableIds.has(p.id) && (
+                    <button type="button" className="btn btn-ghost" onClick={() => releasePlayerContract(p.id)}>
+                      Release
+                    </button>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="bbgm-table-wrap roster-table-desktop">
           <table className="bbgm-table roster-stats-table">
             <thead>
               <tr>

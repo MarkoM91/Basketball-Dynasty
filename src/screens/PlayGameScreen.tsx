@@ -114,7 +114,7 @@ export function PlayGameScreen() {
             </p>
             <h1 className="title-lg">Set your starting five</h1>
           </div>
-          <button type="button" className="btn btn-ghost" onClick={handleBack}>Back</button>
+          <button type="button" className="btn btn-ghost screen-back" onClick={handleBack}>Back</button>
         </div>
         <p className="body" style={{ marginTop: 8 }}>
           {isPlayoffs ? (

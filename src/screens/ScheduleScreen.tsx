@@ -24,7 +24,7 @@ export function ScheduleScreen() {
           <p className="eyebrow">Season {franchise.season}</p>
           <h1 className="title-lg">Schedule</h1>
         </div>
-        <button type="button" className="btn btn-ghost" onClick={() => setScreen('home')}>Back</button>
+        <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('home')}>Back</button>
       </div>
 
       <Panel accent>

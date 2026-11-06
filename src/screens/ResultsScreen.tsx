@@ -23,7 +23,7 @@ export function ResultsScreen() {
             <p className="eyebrow">Box scores</p>
             <h1 className="title-lg">Your results</h1>
           </div>
-          <button type="button" className="btn btn-ghost" onClick={() => setScreen('home')}>Back</button>
+          <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('home')}>Back</button>
         </div>
         <p className="body" style={{ marginTop: 8 }}>
           Season record {record.wins}–{record.losses} · {log.length} games logged

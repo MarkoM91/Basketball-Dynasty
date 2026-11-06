@@ -203,7 +203,7 @@ export function FreeAgencyScreen() {
             {franchise.cap.mleUsed ? ' · MLE used' : ` · MLE ${formatMoney(franchise.cap.mleAvailable)}`}
           </p>
         </div>
-        <button type="button" className="btn btn-ghost" onClick={() => setScreen('home')}>Back</button>
+        <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('home')}>Back</button>
       </div>
 
       {briefing && available.length > 0 && (

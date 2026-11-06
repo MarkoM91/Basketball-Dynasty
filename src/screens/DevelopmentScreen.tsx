@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { DEV_PLANS } from '../engine/trades';
 import { playerName } from '../data/scenarios';
 import { PlayerAvatar } from '../components/PlayerAvatar';
@@ -5,6 +6,7 @@ import { PlayerRatingsPanel } from '../components/PlayerRatingsPanel';
 import { useGameStore } from '../store/gameStore';
 import type { DevFocus, Player, Position } from '../types/game';
 import { Panel } from '../components/UI';
+import { Icon } from '../components/Icon';
 
 const FOCUSES = Object.keys(DEV_PLANS) as DevFocus[];
 
@@ -47,9 +49,13 @@ function DevTrendBadge({ trend }: { trend: Player['devTrend'] }) {
 function DevPlayerCard({
   player,
   onAssign,
+  expanded,
+  onToggle,
 }: {
   player: Player;
   onAssign: (focus: DevFocus) => void;
+  expanded: boolean;
+  onToggle: () => void;
 }) {
   const gap = player.potential - player.overall;
   const pct = devProgress(player.overall, player.potential);
@@ -57,19 +63,26 @@ function DevPlayerCard({
   const stats = player.seasonStats;
 
   return (
-    <Panel className="dev-player-card">
-      <div className="dev-player-top">
-        <PlayerAvatar player={player} size={56} showOverall={false} />
+    <Panel className={`dev-player-card ${expanded ? 'is-open' : ''}`}>
+      {/* Collapsed by default: 15 screens of fully expanded cards on a phone became a short list. */}
+      <button type="button" className="dev-player-top dev-player-toggle" onClick={onToggle} aria-expanded={expanded}>
+        <PlayerAvatar player={player} size={48} showOverall={false} />
         <div className="dev-player-identity">
           <p className="dev-player-name">{playerName(player)}</p>
           <div className="player-meta">
             <span className="chip chip-gold">{player.position}</span>
-            <span className="chip">{player.role}</span>
             <span className="chip">{player.age} yrs</span>
             <DevTrendBadge trend={player.devTrend} />
           </div>
+          <p className="dev-player-focus">{player.devFocus ? `Focus: ${player.devFocus}` : 'No focus set'}</p>
         </div>
-      </div>
+        <div className="dev-player-ovrpot">
+          <strong>{player.overall}</strong>
+          <span>→ {player.potential}</span>
+        </div>
+        <Icon name="chevron-right" size={18} className="dev-player-chevron" />
+      </button>
+      {expanded && (<>
 
       <div className="dev-ratings">
         <div className="dev-rating-block">
@@ -146,19 +159,21 @@ function DevPlayerCard({
               <span className="dev-focus-title">{focus}</span>
               <span className="dev-focus-detail">
                 <span>↑ {plan.improves}</span>
-                <span>⚠ {plan.risk}</span>
+                <span><Icon name="alert" size={13} /> {plan.risk}</span>
                 <span>{plan.timeline}</span>
               </span>
             </button>
           );
         })}
       </div>
+      </>)}
     </Panel>
   );
 }
 
 export function DevelopmentScreen() {
   const { franchise, assignDevFocus, setScreen } = useGameStore();
+  const [openId, setOpenId] = useState<string | null>(null);
   if (!franchise) return null;
 
   const developable = franchise.roster
@@ -172,7 +187,7 @@ export function DevelopmentScreen() {
           <p className="eyebrow">Player development</p>
           <h1 className="title-lg">Development plans</h1>
         </div>
-        <button type="button" className="btn btn-ghost" onClick={() => setScreen('home')}>Back</button>
+        <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('home')}>Back</button>
       </div>
 
       <Panel accent>
@@ -182,7 +197,13 @@ export function DevelopmentScreen() {
       </Panel>
 
       {developable.map((p) => (
-        <DevPlayerCard key={p.id} player={p} onAssign={(focus) => assignDevFocus(p.id, focus)} />
+        <DevPlayerCard
+          key={p.id}
+          player={p}
+          expanded={openId === p.id}
+          onToggle={() => setOpenId(openId === p.id ? null : p.id)}
+          onAssign={(focus) => assignDevFocus(p.id, focus)}
+        />
       ))}
 
       {developable.length === 0 && (

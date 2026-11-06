@@ -28,7 +28,7 @@ export function TeamLogo({
 
   return (
     <div
-      className="team-logo-wrap"
+      className={`team-logo-wrap ${size < 40 ? 'team-logo-wrap--small' : ''}`}
       style={{ width: size, height: size }}
       title={`${team.city} ${team.name}`}
     >

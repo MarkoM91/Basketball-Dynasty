@@ -38,7 +38,7 @@ export function FinancesScreen() {
 
         </div>
 
-        <button type="button" className="btn btn-ghost" onClick={() => setScreen('home')}>Back</button>
+        <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('home')}>Back</button>
 
       </div>
 

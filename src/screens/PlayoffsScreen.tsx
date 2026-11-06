@@ -17,7 +17,7 @@ export function PlayoffsScreen() {
             <p className="eyebrow">Playoffs</p>
             <h1 className="title-lg">League bracket</h1>
           </div>
-          <button type="button" className="btn btn-ghost" onClick={() => setScreen('home')}>Back</button>
+          <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('home')}>Back</button>
         </div>
         <Panel accent>
           <p className="body" style={{ margin: 0 }}>
@@ -53,7 +53,7 @@ export function PlayoffsScreen() {
           <p className="eyebrow">Playoff command center</p>
           <h1 className="title-lg">{roundLabel(po.round)}</h1>
         </div>
-        <button type="button" className="btn btn-ghost" onClick={() => setScreen('home')}>Back</button>
+        <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('home')}>Back</button>
       </div>
 
       <PlayoffBracket state={po} league={league} userTeamId={userTeamId} />
