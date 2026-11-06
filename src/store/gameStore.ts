@@ -661,7 +661,11 @@ export const useGameStore = create<GameStore>()(
         franchise: {
           ...franchise,
           phase: 'regular_season',
-          week: franchise.week + 1,
+          // The schedule starts at week 1. The week counter also ticks through the offseason
+          // (free agency days, camp), so `week + 1` opened the season on week 3 and the user's
+          // week 1–2 games were never played.
+          week: 1,
+          gamesThisWeek: 0,
           record: { wins: 0, losses: 0 },
           regularSeasonRecord: undefined,
           gameLog: (franchise.gameLog ?? []).filter((g) => g.season !== franchise.season),

@@ -1,10 +1,10 @@
 import type { Franchise, League, PlayoffGameResult, PlayoffRound, PlayoffSeries, PlayoffState } from '../types/game';
 import { getStandings, getTeamById } from '../data/league';
 import { uid } from '../data/scenarios';
-import { autoStartingFive, lineupStrength } from './simulation';
+import { autoStartingFive, lineupModifiers, lineupTalent } from './simulation';
 import { adjustSeasonReview as applyCareerSeasonReview } from './careerMode';
 import { effectiveGameStrength } from './leagueWorld';
-import { simulateTeamGameScores, NBA_HOME_EDGE } from './stats';
+import { simulateTeamGameScores, NBA_HOME_EDGE, TALENT_GAP_AMPLIFIER } from './stats';
 
 /** Top 16 = standard playoff field. */
 export const PLAYOFF_TEAM_COUNT = 16;
@@ -148,7 +148,7 @@ export function userPlayoffGamePending(state: PlayoffState, league: League): boo
 export function getUserPlayoffMatchup(
   state: PlayoffState,
   league: League,
-): { opponentName: string; seriesLine: string; round: PlayoffRound } | null {
+): { opponentId: string; opponentName: string; seriesLine: string; round: PlayoffRound } | null {
   const userTeamId = league.teams.find((t) => t.isUser)?.id;
   if (!userTeamId) return null;
   const series = state.series.find((s) => s.userInvolved && !s.complete);
@@ -157,6 +157,7 @@ export function getUserPlayoffMatchup(
     series.higherSeed.teamId === userTeamId ? series.lowerSeed.teamId : series.higherSeed.teamId;
   const opponentName = getTeamById(league, oppId)?.fullName ?? 'Opponent';
   return {
+    opponentId: oppId,
     opponentName,
     seriesLine: seriesScoreline(series, league),
     round: series.round,
@@ -168,7 +169,9 @@ function teamStrength(league: League, teamId: string, franchise?: Franchise): nu
   if (team.isUser && franchise) {
     const starters =
       franchise.startingFive?.length === 5 ? franchise.startingFive : autoStartingFive(franchise);
-    return lineupStrength(franchise, starters);
+    // Talent is amplified by the game sim; situational modifiers are not — scale them down so the
+    // amplifier leaves them at face value (they used to count ~3x more in the playoffs).
+    return lineupTalent(franchise, starters) + lineupModifiers(franchise, starters) / TALENT_GAP_AMPLIFIER;
   }
   return effectiveGameStrength(league, teamId, franchise) + (Math.random() * 3 - 1.5);
 }

@@ -6525,3 +6525,565 @@ h1, h2, h3,
     min-height: 44px;
   }
 }
+
+/* ═══ Free agency ═══════════════════════════════════════════════════════════ */
+.fa-capbar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.fa-capbar > div {
+  padding: 10px 12px;
+  background: var(--charcoal);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fa-capbar span {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+
+.fa-capbar strong {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.fa-capbar .is-warn strong {
+  color: var(--danger);
+}
+
+.fa-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  margin-bottom: 8px;
+  background: var(--charcoal);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+}
+
+.fa-card.is-target {
+  border-left: 3px solid var(--success);
+}
+
+.fa-card.is-pass {
+  opacity: 0.75;
+}
+
+.fa-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.fa-card-id {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fa-card-id strong {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.fa-card-id span {
+  font-size: 13px;
+  color: var(--silver);
+}
+
+.fa-card-ovr {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--font-display);
+  line-height: 1;
+}
+
+.fa-card-ovr strong {
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.fa-card-ovr span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.fa-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.fa-card-rival,
+.fa-sheet-rival {
+  margin: 0;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--off-white);
+  background: rgba(226, 82, 74, 0.1);
+  border-left: 3px solid var(--danger);
+  border-radius: 2px;
+}
+
+.fa-card-interest {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fa-card-interest > span {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+
+.fa-advance {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.fa-stepper {
+  display: grid;
+  grid-template-columns: 56px 1fr 56px;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.fa-stepper > button {
+  min-height: 56px;
+  background: var(--charcoal);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  color: var(--off-white);
+  font-size: 26px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fa-stepper > button:disabled {
+  opacity: 0.35;
+}
+
+.fa-stepper-value {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--charcoal);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+}
+
+.fa-stepper-value strong {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.fa-stepper-value span {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--silver);
+}
+
+.fa-slider {
+  width: 100%;
+  margin: 10px 0 4px;
+  accent-color: var(--signal);
+}
+
+.fa-presets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+  gap: 6px;
+}
+
+.fa-preset,
+.fa-segment > button {
+  min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  background: var(--charcoal);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  color: var(--off-white);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.fa-preset span,
+.fa-segment small {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--silver);
+}
+
+.fa-preset.is-on,
+.fa-segment > button.is-on {
+  border-color: var(--signal);
+  background: rgba(255, 107, 31, 0.1);
+  color: var(--signal);
+}
+
+.fa-segment {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.fa-segment > button {
+  font-size: 20px;
+}
+
+.fa-pitches {
+  display: grid;
+  gap: 6px;
+}
+
+.fa-pitch {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-height: 56px;
+  padding: 10px 12px;
+  background: var(--charcoal);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  color: var(--off-white);
+  text-align: left;
+  cursor: pointer;
+}
+
+.fa-pitch strong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.fa-pitch em {
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  border-radius: 2px;
+  background: rgba(63, 174, 122, 0.16);
+  color: var(--success);
+}
+
+.fa-pitch span {
+  font-size: 13px;
+  color: var(--silver);
+}
+
+.fa-pitch.is-on {
+  border-color: var(--signal);
+  background: rgba(255, 107, 31, 0.08);
+}
+
+.fa-meter {
+  position: relative;
+  height: 8px;
+  margin: 0 0 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 1px;
+}
+
+.fa-meter-fill {
+  height: 100%;
+  border-radius: 1px;
+  background: var(--danger);
+  transition: width 0.2s;
+}
+
+.fa-meter-fill--good { background: var(--success); }
+.fa-meter-fill--mid { background: var(--warning); }
+
+.fa-meter-mark {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  background: var(--off-white);
+}
+
+/* ═══ Training camp cuts ════════════════════════════════════════════════════ */
+.tc-cut-suggested {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.tc-help {
+  margin: 8px 0 6px;
+  font-size: 13px;
+  color: var(--silver);
+}
+
+.tc-player-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tc-player-row.is-suggested {
+  border-color: rgba(224, 160, 58, 0.5);
+  background: rgba(224, 160, 58, 0.06);
+}
+
+.tc-player-meta {
+  font-size: 13px;
+}
+
+.tc-thin {
+  font-style: normal;
+  color: var(--warning);
+}
+
+.tc-suggest-chip {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.tc-release-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: stretch;
+}
+
+.tc-release-btn {
+  min-height: 44px;
+  min-width: 88px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tc-release-btn.is-confirm {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
+
+.tc-cancel {
+  min-height: 36px;
+  background: none;
+  border: none;
+  color: var(--silver);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* ═══ Game day ══════════════════════════════════════════════════════════════ */
+.gameday {
+  padding-bottom: 96px;
+}
+
+.gameday-matchup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.gameday-vs {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+
+.gameday-opp {
+  flex-basis: 100%;
+  margin: 6px 0 0;
+}
+
+.gameday-series {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--silver);
+}
+
+.gameday-odds {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.gameday-odds > div {
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.gameday-odds span {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+
+.gameday-odds strong {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.gameday-win--good strong { color: var(--success); }
+.gameday-win--mid strong { color: var(--warning); }
+.gameday-win--bad strong { color: var(--danger); }
+
+.gameday-five-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.gameday-five-head .btn {
+  width: auto;
+}
+
+.gameday-slots {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.gameday-slot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 62px;
+  padding: 8px 10px;
+  background: var(--slate);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  color: var(--off-white);
+  text-align: left;
+  cursor: pointer;
+}
+
+.gameday-slot.is-empty {
+  border-style: dashed;
+  border-color: rgba(255, 107, 31, 0.5);
+}
+
+.gameday-slot-pos {
+  width: 34px;
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--signal);
+}
+
+.gameday-skip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 4px 0 12px;
+  font-size: 14px;
+  color: var(--silver);
+}
+
+.gameday-skip .btn {
+  width: auto;
+}
+
+.gameday-bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(76px + var(--safe-bottom));
+  width: min(480px, 100%);
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(11, 12, 14, 0.96);
+  border-top: 1px solid var(--hairline);
+  z-index: 80;
+}
+
+.gameday-bar .btn {
+  min-height: 52px;
+  width: 100%;
+}
+
+.gameday-bar .btn:only-child {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 960px) {
+  .gameday {
+    padding-bottom: 24px;
+  }
+
+  .gameday-bar {
+    position: static;
+    transform: none;
+    width: 100%;
+    padding: 0;
+    background: none;
+    border: none;
+  }
+}
+
+/* Slot rows already show the position — hide the avatar's duplicate badge. */
+.gameday-slot .player-avatar-pos,
+.gameday-slot .player-avatar-ovr,
+.tc-player-row .player-avatar-pos {
+  display: none;
+}

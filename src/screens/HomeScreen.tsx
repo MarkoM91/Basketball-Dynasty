@@ -80,7 +80,9 @@ export function HomeScreen() {
 
   const fin = computeTeamFinances(franchise);
   // Before the new season tips off, a table of 0–0s says nothing — show last season's final table.
-  const seasonUnderway = Boolean(league?.teams.some((t) => t.wins + t.losses > 0));
+  // Last season's table only belongs to the offseason — once the regular season opens, show 0–0.
+  const inSeason = ['training_camp', 'regular_season', 'trade_deadline', 'playoffs', 'season_review'].includes(franchise.phase);
+  const seasonUnderway = inSeason || Boolean(league?.teams.some((t) => t.wins + t.losses > 0));
   const lastSeason = !seasonUnderway ? league?.lastSeasonStandings : undefined;
   const standings = league
     ? getStandings(lastSeason ? { ...league, teams: lastSeason.teams } : league)
