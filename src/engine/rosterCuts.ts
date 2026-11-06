@@ -30,8 +30,23 @@ export function rosterHasRoom(franchise: Franchise): boolean {
   return franchise.roster.length < ROSTER_SIZE;
 }
 
-export function rosterFullMessage(): string {
-  return `Roster full (${ROSTER_SIZE}/${ROSTER_SIZE}). Waive or trade someone before signing.`;
+/** Offseason rosters may run over the limit (cuts happen at training camp), up to this many extra. */
+export const OFFSEASON_ROSTER_FLEX = 3;
+
+/** Max roster size for adding a player right now — 18 in season, 21 during the offseason. */
+export function signingRosterLimit(franchise: Franchise): number {
+  return isOffseasonRosterFlex(franchise.phase) ? ROSTER_SIZE + OFFSEASON_ROSTER_FLEX : ROSTER_SIZE;
+}
+
+export function canAddPlayer(franchise: Franchise): boolean {
+  return franchise.roster.length < signingRosterLimit(franchise);
+}
+
+export function rosterFullMessage(franchise?: Franchise): string {
+  const limit = franchise ? signingRosterLimit(franchise) : ROSTER_SIZE;
+  return limit > ROSTER_SIZE
+    ? `Offseason roster max is ${limit}. Waive or trade someone before signing.`
+    : `Roster full (${ROSTER_SIZE}/${ROSTER_SIZE}). Waive or trade someone before signing.`;
 }
 
 export function canOpenFreeAgency(franchise: Franchise): {

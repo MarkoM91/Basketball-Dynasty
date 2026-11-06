@@ -3,12 +3,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { ROSTER_SIZE } from '../data/rosterBuilder';
 import { formatMoney } from '../data/scenarios';
 import { formatUsableCapRoom } from '../engine/cap';
+import { canAddPlayer, signingRosterLimit } from '../engine/rosterCuts';
 
 import {
   marketHeatLabel,
   minSalaryToSign,
   offerSalaryBounds,
-  pitchLabel,
   previewOffer,
   rivalPitchWarning,
 } from '../engine/freeAgency';
@@ -20,6 +20,7 @@ import { useGameStore } from '../store/gameStore';
 import type { FreeAgent, Franchise, League, PitchType } from '../types/game';
 
 import { Panel, ProgressBar } from '../components/UI';
+import { Icon } from '../components/Icon';
 
 const PITCHES: PitchType[] = ['max_offer', 'team_friendly', 'win_now', 'featured_role'];
 
@@ -36,143 +37,215 @@ function pitchShortLabel(p: PitchType): string {
   }
 }
 
-function FaOfferPanel({
+const PITCH_HELP: Record<PitchType, string> = {
+  max_offer: 'Lead with money — beats rival bids, costs the most.',
+  team_friendly: 'Ask for a discount — works when he likes your situation.',
+  win_now: 'Sell the contender — veterans chasing a ring listen.',
+  featured_role: 'Promise minutes and touches — young players want a role.',
+};
+
+const SALARY_STEP = 250_000;
+
+/**
+ * Full-screen offer sheet. Replaces the per-card slider + comma-decimal number box + second
+ * years box + four pitch chips that were repeated under every free agent.
+ */
+function FaOfferSheet({
   fa,
   franchise,
   league,
   recommendedPitch,
   onSubmit,
+  onClose,
 }: {
   fa: FreeAgent;
   franchise: Franchise;
   league: League;
   recommendedPitch?: PitchType;
   onSubmit: (pitch: PitchType, salary: number, years: number) => void;
+  onClose: () => void;
 }) {
   const bounds = useMemo(() => offerSalaryBounds(franchise, fa), [franchise, fa]);
   const [pitch, setPitch] = useState<PitchType>(
     recommendedPitch ?? (fa.topOfferTeam ? 'max_offer' : 'featured_role'),
   );
   const [salary, setSalary] = useState(bounds.suggested);
-  const [years, setYears] = useState(fa.askingYears);
+  const [years, setYears] = useState(Math.max(1, Math.min(5, fa.askingYears)));
 
   useEffect(() => {
-    setSalary((prev) => Math.max(prev, bounds.suggested));
-  }, [fa.id, fa.rivalOfferSalary, fa.userPitchAttempts, bounds.suggested]);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
 
+  const clamp = (v: number) => Math.max(bounds.min, Math.min(bounds.max, Math.round(v / 50_000) * 50_000));
   const preview = useMemo(
     () => previewOffer(franchise, league, fa, pitch, salary, years),
     [franchise, league, fa, pitch, salary, years],
   );
 
-  const salaryMillions = Math.round((salary / 1_000_000) * 10) / 10;
+  const presets: { label: string; value: number }[] = [
+    { label: 'Ask', value: fa.askingSalary },
+    ...(bounds.rival
+      ? [
+          { label: 'Match rival', value: bounds.rival },
+          { label: 'Beat rival', value: bounds.rival * 1.03 },
+        ]
+      : []),
+    { label: 'Max room', value: bounds.max },
+  ].map((p) => ({ ...p, value: clamp(p.value) }));
+
+  const overRoster = franchise.roster.length >= ROSTER_SIZE;
+  const rosterBlocked = !canAddPlayer(franchise);
+  const tone = rosterBlocked || !preview.capOk
+    ? 'bad'
+    : preview.likelySign
+      ? 'good'
+      : preview.projectedInterest >= preview.signThreshold - 10
+        ? 'mid'
+        : 'bad';
+  const headline = rosterBlocked
+    ? 'Roster full'
+    : !preview.capOk
+    ? 'Cap blocks this'
+    : preview.likelySign
+      ? 'He signs'
+      : !preview.beatsRival && preview.rivalSalary > 0
+        ? `${fa.topOfferTeam ?? 'Rival'} wins`
+        : 'Not enough';
+  const detail = rosterBlocked
+    ? `Offseason max is ${signingRosterLimit(franchise)}. Waive or trade someone first.`
+    : !preview.capOk
+    ? preview.capReason
+    : !preview.beatsRival && preview.rivalSalary > 0
+      ? `Raise to ${formatMoney(minSalaryToSign(fa, pitch))}/yr to beat their offer.`
+      : preview.likelySign
+        ? overRoster
+          ? `He signs now — cut back to ${ROSTER_SIZE} at training camp.`
+          : 'Offer is strong enough to land him.'
+        : `Interest ${preview.projectedInterest}% — he needs ${preview.signThreshold}%. Try more money or a different pitch.`;
+  const meter = Math.max(0, Math.min(100, preview.projectedInterest));
 
   return (
-    <div className="fa-offer-panel">
-      <div className="fa-offer-quick">
-        {bounds.rival && (
-          <button type="button" className="btn btn-ghost" onClick={() => setSalary(bounds.rival!)}>
-            Match {formatMoney(bounds.rival!)}
-          </button>
-        )}
-        {bounds.rival && (
+    <div className="deal-sheet" role="dialog" aria-modal="true" aria-label={`Offer to ${fa.firstName} ${fa.lastName}`}>
+      <header className="deal-head">
+        <div>
+          <p className="eyebrow">Offer · {fa.position} · {fa.age} · {fa.overall} OVR</p>
+          <h2 className="deal-title">{fa.firstName} {fa.lastName}</h2>
+        </div>
+        <button type="button" className="deal-close" onClick={onClose} aria-label="Close">
+          <Icon name="x" size={22} />
+        </button>
+      </header>
+
+      <div className="deal-body">
+        {fa.topOfferTeam && <p className="fa-sheet-rival">{rivalPitchWarning(fa) ?? `Leaning ${fa.topOfferTeam}`}</p>}
+
+        <p className="deal-section-label">Salary per year</p>
+        <div className="fa-stepper">
           <button
             type="button"
-            className="btn btn-ghost"
-            onClick={() => setSalary(Math.round(bounds.rival! * 1.03))}
+            aria-label="Lower salary"
+            onClick={() => setSalary(clamp(salary - SALARY_STEP))}
+            disabled={salary <= bounds.min}
           >
-            Beat rival
+            −
           </button>
-        )}
-        <button type="button" className="btn btn-ghost" onClick={() => setSalary(Math.round(bounds.ask * 1.08))}>
-          Max ask
-        </button>
-      </div>
-
-      <label className="stat-label" htmlFor={`fa-salary-${fa.id}`}>
-        Offer · {formatUsableCapRoom(franchise.cap)} usable room
-      </label>
-      <div className="fa-offer-salary-row">
+          <div className="fa-stepper-value">
+            <strong>{formatMoney(salary)}</strong>
+            <span>Asks {formatMoney(fa.askingSalary)} · room {formatUsableCapRoom(franchise.cap)}</span>
+          </div>
+          <button
+            type="button"
+            aria-label="Raise salary"
+            onClick={() => setSalary(clamp(salary + SALARY_STEP))}
+            disabled={salary >= bounds.max}
+          >
+            +
+          </button>
+        </div>
         <input
-          id={`fa-salary-${fa.id}`}
+          className="fa-slider"
           type="range"
+          aria-label="Salary"
           min={bounds.min}
           max={bounds.max}
-          step={100_000}
+          step={50_000}
           value={salary}
           onChange={(e) => setSalary(Number(e.target.value))}
         />
-        <div className="fa-offer-salary-input">
-          <span className="mono">$</span>
-          <input
-            type="number"
-            className="mono"
-            min={bounds.min / 1_000_000}
-            max={bounds.max / 1_000_000}
-            step={0.1}
-            value={salaryMillions}
-            onChange={(e) => {
-              const next = Math.round(Number(e.target.value) * 1_000_000);
-              if (Number.isFinite(next)) {
-                setSalary(Math.max(bounds.min, Math.min(bounds.max, next)));
-              }
-            }}
-          />
-          <span className="mono">M × {years}yr</span>
+        <div className="fa-presets">
+          {presets.map((p) => (
+            <button
+              key={p.label}
+              type="button"
+              className={`fa-preset ${salary === p.value ? 'is-on' : ''}`}
+              onClick={() => setSalary(p.value)}
+            >
+              {p.label}
+              <span>{formatMoney(p.value)}</span>
+            </button>
+          ))}
+        </div>
+
+        <p className="deal-section-label">Years</p>
+        <div className="fa-segment" role="radiogroup" aria-label="Contract years">
+          {[1, 2, 3, 4, 5].map((y) => (
+            <button
+              key={y}
+              type="button"
+              role="radio"
+              aria-checked={years === y}
+              className={years === y ? 'is-on' : ''}
+              onClick={() => setYears(y)}
+            >
+              {y}
+              {y === fa.askingYears && <small>ask</small>}
+            </button>
+          ))}
+        </div>
+
+        <p className="deal-section-label">Your pitch</p>
+        <div className="fa-pitches" role="radiogroup" aria-label="Pitch">
+          {PITCHES.map((p) => (
+            <button
+              key={p}
+              type="button"
+              role="radio"
+              aria-checked={pitch === p}
+              className={`fa-pitch ${pitch === p ? 'is-on' : ''}`}
+              onClick={() => setPitch(p)}
+            >
+              <strong>
+                {pitchShortLabel(p)}
+                {recommendedPitch === p && <em>Recommended</em>}
+              </strong>
+              <span>{PITCH_HELP[p]}</span>
+            </button>
+          ))}
         </div>
       </div>
 
-      <input
-        id={`fa-years-${fa.id}`}
-        type="number"
-        min={1}
-        max={5}
-        value={years}
-        onChange={(e) => setYears(Math.max(1, Math.min(5, Number(e.target.value) || 1)))}
-        className="fa-offer-years"
-        aria-label="Contract years"
-      />
-
-      <div className="fa-pitch-row">
-        {PITCHES.map((p) => (
-          <button
-            key={p}
-            type="button"
-            className={`fa-pitch-chip${pitch === p ? ' fa-pitch-chip-active' : ''}${recommendedPitch === p ? ' fa-pitch-chip-rec' : ''}`}
-            onClick={() => setPitch(p)}
-            title={pitchLabel(p)}
-          >
-            {pitchShortLabel(p)}
-          </button>
-        ))}
-      </div>
-
-      <p className="fa-offer-status">
-        {!preview.capOk ? (
-          <span className="danger-text">{preview.capReason}</span>
-        ) : preview.likelySign && franchise.roster.length >= ROSTER_SIZE ? (
-          <span className="warning-text">Over roster limit — you'll need to cut before the season opens</span>
-        ) : preview.likelySign ? (
-          <span className="success-text">Ready to sign</span>
-        ) : !preview.beatsRival && preview.rivalSalary > 0 ? (
-          <span className="danger-text">
-            Raise to {formatMoney(minSalaryToSign(fa, pitch))}/yr to beat {fa.topOfferTeam ?? 'rival bid'}
-          </span>
-        ) : preview.projectedInterest < preview.signThreshold ? (
-          <span>Interest {preview.projectedInterest}% — need {preview.signThreshold}% (try Max $ or Big role)</span>
-        ) : (
-          <span>Almost there — tweak salary or pitch</span>
-        )}
-      </p>
-
-      <button
-        type="button"
-        className="btn btn-primary fa-offer-submit"
-        disabled={!preview.capOk || !preview.likelySign}
-        onClick={() => onSubmit(pitch, salary, years)}
-      >
-        Offer {formatMoney(salary)}/yr · {pitchShortLabel(pitch)}
-      </button>
+      <footer className="deal-foot">
+        <div className={`deal-verdict deal-verdict--${tone}`}>
+          <strong>{headline}</strong>
+          <span>{detail}</span>
+        </div>
+        <div className="fa-meter" aria-label={`Interest ${meter}%, needs ${preview.signThreshold}%`}>
+          <div className={`fa-meter-fill fa-meter-fill--${tone}`} style={{ width: `${meter}%` }} />
+          <div className="fa-meter-mark" style={{ left: `${preview.signThreshold}%` }} />
+        </div>
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={rosterBlocked || !preview.capOk || !preview.likelySign}
+          onClick={() => onSubmit(pitch, salary, years)}
+        >
+          Offer {formatMoney(salary)} × {years}yr
+        </button>
+      </footer>
     </div>
   );
 }
@@ -185,9 +258,16 @@ export function FreeAgencyScreen() {
     [franchise, league],
   );
 
+  const [offerFor, setOfferFor] = useState<string | null>(null);
+
   if (!franchise) return null;
 
   const available = franchise.freeAgents.filter((a) => !a.signed);
+  // Targets first, passes last, then best available.
+  const rank = (fa: FreeAgent) =>
+    briefing && targetForAgent(briefing, fa.id) ? 0 : briefing && avoidForAgent(briefing, fa.id) ? 2 : 1;
+  const sortedAvailable = [...available].sort((a, b) => rank(a) - rank(b) || b.overall - a.overall);
+  const offerAgent = offerFor ? available.find((a) => a.id === offerFor) : undefined;
   const signed = franchise.freeAgents.filter((a) => a.signed);
   const pendingRFA = (franchise.rfaOffers ?? []).filter((o) => o.status === 'pending');
 
@@ -197,13 +277,23 @@ export function FreeAgencyScreen() {
         <div>
           <p className="eyebrow">Free agency</p>
           <h1 className="title-lg">Sign players</h1>
-          <p className="body" style={{ fontSize: 12, marginTop: 6, marginBottom: 0 }}>
-            {franchise.roster.length}/{ROSTER_SIZE} roster · {formatUsableCapRoom(franchise.cap)} usable
-            {franchise.cap.capHoldsTotal > 0 ? ` · ${formatMoney(franchise.cap.capHoldsTotal)} holds` : ''}
-            {franchise.cap.mleUsed ? ' · MLE used' : ` · MLE ${formatMoney(franchise.cap.mleAvailable)}`}
-          </p>
         </div>
         <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('home')}>Back</button>
+      </div>
+
+      <div className="fa-capbar">
+        <div className={franchise.roster.length > ROSTER_SIZE ? 'is-warn' : ''}>
+          <span>Roster</span>
+          <strong>{franchise.roster.length}/{ROSTER_SIZE}</strong>
+        </div>
+        <div>
+          <span>Cap room</span>
+          <strong>{formatUsableCapRoom(franchise.cap)}</strong>
+        </div>
+        <div>
+          <span>MLE</span>
+          <strong>{franchise.cap.mleUsed ? 'Used' : formatMoney(franchise.cap.mleAvailable)}</strong>
+        </div>
       </div>
 
       {briefing && available.length > 0 && (
@@ -220,15 +310,6 @@ export function FreeAgencyScreen() {
                 </span>
               ))}
             </div>
-          )}
-          {briefing.targets.length > 0 && (
-            <ul className="fa-target-list">
-              {briefing.targets.slice(0, 3).map((target) => (
-                <li key={target.id}>
-                  <strong>{target.playerName}</strong> ({target.overall}) — {target.headline}. {pitchShortLabel(target.recommendedPitch)}.
-                </li>
-              ))}
-            </ul>
           )}
         </Panel>
       )}
@@ -265,57 +346,45 @@ export function FreeAgencyScreen() {
           </button>
         </Panel>
       ) : (
-        available.map((fa) => {
+        sortedAvailable.map((fa) => {
           const target = briefing ? targetForAgent(briefing, fa.id) : undefined;
           const avoid = briefing ? avoidForAgent(briefing, fa.id) : undefined;
-          if (!league) return null;
-
           return (
-            <Panel key={fa.id} accent={Boolean(target?.urgency === 'high')}>
-              <div className="fa-player-head">
-                <div>
-                  <p className="title-md">{fa.firstName} {fa.lastName} · {fa.age} · {fa.position}</p>
-                  <div className="fa-player-chips">
-                    <span className="chip chip-gold">{fa.archetype}</span>
-                    {fa.formerTeam && <span className="chip">ex-{fa.formerTeam.split(' ').slice(-1)[0]}</span>}
-                    <span className="chip">{marketHeatLabel(fa)}</span>
-                    {(fa.suitorCount ?? 0) > 0 && (
-                      <span className="chip chip-warning">{fa.suitorCount} suitors</span>
-                    )}
-                    {target && (
-                      <span className={`chip ${target.urgency === 'high' ? 'chip-success' : 'chip-warning'}`}>
-                        Target
-                      </span>
-                    )}
-                    {avoid && !target && <span className="chip chip-danger">Pass</span>}
-                  </div>
+            <article key={fa.id} className={`fa-card ${target ? 'is-target' : ''} ${avoid && !target ? 'is-pass' : ''}`}>
+              <div className="fa-card-top">
+                <div className="fa-card-id">
+                  <strong>{fa.firstName} {fa.lastName}</strong>
+                  <span>
+                    {fa.position} · {fa.age} · {fa.archetype}
+                    {fa.formerTeam ? ` · ex-${fa.formerTeam.split(' ').slice(-1)[0]}` : ''}
+                  </span>
                 </div>
-                <div className="fa-player-ask">
-                  <div className="fa-player-ovr">{fa.overall}</div>
-                  <div className="mono">{formatMoney(fa.askingSalary)}</div>
+                <div className="fa-card-ovr">
+                  <strong>{fa.overall}</strong>
+                  <span>{formatMoney(fa.askingSalary)} × {fa.askingYears}y</span>
                 </div>
               </div>
-
+              <div className="fa-card-tags">
+                {target && <span className="chip chip-success">Target</span>}
+                {avoid && !target && <span className="chip chip-danger">Pass</span>}
+                <span className="chip">{marketHeatLabel(fa)}</span>
+                {(fa.suitorCount ?? 0) > 0 && <span className="chip chip-warning">{fa.suitorCount} suitors</span>}
+              </div>
               {fa.topOfferTeam && (
-                <p className="fa-rival-line danger-text">
-                  {rivalPitchWarning(fa) ?? `Leaning ${fa.topOfferTeam}`}
-                </p>
+                <p className="fa-card-rival">{rivalPitchWarning(fa) ?? `Leaning ${fa.topOfferTeam}`}</p>
               )}
-
-              <p className="body" style={{ fontSize: 12, marginTop: 8, marginBottom: 0 }}>{fa.scoutNote}</p>
-
-              <p className="eyebrow" style={{ marginTop: 10 }}>Your interest</p>
-              <ProgressBar value={fa.interest} />
-
-              <FaOfferPanel
-                key={`${fa.id}-${fa.rivalOfferSalary ?? 0}-${fa.userPitchAttempts ?? 0}`}
-                fa={fa}
-                franchise={franchise}
-                league={league}
-                recommendedPitch={target?.recommendedPitch}
-                onSubmit={(pitch, salary, years) => pitchAgent(fa.id, pitch, salary, years)}
-              />
-            </Panel>
+              <div className="fa-card-interest">
+                <span>Interest in you</span>
+                <ProgressBar value={fa.interest} />
+              </div>
+              <button
+                type="button"
+                className={`btn ${target ? 'btn-primary' : 'btn-secondary'}`}
+                onClick={() => setOfferFor(fa.id)}
+              >
+                Make offer
+              </button>
+            </article>
           );
         })
       )}
@@ -332,9 +401,24 @@ export function FreeAgencyScreen() {
       )}
 
       {available.length > 0 && (
-        <button type="button" className="btn btn-secondary" style={{ marginTop: 8, width: '100%' }} onClick={advanceFreeAgency}>
-          Advance market
+        <button type="button" className="btn btn-secondary fa-advance" onClick={advanceFreeAgency}>
+          Advance market · rivals make moves
         </button>
+      )}
+
+      {offerAgent && league && (
+        <FaOfferSheet
+          key={`${offerAgent.id}-${offerAgent.rivalOfferSalary ?? 0}-${offerAgent.userPitchAttempts ?? 0}`}
+          fa={offerAgent}
+          franchise={franchise}
+          league={league}
+          recommendedPitch={briefing ? targetForAgent(briefing, offerAgent.id)?.recommendedPitch : undefined}
+          onClose={() => setOfferFor(null)}
+          onSubmit={(pitch, salary, years) => {
+            pitchAgent(offerAgent.id, pitch, salary, years);
+            setOfferFor(null);
+          }}
+        />
       )}
     </div>
   );

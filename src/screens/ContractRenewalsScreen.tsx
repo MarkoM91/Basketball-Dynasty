@@ -40,7 +40,7 @@ export function ContractRenewalsScreen() {
           <p className="eyebrow">Offseason · Before free agency</p>
           <h1 className="title-lg">Contract renewals</h1>
         </div>
-        <button type="button" className="btn btn-ghost" onClick={() => setScreen('home')}>
+        <button type="button" className="btn btn-ghost screen-back" onClick={() => setScreen('home')}>
           Back
         </button>
       </div>
