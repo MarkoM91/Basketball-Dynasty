@@ -10,6 +10,7 @@ import { PROBALLERS_RATINGS } from './proballersRatings';
 import { teamStarFromRatings, teamStrengthFromRatings } from '../engine/proballersPlayer';
 import { strategyForFranchise, teamRatingStrength } from '../engine/scenarioDifficulty';
 import { ensureLeagueRosters } from '../engine/leagueWorld';
+import { repairDraftOrder } from '../engine/draftOrder';
 
 export const LEAGUE_TEAM_TEMPLATES: { city: string; name: string; market: 'Small' | 'Mid' | 'Large' }[] = [
   { city: 'Boston', name: 'Harbor', market: 'Large' },
@@ -52,6 +53,27 @@ export function pickStrategy(strength: number): TeamStrategy {
   if (strength >= 68) return 'playin';
   if (strength >= 64) return 'retool';
   return Math.random() > 0.4 ? 'rebuild' : 'tank';
+}
+
+/**
+ * Front-office strategy follows where a team sits in the league, not absolute OVR thresholds
+ * (no roster ever reached the old ≥86 "contend" bar, so 25 of 30 teams were "Developing").
+ */
+export function strategyForRank(rank: number, teamCount: number, coinFlip = Math.random()): TeamStrategy {
+  const pct = rank / Math.max(1, teamCount - 1);
+  if (pct <= 0.1) return coinFlip > 0.5 ? 'all_in' : 'contend';
+  if (pct <= 0.27) return 'contend';
+  if (pct <= 0.45) return coinFlip > 0.5 ? 'playin' : 'retool';
+  if (pct <= 0.62) return 'developing';
+  if (pct <= 0.8) return coinFlip > 0.5 ? 'retool' : 'developing';
+  return coinFlip > 0.4 ? 'rebuild' : 'tank';
+}
+
+function assignStrategiesByRank(teams: LeagueTeam[]): void {
+  const ranked = [...teams].sort((a, b) => b.strength - a.strength);
+  ranked.forEach((t, i) => {
+    if (!t.isUser) t.strategy = strategyForRank(i, ranked.length);
+  });
 }
 
 export function createLeague(
@@ -104,6 +126,7 @@ export function createLeague(
     };
   });
 
+  assignStrategiesByRank(teams);
   const userTeam = teams.find((t) => t.isUser);
   const balanced = seedLeagueRecords(
     teams,
@@ -233,10 +256,10 @@ export function normalizeLeague(league: League, userFranchise?: Franchise | null
     ...league,
     teams: league.teams.map(normalizeLeagueTeam),
   });
-  const withRosters = ensureLeagueRosters(withSchedule, userFranchise);
+  const withRosters = repairDraftOrder(ensureLeagueRosters(withSchedule, userFranchise));
   return {
     ...withRosters,
-    draftOrder: (league.draftOrder ?? []).map((entry) => ({
+    draftOrder: (withRosters.draftOrder ?? []).map((entry) => ({
       ...entry,
       teamName: resolveTeamFullName(entry.teamName),
     })),

@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { Link, Navigate, Outlet, useNavigate } from 'react-router-dom';
-import { NavBar, Toast } from './UI';
+import { Toast } from './UI';
+import { MobileNav } from './MobileNav';
 import { DesktopHeader, DesktopSidebar } from './DesktopSidebar';
 import { pathFromScreen } from '../routes';
 import { useGameStore, normalizeFranchise } from '../store/gameStore';
@@ -66,8 +67,12 @@ export function GameLayout() {
   const setScreen = useGameStore((s) => s.setScreen);
   const isMobile = useMobileLayout();
 
+  // Phones used to drop every toast instantly, so mobile players never saw game feedback.
+  // Show it above the bottom nav and auto-dismiss instead.
   useEffect(() => {
-    if (isMobile && toast) dismissToast();
+    if (!isMobile || !toast) return;
+    const t = window.setTimeout(dismissToast, 4000);
+    return () => window.clearTimeout(t);
   }, [isMobile, toast, dismissToast]);
 
   const goTo = (next: ScreenId) => {
@@ -81,14 +86,14 @@ export function GameLayout() {
       {franchise && <DesktopSidebar screen={screen} onNavigate={goTo} />}
       <div className="app-main">
         {franchise && <DesktopHeader />}
-        {toast && !isMobile && <Toast message={toast} onDismiss={dismissToast} />}
+        {toast && <Toast message={toast} onDismiss={dismissToast} mobile={isMobile} />}
         {franchise && (
           <div className="mobile-game-nav">
             <Link to="/" className="back-link">← Main menu</Link>
           </div>
         )}
         <Outlet context={{ goTo }} />
-        {franchise && <NavBar screen={screen} phase={franchise.phase} onNavigate={goTo} />}
+        {franchise && <MobileNav screen={screen} phase={franchise.phase} onNavigate={goTo} />}
       </div>
     </div>
   );

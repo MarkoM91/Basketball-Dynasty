@@ -15,7 +15,9 @@ import type {
   TradeProposal,
   TradeChainProposal,
 } from '../types/game';
-import { createLeague, getTeamById, normalizeLeague, syncUserTeam } from '../data/league';
+import { createLeague, getTeamById, normalizeLeague, normalizeLeagueTeam, syncUserTeam } from '../data/league';
+import { buildLeagueSchedule, SEASON_GAME_COUNT } from '../engine/leagueSchedule';
+import { backfillTakeoverHistory } from '../engine/takeoverHistory';
 import { resolveTeamFullName, resolveTeamIdentity } from '../data/teamNames';
 import { applyRosterSize, fillRosterTo18, normalizeLoadedRoster } from '../data/rosterBuilder';
 import { applyScenarioProfile, strategyForFranchise, teamRatingStrength, ensureScenarioRosterShape } from '../engine/scenarioDifficulty';
@@ -37,10 +39,12 @@ import {
   advanceLeagueSeason,
   applyUserTradeToLeague,
   addDraftPickToLeague,
+  applyAiDraftSelections,
   ensureLeagueRosters,
   syncUserRosterToLeague,
   tickLeagueInjuries,
   executeLeagueTrades,
+  snapshotFinalStandings,
 } from '../engine/leagueWorld';
 import {
   generateLeagueTradeOffers,
@@ -55,6 +59,7 @@ import {
   initDraftNight,
   isUserDraftComplete,
   normalizeDraftNight,
+  userSlotsFromDraftOrder,
   runDraftToUserPick,
   simDraftToEnd,
   simOneDraftPick,
@@ -90,7 +95,7 @@ import {
   reconcileLeagueRegularSeason,
   userWeekResultsFromGames,
 } from '../engine/leagueSimulation';
-import { buildLeagueStatSnapshot } from '../engine/stats';
+import { buildLeagueStatSnapshot, estimateSeasonLine, initialTeamScoring } from '../engine/stats';
 import { fireCoach, generateCoachMarket, hireCoach } from '../engine/coaches';
 import { clearPartnerTradeAssetCache } from '../engine/tradeBuilder';
 import { declineRFAOffer, matchRFAOffer, seedRFAOffers } from '../engine/rfa';
@@ -402,6 +407,22 @@ function rosterStrength(franchise: Franchise): number {
   return active.reduce((s, p) => s + p.overall, 0) / active.length;
 }
 
+/** New regular season: every team 0–0 with a fresh schedule (mirrors advanceLeagueSeason's reset). */
+function startFreshLeagueSeason(prior: League, season: number): League {
+  const teams = prior.teams.map((t) =>
+    normalizeLeagueTeam({
+      ...t,
+      wins: 0,
+      losses: 0,
+      regularWins: 0,
+      regularLosses: 0,
+      ...initialTeamScoring(t.strength),
+      scoreGames: 0,
+    }),
+  );
+  return { ...prior, season, teams, draftOrder: [], draftLotteryLog: [], schedule: buildLeagueSchedule(teams, season) };
+}
+
 function franchiseRegularSeasonPhase(franchise: Franchise): boolean {
   return franchise.phase === 'regular_season' || franchise.phase === 'trade_deadline';
 }
@@ -468,6 +489,18 @@ export const useGameStore = create<GameStore>()(
     clearPartnerTradeAssetCache();
     let next = cloneFranchise({ ...source, scenarioId: scenarioId ?? source.scenarioId ?? null });
     next = applyScenarioProfile(next, scenarioId);
+    const startsInOffseason = next.phase === 'draft_scouting' || next.phase === 'draft_night';
+    let priorSeasonRecord: { wins: number; losses: number } | undefined;
+    if (startsInOffseason) {
+      // An offseason start means last season is over. Normalise it to a full 82 games so the
+      // prior-season league (used for draft order) is internally consistent.
+      const played = next.record.wins + next.record.losses;
+      priorSeasonRecord = next.record;
+      if (played > 0 && played !== SEASON_GAME_COUNT) {
+        const wins = Math.round((next.record.wins / played) * SEASON_GAME_COUNT);
+        priorSeasonRecord = { wins, losses: SEASON_GAME_COUNT - wins };
+      }
+    }
     let league = createLeague(
       next.season,
       next.city,
@@ -476,16 +509,74 @@ export const useGameStore = create<GameStore>()(
       next.record,
       strategyForFranchise(next),
     );
+    let priorSeasonLeague: League | undefined;
+    if (startsInOffseason) {
+      if (priorSeasonRecord) {
+        league = createLeague(
+          next.season - 1,
+          next.city,
+          next.name,
+          rosterStrength(next),
+          priorSeasonRecord,
+          strategyForFranchise(next),
+        );
+      }
+      // Last season is frozen (draft order comes from it); the new season starts at 0–0 for everyone,
+      // exactly like the regular season_review → draft flow.
+      priorSeasonLeague = linkLeagueToFranchise(next, freezeRegularSeasonRecords(league)).league;
+      league = {
+        ...startFreshLeagueSeason(priorSeasonLeague, next.season),
+        lastSeasonStandings: snapshotFinalStandings(priorSeasonLeague),
+      };
+      next = {
+        ...next,
+        record: { wins: 0, losses: 0 },
+        regularSeasonRecord: undefined,
+        memory: [
+          ...(next.memory ?? []),
+          ...(priorSeasonRecord
+            ? [{
+                id: uid('mem'),
+                season: next.season - 1,
+                week: 0,
+                text: `Inherited a ${priorSeasonRecord.wins}–${priorSeasonRecord.losses} team. Ownership handed you the keys at the draft.`,
+                type: 'milestone' as const,
+              }]
+            : []),
+        ],
+      };
+    }
     const linked = linkLeagueToFranchise(next, league);
     next = withStartingFive(linked.franchise);
     league = linked.league;
 
-    if (next.phase === 'draft_scouting' || next.phase === 'draft_night') {
+    if (!startsInOffseason && next.record.wins + next.record.losses > 0) {
+      league = ensureLeagueRosters(league, next);
+      const history = backfillTakeoverHistory(next, league);
+      next = history.franchise;
+      league = history.league;
+    }
+
+    // Seed stat lines for games the franchise played before the user took over.
+    {
+      const inSeasonGames = startsInOffseason ? 0 : next.record.wins + next.record.losses;
+      const priorGames = startsInOffseason ? (priorSeasonRecord ? SEASON_GAME_COUNT : 0) : 0;
+      next = {
+        ...next,
+        roster: next.roster.map((p) => ({
+          ...p,
+          seasonStats: p.seasonStats?.games ? p.seasonStats : estimateSeasonLine(p, inSeasonGames),
+          priorSeasonStats: p.priorSeasonStats?.games ? p.priorSeasonStats : priorGames ? estimateSeasonLine(p, priorGames) : p.priorSeasonStats,
+        })),
+      };
+    }
+
+    if (startsInOffseason) {
       const pinnedPick = source.draftPickNumber;
       const prepared = prepareDraftScouting(
         next,
         league,
-        undefined,
+        priorSeasonLeague,
         undefined,
         pinnedPick != null ? { pinnedPick } : undefined,
       );
@@ -1124,20 +1215,27 @@ export const useGameStore = create<GameStore>()(
         offer.incoming.picks,
       );
     }
-    // If draft is live and user received picks, add those slots to draftNight
-    if (next.draftNight?.active && offer.incoming.picks.length > 0 && partner) {
-      const updatedOrder = nextLeague.draftOrder ?? [];
-      const userKey = `${next.city}|${next.name}`;
-      const newSlots = updatedOrder
-        .filter((e) => `${e.city}|${e.name}` === userKey)
-        .map((e) => e.pick);
-      const current = next.draftNight.userPickNumbers;
-      const merged = [...new Set([...current, ...newSlots])].sort((a, b) => a - b);
-      if (merged.length !== current.length) {
-        const onClock = merged.includes(next.draftNight.currentPick);
+    // Draft live: the draft order is the source of truth. Re-derive the user's slots in BOTH
+    // directions — this path used to only ADD incoming slots, so a pick traded away from the
+    // Trades screen stayed in userPickNumbers and the user was still put on the clock for it.
+    const movedPicks = offer.incoming.picks.length > 0 || offer.outgoing.picks.length > 0;
+    if (next.draftNight?.active && movedPicks && partner) {
+      const owned = userSlotsFromDraftOrder(next, nextLeague);
+      if (owned) {
+        const night = normalizeDraftNight(next.draftNight, next.draftPickNumber);
+        const userPickNumbers = [...new Set([...owned, ...night.userPicksMade])].sort((a, b) => a - b);
+        const onClock = owned.includes(night.currentPick) && !night.userPicksMade.includes(night.currentPick);
         next = {
           ...next,
-          draftNight: { ...next.draftNight, userPickNumbers: merged, onClock },
+          draftNight: {
+            ...night,
+            userPickNumbers,
+            onClock,
+            stakeholderNote:
+              userPickNumbers.every((p) => night.userPicksMade.includes(p))
+                ? 'Draft picks traded away — no selections remaining.'
+                : night.stakeholderNote,
+          },
         };
       }
     }
@@ -1259,6 +1357,7 @@ export const useGameStore = create<GameStore>()(
         phase: 'draft_night',
         draftNight,
       },
+      league: applyAiDraftSelections(league, base.log, draftNight, franchise),
       screen: 'draft',
       toast: draftNight.onClock
         ? `Round ${draftNight.log.length ? '' : '1 — '}on the clock at pick #${draftNight.currentPick}.`
@@ -1269,14 +1368,12 @@ export const useGameStore = create<GameStore>()(
   runToUserPick: () => {
     const { franchise, league } = get();
     if (!franchise?.draftNight || !league) return;
-    const draftNight = runDraftToUserPick(
-      normalizeDraftNight(franchise.draftNight, franchise.draftPickNumber),
-      league,
-      franchise,
-    );
+    const before = normalizeDraftNight(franchise.draftNight, franchise.draftPickNumber);
+    const draftNight = runDraftToUserPick(before, league, franchise);
     const nextPick = draftNight.userPickNumbers.find((p) => !draftNight.userPicksMade.includes(p));
     set({
       franchise: { ...franchise, draftNight },
+      league: applyAiDraftSelections(league, before.log, draftNight, franchise),
       toast: draftNight.onClock
         ? `Round ${draftNight.currentPick <= 30 ? 1 : 2} — pick #${draftNight.currentPick}. Make your selection.`
         : nextPick
@@ -1315,6 +1412,7 @@ export const useGameStore = create<GameStore>()(
     next = rememberRenewals(withContracts, summary);
     next = withDraftRecap({ ...next, draftNight });
     set({
+      league: applyAiDraftSelections(league, franchise.draftNight.log, draftNight, franchise),
       franchise: refreshCap(next),
       screen: 'contract_renewals',
       toast: `Draft complete. ${formatRenewalHeadline(summary)} Set your renewals, then open free agency.`,
@@ -1349,9 +1447,11 @@ export const useGameStore = create<GameStore>()(
     let draftNight: typeof result.state = { ...result.state, userDraftedNames: draftedNames };
 
     if (!isUserDraftComplete(draftNight)) {
+      const beforeRun = draftNight;
       draftNight = runDraftToUserPick(draftNight, league, next);
       set({
         franchise: { ...next, draftNight },
+        league: applyAiDraftSelections(league, beforeRun.log, draftNight, next),
         screen: 'draft',
         toast: draftNight.onClock
           ? `Round 1 pick secured. On the clock for Round 2 — pick #${draftNight.currentPick}.`
@@ -1360,6 +1460,7 @@ export const useGameStore = create<GameStore>()(
       return;
     }
 
+    const beforeEnd = draftNight;
     draftNight = simDraftToEnd(draftNight, league, next);
 
     const { franchise: withContracts, summary } = processContractRenewals(next, draftedNames);
@@ -1367,6 +1468,7 @@ export const useGameStore = create<GameStore>()(
     next = withDraftRecap({ ...next, draftNight });
 
     set({
+      league: applyAiDraftSelections(league, beforeEnd.log, draftNight, next),
       franchise: refreshCap(next),
       screen: 'contract_renewals',
       toast: `Draft complete. ${formatRenewalHeadline(summary)} Set your renewals, then open free agency.`,
@@ -1399,20 +1501,24 @@ export const useGameStore = create<GameStore>()(
     };
 
     if (!isUserDraftComplete(draftNight)) {
+      const beforeRun = draftNight;
       draftNight = runDraftToUserPick(draftNight, league, next);
       set({
         franchise: { ...next, draftNight },
+        league: applyAiDraftSelections(league, beforeRun.log, draftNight, next),
         screen: 'draft',
         toast: `${playerName(prospect)} stashed overseas for ${stashedPlayer.yearsRemaining} year${stashedPlayer.yearsRemaining > 1 ? 's' : ''}. On the clock for Round 2.`,
       });
       return;
     }
 
+    const beforeEnd = draftNight;
     draftNight = simDraftToEnd(draftNight, league, next);
     const { franchise: withContracts, summary } = processContractRenewals(next, draftedNames);
     next = rememberRenewals(withContracts, summary);
     next = withDraftRecap({ ...next, draftNight });
     set({
+      league: applyAiDraftSelections(league, beforeEnd.log, draftNight, next),
       franchise: refreshCap(next),
       screen: 'contract_renewals',
       toast: `Draft complete. ${playerName(prospect)} stashed overseas. ${formatRenewalHeadline(summary)}`,
@@ -1690,12 +1796,15 @@ export const useGameStore = create<GameStore>()(
     // Stage the current-year pick AND mark it ephemerally; pruneStagedDraftPicks
     // removes it on screen-change if the user backs out without completing a trade.
     const pick = pickForDraftSlot(franchise, pickNumber);
+    const alreadyOnBooks = franchise.draftPicks.some((p) => pickKey(p) === pickKey(pick));
     const next = ensurePickOnBooks(franchise, pick);
     set({
       franchise: next,
       screen: 'trade',
       openTradeShopDrawer: true,
-      stagedDraftSlotKey: pickKey(pick),
+      // Only a pick this action ADDED may be pruned on leaving the screen — pruning a pick that was
+      // already on the books (e.g. the scenario's 2026 1st) deleted the user's real pick.
+      stagedDraftSlotKey: alreadyOnBooks ? null : pickKey(pick),
     });
   },
 
@@ -1938,7 +2047,9 @@ export const useGameStore = create<GameStore>()(
                 Math.max(0, state.franchise.week - 1),
               );
             }
-            if (leagueRecordsNeedReconcile(league)) {
+            // Only replay the schedule once the regular season is supposed to be over — never mid-season
+            // (that silently re-simulated scenario starts on every page reload).
+            if (!franchiseRegularSeasonPhase(state.franchise) && leagueRecordsNeedReconcile(league)) {
               const reconciled = reconcileLeagueRegularSeason(
                 league,
                 state.franchise,

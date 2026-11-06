@@ -6,7 +6,7 @@ import { opponentStrength, scheduledGameAt, type ScheduleGame, SCHEDULE_GAMES_PE
 import { applyGameStats, mergeTeamScoring, simulateTeamGameScores, NBA_HOME_EDGE } from './stats';
 import { lineupSimAdjustment, ensureScenarioRosterShape, evolveFranchiseWindow, refreshScenarioOdds, windowSeasonBump } from './scenarioDifficulty';
 import { evaluateJobSecurity } from './careerMode';
-import { depthBoost } from './leagueWorld';
+import { strengthFromRoster } from './leagueWorld';
 
 export const GAMES_PER_WEEK = SCHEDULE_GAMES_PER_WEEK;
 
@@ -71,35 +71,49 @@ export function validateStartingFive(
   return { ok: true };
 }
 
-export function lineupStrength(franchise: Franchise, starterIds: string[]): number {
+/**
+ * Talent on the floor, on the same scale as AI teams (strengthFromRoster): your chosen starters
+ * fill the top five rotation slots, the best remaining healthy players fill the bench slots.
+ */
+export function lineupTalent(franchise: Franchise, starterIds: string[]): number {
+  const roster = franchise.roster ?? [];
   const starters = starterIds
-    .map((id) => (franchise.roster ?? []).find((p) => p.id === id))
-    .filter(Boolean) as Player[];
-  if (starters.length < 5) return rosterStrength(franchise);
+    .map((id) => roster.find((p) => p.id === id))
+    .filter((p): p is Player => Boolean(p) && !p!.injured);
+  const bench = roster
+    .filter((p) => !p.injured && !starters.some((s) => s.id === p.id))
+    .sort((a, b) => b.overall - a.overall);
+  const ordered = [...[...starters].sort((a, b) => b.overall - a.overall), ...bench];
+  return strengthFromRoster(ordered.map((p) => ({ ...p, injured: false })), true);
+}
 
-  const talent =
-    starters.reduce((s, p) => s + (p.overall - 1), 0) / starters.length;
+/** Situational edge in strength points — NOT amplified by the talent-gap multiplier. */
+export function lineupModifiers(franchise: Franchise, starterIds: string[]): number {
+  const roster = franchise.roster ?? [];
+  const starters = starterIds.map((id) => roster.find((p) => p.id === id)).filter(Boolean) as Player[];
   const moraleBonus = moraleModifier(franchise.lockerRoom);
-  const coachBonus = (franchise.coach.devRating + franchise.coach.playoffRating) / 55;
+  // Relative to an average coach (~70), not a flat +2.7 for everyone.
+  const coachBonus = ((franchise.coach.devRating + franchise.coach.playoffRating) / 2 - 70) / 8;
   const chemistry =
     franchise.starHappiness === 'Happy' ? 1 : franchise.starHappiness === 'Angry' ? -2 : 0;
   const starBoost = starters.some((p) => p.isStar) ? 0.5 : 0;
-  const bench = depthBoost(franchise.roster) * 0.65;
-  const injuredPenalty = franchise.roster.filter((p) => p.injured).length * 0.75;
-  return talent + moraleBonus + coachBonus + chemistry + starBoost + bench - injuredPenalty + lineupSimAdjustment(franchise);
+  return moraleBonus + coachBonus + chemistry + starBoost + lineupSimAdjustment(franchise);
 }
 
-function rosterStrength(franchise: Franchise): number {
-  const ids = franchise.startingFive?.length === 5 ? franchise.startingFive : autoStartingFive(franchise);
-  return lineupStrength(franchise, ids);
+export function lineupStrength(franchise: Franchise, starterIds: string[]): number {
+  const ids = starterIds.length === 5 ? starterIds : autoStartingFive(franchise);
+  return lineupTalent(franchise, ids) + lineupModifiers(franchise, ids);
 }
+
 export function simulateSingleGame(
   franchise: Franchise,
   league: League | undefined,
   starterIds: string[],
   scheduled?: ScheduleGame,
 ): GameResult {
-  const strength = lineupStrength(franchise, starterIds);
+  const ids = starterIds.length === 5 ? starterIds : autoStartingFive(franchise);
+  const talent = lineupTalent(franchise, ids);
+  const modifiers = lineupModifiers(franchise, ids);
 
   let home: boolean;
   let oppName: string;
@@ -135,11 +149,14 @@ export function simulateSingleGame(
 
   const homeAdv = home ? NBA_HOME_EDGE : 0;
   const fatigue = (gameInWeek ?? 1) > 1 ? 1.4 : 0;
-  const result = simulateTeamGameScores(strength - fatigue, oppStrength, homeAdv, { isUserTeam: true });
+  const result = simulateTeamGameScores(talent, oppStrength, homeAdv, {
+    isUserTeam: true,
+    teamAdj: modifiers - fatigue,
+  });
   const teamScore = result.teamScore;
   const oppScore = result.oppScore;
   const won = result.won;
-  const diff = strength + homeAdv - oppStrength;
+  const diff = (talent - oppStrength) * 3.3 + modifiers + homeAdv;
 
   let note = won
     ? 'Your starting five controlled tempo and closed strong.'
@@ -360,6 +377,14 @@ export function phaseLabel(phase: Franchise['phase']): string {
     season_review: 'Season Review',
   };
   return labels[phase];
+}
+
+/** "Week 7" during the season, otherwise the phase name — "Week 1" in the offseason is meaningless. */
+export function calendarLabel(f: Pick<Franchise, 'phase' | 'week'>, short = false): string {
+  if (f.phase === 'regular_season' || f.phase === 'trade_deadline') {
+    return short ? `Wk ${f.week}` : `Week ${f.week}`;
+  }
+  return phaseLabel(f.phase);
 }
 
 export function statusFromRecord(f: Franchise): string {

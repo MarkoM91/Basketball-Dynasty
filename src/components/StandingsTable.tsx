@@ -28,7 +28,7 @@ export function StandingsTable({
 
   return (
     <div className="standings-table-wrap">
-      <table className="standings-table">
+      <table className={`standings-table ${compact ? 'standings-table-compact' : ''}`}>
         <thead>
           <tr>
             <th>#</th>
@@ -37,8 +37,8 @@ export function StandingsTable({
             <th>L</th>
             <th>Win%</th>
             {!compact && <th>GB</th>}
-            <th title="Points scored per game">PS</th>
-            <th title="Points allowed per game">PA</th>
+            <th className="standings-col-score" title="Points scored per game">PS</th>
+            <th className="standings-col-score" title="Points allowed per game">PA</th>
             {!compact && <th title="Point differential per game">MOV</th>}
             {!compact && <th>STR</th>}
             <th>{compact ? 'Mode' : 'Strategy'}</th>
@@ -72,8 +72,8 @@ export function StandingsTable({
                 <td className="standings-num">{t.losses}</td>
                 <td className="standings-num mono">{formatWinPct(t.wins, t.losses)}</td>
                 {!compact && <td className="standings-num mono">{leader ? gamesBack(leader, t) : '—'}</td>}
-                <td className="standings-num mono">{t.ppgFor.toFixed(1)}</td>
-                <td className="standings-num mono">{t.ppgAgainst.toFixed(1)}</td>
+                <td className="standings-num mono standings-col-score">{t.ppgFor.toFixed(1)}</td>
+                <td className="standings-num mono standings-col-score">{t.ppgAgainst.toFixed(1)}</td>
                 {!compact && (
                   <td className={`standings-num mono ${mov > 0 ? 'success' : mov < 0 ? 'danger' : ''}`}>
                     {mov > 0 ? '+' : ''}{mov.toFixed(1)}

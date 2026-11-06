@@ -152,7 +152,9 @@ export function OnboardingScreen() {
           <div className="stat-value" style={{ fontSize: 13 }}>{f.ownership.goal}</div>
         </div>
         <div className="stat-cell">
-          <div className="stat-label">Record</div>
+          <div className="stat-label">
+            {f.phase === 'draft_scouting' || f.phase === 'draft_night' ? 'Last season' : 'Record'}
+          </div>
           <div className="stat-value">{f.record.wins}–{f.record.losses}</div>
         </div>
         <div className="stat-cell">

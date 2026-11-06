@@ -63,8 +63,16 @@ export const NBA_GAME_VARIANCE = 13;
 /** Home court in strength points (~3–4% win prob at parity). */
 export const NBA_HOME_EDGE = 1.6;
 
+/**
+ * Team strengths are top-heavy OVR averages that only span ~7 points league-wide, which made every
+ * team finish 33–53 wins (win SD ≈ 4; the real NBA is ≈ 12). The raw talent gap is amplified before
+ * the logistic so a stacked roster wins ~60 and a gutted one ~15–20. Situational adjustments
+ * (home court, scenario/user modifiers) are NOT amplified — they keep their calibrated meaning.
+ */
+export const TALENT_GAP_AMPLIFIER = 3.3;
+
 export function nbaWinProbability(strengthDiff: number, variance = NBA_GAME_VARIANCE): number {
-  const adjusted = strengthDiff + (Math.random() - 0.5) * variance;
+  const adjusted = strengthDiff * TALENT_GAP_AMPLIFIER + (Math.random() - 0.5) * variance;
   return 1 / (1 + Math.exp(-adjusted / NBA_WIN_PROB_SCALE));
 }
 
@@ -72,20 +80,16 @@ export function simulateTeamGameScores(
   teamStrength: number,
   oppStrength: number,
   homeAdvantage = 0,
-  opts?: { isUserTeam?: boolean; isPlayoffs?: boolean },
+  opts?: { isUserTeam?: boolean; isPlayoffs?: boolean; /** Unamplified situational edge. */ teamAdj?: number },
 ): {
   teamScore: number;
   oppScore: number;
   won: boolean;
 } {
-  let teamStr = teamStrength;
-  let oppStr = oppStrength;
-  if (opts?.isUserTeam) {
-    teamStr -= 2.4;
-    oppStr += 1;
-  }
+  // No hidden user handicap — scenario difficulty lives in lineupSimAdjustment, visibly.
+  const userAdj = opts?.teamAdj ?? 0;
   const homeAdv = homeAdvantage + (opts?.isPlayoffs ? 0.4 : 0);
-  const diff = teamStr + homeAdv - oppStr;
+  const diff = (teamStrength - oppStrength) * TALENT_GAP_AMPLIFIER + userAdj + homeAdv;
   const variance = (Math.random() - 0.5) * NBA_GAME_VARIANCE;
   const adjusted = diff + variance;
   const winProb = 1 / (1 + Math.exp(-adjusted / NBA_WIN_PROB_SCALE));
@@ -112,6 +116,18 @@ function statRates(player: Player): { ppg: number; rpg: number; apg: number; mpg
   const apg = (1.5 + ovr * 0.05 + (pos === 'PG' ? 4 : pos === 'SG' ? 1.5 : 0)) * usage;
   const mpg = Math.min(38, player.minutesPerGame + (Math.random() - 0.5) * 4);
   return { ppg, rpg, apg, mpg };
+}
+
+/**
+ * A plausible season line for a player who already has `games` behind them when a save begins
+ * (scenario starts mid-season or at the draft) — so the roster never shows a season of dashes.
+ */
+export function estimateSeasonLine(player: Player, games: number): PlayerSeasonStats {
+  if (games <= 0 || player.minutesPerGame <= 0) return { games: 0, ppg: 0, rpg: 0, apg: 0, mpg: 0 };
+  const rates = statRates(player);
+  const played = Math.max(1, Math.round(games * (player.injured ? 0.55 : 0.88 + Math.random() * 0.12)));
+  const r1 = (n: number) => Math.round(n * 10) / 10;
+  return { games: played, ppg: r1(rates.ppg), rpg: r1(rates.rpg), apg: r1(rates.apg), mpg: r1(rates.mpg) };
 }
 
 function gameBoxScore(player: Player): { pts: number; reb: number; ast: number; min: number } {

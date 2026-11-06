@@ -101,7 +101,7 @@ export function derivePlayerRatings(player: Player): PlayerRatings {
   if (player.overall >= 74 && ratings.fg >= 58) skills.push('V');
 
   ratings.skills = skills;
-  ratings.heightIn = heightInches(player.position, ratings.hgt);
+  ratings.heightIn = player.heightInches ?? heightInches(player.position, ratings.hgt);
   return ratings;
 }
 
@@ -139,11 +139,20 @@ export const COMPACT_RATING_KEYS: { key: 'fg' | 'tp' | 'ps' | 'dr' | 'reb' | 'di
   { key: 'dp', label: 'Per D' },
 ];
 
+/**
+ * Tier thresholds calibrated to the league's actual OVR distribution (~540 rostered players):
+ * top ~1% ≥ 92, top ~4% ≥ 87 (≈ two All-Star teams), top ~10% ≥ 80, top ~28% ≥ 71 (≈ 150 starters).
+ */
+export const OVR_TIERS: { min: number; label: string }[] = [
+  { min: 92, label: 'MVP candidate' },
+  { min: 87, label: 'All-Star' },
+  { min: 80, label: 'Borderline All-Star' },
+  { min: 71, label: 'Starter' },
+  { min: 66, label: 'Rotation' },
+  { min: 61, label: 'Bench' },
+  { min: 0, label: 'Fringe' },
+];
+
 export function ovrTier(ovr: number): string {
-  if (ovr >= 85) return 'All-time tier';
-  if (ovr >= 75) return 'MVP candidate';
-  if (ovr >= 65) return 'All-league caliber';
-  if (ovr >= 55) return 'Starter';
-  if (ovr >= 45) return 'Rotation';
-  return 'Fringe';
+  return (OVR_TIERS.find((t) => ovr >= t.min) ?? OVR_TIERS[OVR_TIERS.length - 1]).label;
 }

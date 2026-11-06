@@ -23,33 +23,34 @@ const WINDOW_LADDER: WindowStatus[] = [
 ];
 
 const PROFILES: Record<ScenarioId, ScenarioProfile> = {
+  // simPenalty values are in unamplified strength points (≈ 2.5–3 wins each) — keep them small.
   lottery_rebuild: {
     window: 'Deep Rebuild',
     strategy: 'rebuild',
-    simPenalty: 5,
-    depthSimPenalty: 2.5,
+    simPenalty: 0.5,
+    depthSimPenalty: 0.5,
     reshape: (f) => reshapeRebuildRoster(f),
   },
   stuck_middle: {
     window: 'Expensive Mediocrity',
     strategy: 'playin',
-    simPenalty: 2,
-    depthSimPenalty: 1,
-    reshape: (f) => reshapeMediocreRoster(f, { cap: 83, depthPenalty: 4 }),
+    simPenalty: 0,
+    depthSimPenalty: 0,
+    reshape: (f) => reshapeMediocreRoster(f, { cap: 83, depthPenalty: -2 }),
   },
   aging_contender: {
     window: 'Aging Contender',
     strategy: 'all_in',
-    simPenalty: 2,
-    depthSimPenalty: 1,
-    reshape: (f) => reshapeContenderRoster(f, { floor: 76, starBoost: 1 }),
+    simPenalty: 0,
+    depthSimPenalty: 0,
+    reshape: (f) => reshapeContenderRoster(f, { floor: 77, starBoost: 2 }),
   },
   small_market_star: {
     window: 'Rising Contender',
     strategy: 'contend',
-    simPenalty: 1,
+    simPenalty: 0,
     depthSimPenalty: 0,
-    reshape: (f) => reshapeContenderRoster(f, { floor: 70, starBoost: 0 }),
+    reshape: (f) => reshapeContenderRoster(f, { floor: 72, starBoost: 1 }),
   },
 };
 
@@ -74,7 +75,11 @@ function roleForOverall(overall: number, isStarPlayer: boolean): Player['role'] 
   return 'Prospect';
 }
 
-/** Lottery rebuild — one young star (~80–82), thin NBA-quality depth. Target ~28–38 wins year 1. */
+/**
+ * Lottery rebuild — one young star (~80–82), thin NBA-quality depth. Target ~25–32 wins year 1.
+ * Applied ONCE at career start (see scenarioShaped). Keeps real ages and a real spread of
+ * ratings so the young core is a puzzle to sort out, not 16 interchangeable 52s.
+ */
 function reshapeRebuildRoster(franchise: Franchise): Player[] {
   const starId = starPlayerId(franchise.roster);
   const sorted = [...franchise.roster].sort((a, b) => b.overall - a.overall);
@@ -91,29 +96,26 @@ function reshapeRebuildRoster(franchise: Franchise): Player[] {
         potential: clamp(Math.min(p.potential, overall + 12), overall, 92),
         isStar: true,
         role: 'Star',
-        age: Math.min(p.age, 25),
         gmNote: p.gmNote || 'Young cornerstone — promising, not a finished star yet.',
       };
     }
 
     let overall: number;
-    if (rank === 1 || rank === 2) {
-      overall = p.age <= 24
-        ? clamp(Math.min(p.overall, 72), 58, 72)
-        : clamp(p.overall - 12, 55, 68);
+    if (rank <= 2) {
+      overall = p.age <= 24 ? clamp(Math.min(p.overall, 76), 66, 76) : clamp(p.overall - 1, 64, 74);
     } else if (rank < 8) {
-      overall = clamp(p.overall - 14, 55, 68);
+      overall = clamp(p.overall, 63, 73);
     } else {
-      overall = clamp(p.overall - 9, 52, 64);
+      overall = clamp(p.overall, 52, 68);
     }
-
+    // Young players keep upside; vets on a rebuilding team are who they are.
+    const upside = p.age <= 22 ? 10 : p.age <= 25 ? 6 : 2;
     return {
       ...p,
       overall,
-      potential: clamp(p.potential - 6, overall, overall + 8),
+      potential: clamp(Math.max(p.potential - 3, overall), overall, overall + upside),
       isStar: false,
       role: roleForOverall(overall, false),
-      age: rank < 10 ? Math.min(p.age, 24) : p.age,
     };
   });
 }
@@ -129,7 +131,7 @@ function reshapeMediocreRoster(
       const overall = Math.min(p.overall, opts.cap);
       return { ...p, overall, role: roleForOverall(overall, p.isStar ?? false) };
     }
-    const overall = clamp(p.overall - opts.depthPenalty, 60, 77);
+    const overall = clamp(p.overall - opts.depthPenalty, 62, 77);
     return { ...p, overall, isStar: false, role: roleForOverall(overall, false) };
   });
 }
@@ -175,12 +177,17 @@ function oddsFromRoster(franchise: Franchise, window: WindowStatus): { playoffOd
   return { playoffOdds, titleOdds };
 }
 
-/** Idempotent — re-applies scenario roster shape after parody-name sync. */
+/**
+ * Applies the scenario roster shape exactly once. The reshape functions are NOT idempotent
+ * (they subtract ratings), and refreshCap runs after nearly every action — re-applying them
+ * used to grind every rebuild roster down to the rating floor and erase player development.
+ */
 export function ensureScenarioRosterShape(franchise: Franchise): Franchise {
-  if (!franchise.scenarioId) return franchise;
+  if (!franchise.scenarioId || franchise.scenarioShaped) return franchise;
   const profile = PROFILES[franchise.scenarioId];
+  if (!profile) return franchise;
   const roster = profile.reshape(franchise);
-  return { ...franchise, roster };
+  return { ...franchise, roster, scenarioShaped: true };
 }
 
 /** Effective team strength for sims + league sync — not raw ProBallers average. */
@@ -322,8 +329,8 @@ export function lineupSimAdjustment(franchise: Franchise): number {
       .sort((a, b) => b.overall - a.overall)
       .slice(5, 12);
     const benchAvg = bench.reduce((s, p) => s + p.overall, 0) / Math.max(1, bench.length);
-    if (benchAvg < 66) adj -= 2;
-    else if (benchAvg < 68) adj -= 1;
+    if (benchAvg < 64) adj -= PROFILES.lottery_rebuild.depthSimPenalty * 2;
+    else if (benchAvg < 67) adj -= PROFILES.lottery_rebuild.depthSimPenalty;
   }
 
   return adj;
@@ -336,10 +343,11 @@ export function applyScenarioProfile(
   if (!scenarioId) return franchise;
 
   const profile = PROFILES[scenarioId];
-  const roster = profile.reshape(franchise);
+  const roster = franchise.scenarioShaped ? franchise.roster : profile.reshape(franchise);
   const shaped: Franchise = {
     ...franchise,
     roster,
+    scenarioShaped: true,
     scenarioId,
     window: profile.window,
     scenarioStartSeason: franchise.scenarioStartSeason ?? franchise.season,

@@ -18,7 +18,7 @@ import { takeTeamRosterName } from '../data/names';
 import { marketSalary } from '../engine/salaries';
 import { uid, playerName } from '../data/scenarios';
 import { pickKey, validateTradeSalaryMatch } from './cap';
-import { evaluateTradeForTeam } from './league';
+import { evaluateTradeForTeam, pickTradePoints, playerTradePoints } from './league';
 import {
   buildTradeOfferFromProposal,
   generateCounterOffer,
@@ -150,10 +150,41 @@ export function generateLeagueTradeBlockListings(league: League, franchise: Fran
     }
   }
 
+  // Real slots a team acquired in the current draft (e.g. the #2 pick you traded them) are listed
+  // first — they're the most interesting asset on the market and must reflect actual ownership.
+  listings.unshift(...acquiredDraftSlotListings(league, franchise));
+
   return listings.sort((a, b) => {
     const rank = { High: 0, Medium: 1, Low: 2 };
     return rank[a.interestForUser] - rank[b.interestForUser];
   });
+}
+
+function acquiredDraftSlotListings(league: League, franchise: Franchise): LeagueTradeBlockListing[] {
+  const draftLive = franchise.phase === 'draft_scouting' || franchise.phase === 'draft_night';
+  if (!draftLive) return [];
+  const taken = new Set((franchise.draftNight?.log ?? []).map((entry) => entry.pick));
+  return (league.draftOrder ?? [])
+    .filter((entry) => entry.via && !taken.has(entry.pick))
+    .map((entry) => {
+      const team = league.teams.find((t) => t.city === entry.city && t.name === entry.name);
+      if (!team || team.isUser) return null;
+      const round = entry.pick <= 30 ? 1 : 2;
+      const listing: LeagueTradeBlockListing = {
+        id: uid('tbl'),
+        teamId: team.id,
+        teamName: team.fullName,
+        assetType: 'pick',
+        label: `${LEAGUE_CALENDAR_YEAR} #${entry.pick} overall (R${round}, via ${entry.via})`,
+        askingNote: teamWantsPicks(team.strategy)
+          ? 'Just acquired — they plan to use it unless the price is right.'
+          : 'Acquired pick — available for rotation help.',
+        interestForUser: round === 1 ? 'High' : 'Medium',
+        shoppingFor: teamWantsPicks(team.strategy) ? ['young_talent', 'draft_picks'] : ['veteran_help'],
+      };
+      return listing;
+    })
+    .filter((l): l is LeagueTradeBlockListing => l !== null);
 }
 
 export type BlockListFilter =
@@ -489,21 +520,46 @@ function buildBlockOfferProposal(
     }
   } else if (targetPick) {
     outgoingPickKeys.push(pickKey(targetPick));
+    // Size the return to what the pick is worth. This used to always send the partner's best
+    // one or two players (assets[0], assets[1]) — so a #2 pick fetched an 88 + an 80, and even a
+    // late 2nd-rounder drew offers of a team's best player.
+    const target = pickTradePoints(targetPick);
+    const byValue = [...assets].sort((a, b) => playerTradePoints(b) - playerTradePoints(a));
+    const fit = (maxPts: number, exclude: Player[] = []) =>
+      byValue.find((p) => playerTradePoints(p) <= maxPts && !exclude.includes(p));
+    const add = (p: Player | undefined) => {
+      if (p) incomingPlayers.push(p);
+      return p;
+    };
+    // Trade points climb ~1.2 per OVR point, so a "pair" is two solid players a notch below the
+    // pick's value each — not two halves (which only matched end-of-bench players).
     switch (packageType) {
       case 0:
-        incomingPlayers.push(assets[0]);
+        add(fit(target * 0.95));
         incomingPicks.push(partnerReturnPick(franchise, partner, 2));
         break;
-      case 1:
-        incomingPlayers.push(assets[0], assets[2] ?? assets[1]);
+      case 1: {
+        const first = add(fit(target * 0.85));
+        add(fit(target * 0.78, first ? [first] : []));
         break;
+      }
       case 2:
-        incomingPlayers.push(assets[1]);
-        incomingPicks.push(partnerReturnPick(franchise, partner, 1, 1, 'Top-12 protected'));
+        add(fit(target * 0.9));
+        if (targetPick.round === 1) incomingPicks.push(partnerReturnPick(franchise, partner, 1, 1, 'Top-12 protected'));
+        else incomingPicks.push(partnerReturnPick(franchise, partner, 2));
         break;
       default:
-        incomingPlayers.push(assets[0], assets[1]);
+        add(fit(target));
         break;
+    }
+    if (!incomingPlayers.length) {
+      // No roster fit for this value — pay in picks instead.
+      if (targetPick.round === 1 && target >= 40) {
+        incomingPicks.push(partnerReturnPick(franchise, partner, 1));
+        if (target >= 70) incomingPicks.push(partnerReturnPick(franchise, partner, 2));
+      } else if (!incomingPicks.length) {
+        incomingPicks.push(partnerReturnPick(franchise, partner, 2));
+      }
     }
   } else {
     return null;

@@ -1,4 +1,4 @@
-import type { LeagueTeam, Player } from '../types/game';
+import type { LeagueTeam, Player, Position } from '../types/game';
 import { PROBALLERS_RATINGS, type SlotRating } from '../data/proballersRatings';
 import { takeTeamRosterName } from '../data/names';
 import { makePlayer } from '../data/scenarios';
@@ -18,9 +18,17 @@ export function getTeamSlotRating(city: string, name: string, slot: number): Slo
 }
 
 /** Top-8 average overall — used for league team strength. */
+/** Star-weighted rotation strength — same weights as leagueWorld.strengthFromRoster. */
 export function teamStrengthFromRatings(ratings: SlotRating[]): number {
-  const top = [...ratings].sort((a, b) => b.overall - a.overall).slice(0, 8);
-  return Math.round(top.reduce((sum, r) => sum + r.overall, 0) / top.length);
+  const weights = [1.6, 1.35, 1.2, 1.05, 1, 0.8, 0.65, 0.5, 0.35, 0.25];
+  const sorted = [...ratings].sort((a, b) => b.overall - a.overall);
+  let sum = 0;
+  let w = 0;
+  weights.forEach((x, i) => {
+    sum += (sorted[i]?.overall ?? 58) * x;
+    w += x;
+  });
+  return Math.round((sum / w) * 10) / 10;
 }
 
 export function teamStarFromRatings(ratings: SlotRating[]): number {
@@ -49,6 +57,26 @@ function rosterRole(overall: number, team: LeagueTeam): Player['role'] {
   if (overall >= team.strength - 4) return 'Rotation';
   if (overall >= team.strength - 8) return 'Bench';
   return 'Prospect';
+}
+
+/**
+ * Parody roster data only carries coarse G/F/C buckets (SG/SF/C), which left whole leagues with no
+ * point guards or power forwards. Height + per-36 rebounding/playmaking gives a real position.
+ */
+export function inferPosition(rated: SlotRating | undefined, fallback: Position): Position {
+  if (!rated?.heightInches) return fallback;
+  const h = rated.heightInches;
+  const st = rated.seasonStats;
+  const per36 = (v: number) => (st && st.mpg > 0 ? (v / st.mpg) * 36 : 0);
+  const ast = per36(st?.apg ?? 0);
+  const reb = per36(st?.rpg ?? 0);
+  if (ast >= 7 && h <= 81) return 'PG';
+  if (h <= 75) return ast >= 4 || fallback !== 'SF' ? 'PG' : 'SG';
+  if (h <= 77) return ast >= 6 ? 'PG' : 'SG';
+  if (h <= 79) return reb >= 8 ? 'SF' : ast >= 6 ? 'PG' : fallback === 'SF' ? 'SF' : 'SG';
+  if (h <= 81) return reb >= 9.5 ? 'PF' : 'SF';
+  if (h <= 83) return reb >= 11 && fallback === 'C' ? 'C' : 'PF';
+  return 'C';
 }
 
 export function buildPlayerFromSlot(
@@ -83,7 +111,7 @@ export function buildPlayerFromSlot(
     id: partial?.id ?? `pl_${city}_${teamName}_${slot}`,
     firstName: named.firstName,
     lastName: named.lastName,
-    position: named.position ?? partial?.position ?? 'SF',
+    position: inferPosition(rated, named.position ?? partial?.position ?? 'SF'),
     age,
     overall,
     potential,
@@ -95,6 +123,7 @@ export function buildPlayerFromSlot(
     morale: 'Stable' as const,
     injuryRisk: (age >= 30 ? 'Medium' : 'Low') as Player['injuryRisk'],
     priorSeasonStats: rated?.seasonStats,
+    heightInches: rated?.heightInches,
   };
 
   return makePlayer({
