@@ -299,8 +299,8 @@ export function DraftScreen() {
               ))}
             </div>
           )}
-          <button type="button" className="btn btn-primary" style={{ marginTop: 12 }} onClick={startDraftNight}>
-            Run to my pick
+          <button type="button" className="btn btn-primary" style={{ marginTop: 12 }} onClick={tradableSlots.length === 0 ? finishDraft : startDraftNight}>
+            {tradableSlots.length === 0 ? 'End draft' : 'Run to my pick'}
           </button>
         </Panel>
       )}

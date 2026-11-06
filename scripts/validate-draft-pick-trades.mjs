@@ -202,6 +202,20 @@ const entry = `
   store().setScreen('trade');
   check('case6: general trade entry also retains both slots', store().franchise.draftPicks.some(p => p.slot === 29) && store().franchise.draftPicks.some(p => p.slot === 59));
 
+  // Case 7: end the draft directly from scouting after selling every pick.
+  startChicago();
+  const endFirst = cheapOffer(2); store().acceptDraftPickTrade(endFirst.offer, 2);
+  const endSecond = cheapOffer(32); store().acceptDraftPickTrade(endSecond.offer, 32);
+  check('case7: no draft-night state before ending', !store().franchise.draftNight);
+  store().finishDraft();
+  check('case7: directly opens renewals', store().screen === 'contract_renewals' && store().franchise.phase === 'contract_renewals');
+  check('case7: entire draft simulated', store().franchise.draftNight.log.length === 60 && !store().franchise.draftNight.active);
+  check('case7: no user selections invented', store().franchise.draftNight.userPicksMade.length === 0);
+  for (const row of [endFirst, endSecond]) {
+    const buyer = store().league.teams.find(t => t.id === row.partnerTeamId);
+    check('case7: buyer drafts with traded slot '+row.pickNumber, getTeamRoster(store().league, buyer, store().franchise).some(p => p.draftPick === row.pickNumber));
+  }
+
   if (failures.length) {
     console.error('Draft pick trade validation FAILED:\\n  - ' + failures.join('\\n  - '));
     process.exit(1);
