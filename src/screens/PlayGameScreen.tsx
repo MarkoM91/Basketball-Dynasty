@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { playerName } from '../data/scenarios';
 import { getTeamById } from '../data/league';
 import { getUserPlayoffMatchup } from '../engine/playoffs';
@@ -35,6 +35,9 @@ export function PlayGameScreen() {
   const [slots, setSlots] = useState<string[]>(EMPTY);
   const [pickingSlot, setPickingSlot] = useState<number | null>(null);
   const [confirmSkip, setConfirmSkip] = useState(false);
+  const [dragSlot, setDragSlot] = useState<number | null>(null);
+  const [dropSlot, setDropSlot] = useState<number | null>(null);
+  const drag = useRef<{ from: number; pointerId: number } | null>(null);
 
   // Initialise once per franchise from the saved five (or the best auto lineup).
   useEffect(() => {
@@ -47,7 +50,9 @@ export function PlayGameScreen() {
 
   const isPlayoffs = franchise?.phase === 'playoffs';
   const gamesPlayed = franchise?.gamesThisWeek ?? 0;
-  const gamesLeft = franchise ? GAMES_PER_WEEK - gamesPlayed : 0;
+  const gamesLeft = franchise ? Math.max(0, GAMES_PER_WEEK - gamesPlayed) : 0;
+  const isRegularSeason = franchise?.phase === 'regular_season' || franchise?.phase === 'trade_deadline';
+  const weekComplete = isRegularSeason && gamesLeft === 0;
   const nextRegular = franchise && league && !isPlayoffs ? currentScheduledGame(franchise, league) : null;
   const playoffMatchup =
     isPlayoffs && franchise?.playoffs && league ? getUserPlayoffMatchup(franchise.playoffs, league) : null;
@@ -85,12 +90,30 @@ export function PlayGameScreen() {
     setPickingSlot(null);
   };
 
+  const swapSlots = (from: number, to: number) => {
+    if (from === to || to < 0 || to >= SLOTS.length) return;
+    const next = [...slots];
+    [next[from], next[to]] = [next[to], next[from]];
+    commit(next);
+  };
+
+  const slotAtPoint = (x: number, y: number): number | null => {
+    const row = document.elementFromPoint(x, y)?.closest<HTMLElement>('[data-lineup-slot]');
+    return row ? Number(row.dataset.lineupSlot) : null;
+  };
+
+  const cancelDrag = () => {
+    drag.current = null;
+    setDragSlot(null);
+    setDropSlot(null);
+  };
+
   const bestLineup = () => {
     const picks = autoStartingFive(franchise);
     if (picks.length === 5) commit(picks);
   };
 
-  const canPlay = full && (isPlayoffs ? playoffMatchup !== null : gamesLeft > 0 && (franchise.phase === 'regular_season' || franchise.phase === 'trade_deadline'));
+  const canPlay = full && (isPlayoffs ? playoffMatchup !== null : gamesLeft > 0 && isRegularSeason && Boolean(nextRegular));
 
   const handlePlay = () => {
     if (!full) return;
@@ -165,7 +188,9 @@ export function PlayGameScreen() {
         <p className="eyebrow">
           {isPlayoffs
             ? `Playoffs · ${playoffMatchup?.round ?? franchise.playoffs?.round ?? 'Postseason'}`
-            : `Week ${franchise.week} · Game ${Math.min(gamesPlayed + 1, GAMES_PER_WEEK)} of ${GAMES_PER_WEEK}`}
+            : weekComplete
+              ? `Week ${franchise.week} · ${GAMES_PER_WEEK} of ${GAMES_PER_WEEK} games played`
+              : `Week ${franchise.week} · Game ${Math.min(gamesPlayed + 1, GAMES_PER_WEEK)} of ${GAMES_PER_WEEK}`}
         </p>
         {opponent ? (
           <div className="gameday-matchup">
@@ -175,8 +200,9 @@ export function PlayGameScreen() {
             <h1 className="title-lg gameday-opp">{opponent.fullName}</h1>
           </div>
         ) : (
-          <h1 className="title-lg">{isPlayoffs ? 'No active series' : 'No game scheduled'}</h1>
+          <h1 className="title-lg">{isPlayoffs ? 'No active series' : weekComplete ? 'Week complete' : 'No game scheduled'}</h1>
         )}
+        {weekComplete && <p className="gameday-series">Both games are finished. Advance to next week to keep playing.</p>}
         {isPlayoffs && playoffMatchup && <p className="gameday-series">{playoffMatchup.seriesLine}</p>}
         {odds && (
           <div className="gameday-odds">
@@ -203,12 +229,13 @@ export function PlayGameScreen() {
             Best lineup
           </button>
         </div>
+        <p className="gameday-drag-hint">Drag the handles to swap positions, or tap a player to choose a replacement.</p>
         <ul className="gameday-slots">
           {SLOTS.map((pos, i) => {
             const p = slots[i] ? byId(slots[i]) : undefined;
             const outOfPosition = p && p.position !== pos;
             return (
-              <li key={pos}>
+              <li key={pos} data-lineup-slot={i} className={`gameday-slot-wrap ${dragSlot === i ? 'is-dragging' : ''} ${dropSlot === i && dragSlot !== i ? 'is-drop-target' : ''}`}>
                 <button type="button" className={`gameday-slot ${p ? '' : 'is-empty'}`} onClick={() => setPickingSlot(i)}>
                   <span className="gameday-slot-pos">{pos}</span>
                   {p ? (
@@ -228,6 +255,42 @@ export function PlayGameScreen() {
                   )}
                   <Icon name="chevron-right" size={18} className="deal-chevron" />
                 </button>
+                <button
+                  type="button"
+                  className="gameday-drag-handle"
+                  aria-label={`Move ${p ? playerName(p) : pos}. Drag to swap positions or use arrow keys.`}
+                  disabled={!p}
+                  onPointerDown={(event) => {
+                    if (!event.isPrimary || event.button !== 0) return;
+                    event.preventDefault();
+                    event.currentTarget.setPointerCapture(event.pointerId);
+                    drag.current = { from: i, pointerId: event.pointerId };
+                    setDragSlot(i);
+                    setDropSlot(i);
+                  }}
+                  onPointerMove={(event) => {
+                    if (drag.current?.pointerId !== event.pointerId) return;
+                    setDropSlot(slotAtPoint(event.clientX, event.clientY));
+                    // The handle owns the gesture; the rest of the row remains scrollable.
+                    if (event.clientY < 100) window.scrollBy(0, -12);
+                    else if (event.clientY > window.innerHeight - 170) window.scrollBy(0, 12);
+                  }}
+                  onPointerUp={(event) => {
+                    const current = drag.current;
+                    if (!current || current.pointerId !== event.pointerId) return;
+                    const target = slotAtPoint(event.clientX, event.clientY);
+                    if (target !== null) swapSlots(current.from, target);
+                    cancelDrag();
+                  }}
+                  onPointerCancel={cancelDrag}
+                  onLostPointerCapture={cancelDrag}
+                  onKeyDown={(event) => {
+                    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+                      event.preventDefault();
+                      swapSlots(i, i + (event.key === 'ArrowUp' ? -1 : 1));
+                    }
+                  }}
+                ><span aria-hidden="true">⠿</span></button>
               </li>
             );
           })}
@@ -251,13 +314,15 @@ export function PlayGameScreen() {
       )}
 
       <div className="gameday-bar">
-        {!isPlayoffs && (
+        {!isPlayoffs && !weekComplete && (
           <button type="button" className="btn btn-secondary" onClick={advanceWeek}>
             {gamesLeft > 0 ? 'Sim week' : 'Next week'}
           </button>
         )}
-        <button type="button" className="btn btn-primary" disabled={!canPlay} onClick={handlePlay}>
-          {!full
+        <button type="button" className="btn btn-primary" disabled={!weekComplete && !canPlay} onClick={weekComplete ? advanceWeek : handlePlay}>
+          {weekComplete
+            ? 'Next week'
+            : !full
             ? 'Fill all 5 slots'
             : isPlayoffs
               ? 'Play playoff game'

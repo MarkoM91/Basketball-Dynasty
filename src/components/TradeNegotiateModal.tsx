@@ -3,7 +3,7 @@ import { formatMoney, playerName } from '../data/scenarios';
 import { getTeamById, strategyLabel, teamWantsPicks, teamWantsVeterans } from '../data/league';
 import { pickKey } from '../engine/cap';
 import { LEAGUE_CALENDAR_YEAR } from '../data/leagueWorld';
-import { generatePartnerTradeAssets, pickDescription, validateProposal } from '../engine/tradeBuilder';
+import { generatePartnerTradeAssets, pickDescription, proposalMatchesOffer, validateProposal } from '../engine/tradeBuilder';
 import { chainSummary, validateTradeChain } from '../engine/tradeChain';
 import { suggestDealFixes, type DealSuggestion } from '../engine/tradeSuggestions';
 import { scoreTrade } from '../engine/trades';
@@ -18,6 +18,7 @@ import type {
   Player,
   TradeChainProposal,
   TradeProposal,
+  TradeOffer,
   TradeValidation,
 } from '../types/game';
 
@@ -73,6 +74,8 @@ export function TradeNegotiateModal({
   league,
   initialPartnerId,
   initialPrefill,
+  sourceOffer,
+  onAcceptOffer,
   negotiation,
   onSubmit,
   onRequestCounter,
@@ -84,6 +87,8 @@ export function TradeNegotiateModal({
   league: League;
   initialPartnerId?: string;
   initialPrefill?: Partial<TradeProposal>;
+  sourceOffer?: TradeOffer;
+  onAcceptOffer?: (offer: TradeOffer) => void;
   negotiation?: Franchise['tradeNegotiation'];
   onSubmit: (proposal: TradeProposal) => void;
   onRequestCounter: (proposal: TradeProposal) => void;
@@ -167,7 +172,11 @@ export function TradeNegotiateModal({
 
   const hasAssets =
     outgoingPlayerIds.length + outgoingPickKeys.length + incomingPlayerIds.length + incomingPicks.length > 0;
-  const verdict = dealVerdict(validation, hasAssets);
+  const unchangedOffer = !showChain && sourceOffer && onAcceptOffer && proposalMatchesOffer(proposal, sourceOffer);
+  const canAcceptOffer = Boolean(unchangedOffer && validation && validation.errors.length === 0);
+  const verdict: Verdict = canAcceptOffer
+    ? { tone: 'good', headline: 'Their offer · ready to accept', detail: 'They proposed this package. Change the assets to negotiate a counteroffer.' }
+    : dealVerdict(validation, hasAssets);
   const salaryOut = franchise.roster
     .filter((p) => outgoingPlayerIds.includes(p.id))
     .reduce((s, p) => s + p.contract.annualSalary, 0);
@@ -390,7 +399,7 @@ export function TradeNegotiateModal({
   );
 
   const needsFix =
-    hasAssets && validation && (!validation.valid || validation.partnerAcceptScore < 62);
+    !canAcceptOffer && hasAssets && validation && (!validation.valid || validation.partnerAcceptScore < 62);
 
   return (
     <div className="deal-sheet" role="dialog" aria-modal="true" aria-label={`Trade with ${partner.fullName}`}>
@@ -491,10 +500,14 @@ export function TradeNegotiateModal({
             <button
               type="button"
               className="btn btn-primary"
-              disabled={!validation?.valid}
-              onClick={() => { onSubmit(proposal); onClose(); }}
+              disabled={!canAcceptOffer && !validation?.valid}
+              onClick={() => {
+                if (canAcceptOffer && sourceOffer && onAcceptOffer) onAcceptOffer(sourceOffer);
+                else onSubmit(proposal);
+                onClose();
+              }}
             >
-              {negotiation ? 'Resend offer' : 'Send offer'}
+              {canAcceptOffer ? 'Accept their offer' : sourceOffer ? 'Send counteroffer' : negotiation ? 'Resend offer' : 'Send offer'}
             </button>
           )}
         </div>

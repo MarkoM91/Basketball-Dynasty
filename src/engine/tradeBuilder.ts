@@ -22,6 +22,20 @@ export function pickDescription(pick: DraftPick): string {
   return `${pick.year} ${pick.round === 1 ? '1st' : '2nd'}${slot}${pick.protections ? ` (${pick.protections})` : ''}`;
 }
 
+/** An unchanged inbound offer is already agreed by its sender. Edits need a new evaluation. */
+export function proposalMatchesOffer(proposal: TradeProposal, offer: TradeOffer): boolean {
+  const same = (a: string[], b: string[]) =>
+    JSON.stringify([...a].sort()) === JSON.stringify([...b].sort());
+  const pickTerms = (pick: DraftPick) => JSON.stringify([
+    pickKey(pick), pick.protections ?? '', pick.slot ?? null,
+  ]);
+  return proposal.partnerTeamId === offer.partnerTeamId
+    && same(proposal.incomingPlayers.map((p) => p.id), offer.incoming.players.map((p) => p.id))
+    && same(proposal.outgoingPlayerIds, offer.outgoing.players.map((p) => p.id))
+    && same(proposal.incomingPicks.map(pickTerms), offer.incoming.picks.map(pickTerms))
+    && same(proposal.outgoingPickKeys, offer.outgoing.picks.map(pickKey));
+}
+
 export function buildTradeOfferFromProposal(
   franchise: Franchise,
   league: League,
@@ -45,13 +59,7 @@ export function buildTradeOfferFromProposal(
     return null;
   }
 
-  const evalResult = evaluateTradeForTeam(
-    partner,
-    outgoingPlayers,
-    outgoingPicks,
-    incomingPlayers,
-    incomingPicks,
-  );
+  const evalResult = { score: validation.partnerAcceptScore, verdict: validation.partnerVerdict };
 
   const titleOddsDelta = evalResult.score >= 65 ? 8 : evalResult.score >= 50 ? 3 : -4;
 

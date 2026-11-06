@@ -6220,8 +6220,7 @@ h1, h2, h3,
 }
 
 @media (max-width: 959px) {
-  /* Bottom nav + More sheet already cover navigation. */
-  .screen-back,
+  /* Keep Back buttons available alongside the bottom navigation. */
   .mobile-game-nav {
     display: none !important;
   }
@@ -7172,3 +7171,49 @@ h1, h2, h3,
 
 .fa-bar-actions { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .fa-finish { background: none; border: 0; color: var(--silver); text-decoration: underline; cursor: pointer; padding: 6px 12px; }
+
+.trade-response-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.75);
+}
+.trade-response-dialog {
+  width: min(100%, 480px);
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  padding: 20px;
+  border: 1px solid var(--hairline);
+  border-top: 3px solid var(--signal);
+  border-radius: var(--radius-sm);
+  background: var(--charcoal);
+}
+.trade-response-actions { display: grid; gap: 8px; margin-top: 16px; }
+
+.results-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.results-actions .btn { width: auto; flex: 1; min-width: 130px; }
+.trade-disclosure { width: 100%; min-height: 52px; }
+.trade-active-negotiations { display: grid; gap: 16px; }
+
+.gameday-drag-hint { margin: 0 0 12px; color: var(--silver); font-size: 13px; }
+.gameday-slot-wrap { display: flex; gap: 4px; border-radius: var(--radius-sm); }
+.gameday-slot-wrap .gameday-slot { flex: 1; min-width: 0; width: auto; }
+.gameday-drag-handle {
+  flex: 0 0 44px;
+  min-height: 44px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  background: var(--slate);
+  color: var(--silver);
+  font-size: 26px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.gameday-drag-handle:active { cursor: grabbing; }
+.gameday-slot-wrap.is-dragging { opacity: 0.55; }
+.gameday-slot-wrap.is-drop-target { outline: 2px solid var(--signal); outline-offset: 2px; }
+.gameday-drag-handle:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }

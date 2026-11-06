@@ -181,7 +181,6 @@ export function TradeScreen() {
     submitTradeProposal,
     requestTradeCounter,
     submitTradeChain,
-    acceptPendingCounter,
     declinePendingCounter,
     toggleTradeBlockPlayer,
     toggleTradeBlockPick,
@@ -197,9 +196,14 @@ export function TradeScreen() {
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [showRosterDrawer, setShowRosterDrawer] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [showNegotiations, setShowNegotiations] = useState(false);
   const [negotiateOpen, setNegotiateOpen] = useState(false);
   const [negotiatePartnerId, setNegotiatePartnerId] = useState<string | undefined>();
   const [negotiatePrefill, setNegotiatePrefill] = useState<Partial<TradeProposal> | undefined>();
+  const [negotiateSourceOffer, setNegotiateSourceOffer] = useState<TradeOffer | undefined>();
+  const [tradeResponse, setTradeResponse] = useState<{
+    title: string; detail: string; proposal: TradeProposal; counter?: TradeOffer; accepted?: boolean;
+  } | null>(null);
   const [negotiateKey, setNegotiateKey] = useState(0);
 
   const leagueBlockRaw = useMemo(
@@ -227,6 +231,14 @@ export function TradeScreen() {
   useEffect(() => {
     syncBlockListingOffers();
   }, [syncBlockListingOffers, franchise?.tradeBlock?.playerIds, franchise?.tradeBlock?.pickKeys]);
+
+  useEffect(() => {
+    if (!tradeResponse) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.getElementById('trade-response-close')?.focus();
+    return () => { document.body.style.overflow = previous; };
+  }, [tradeResponse]);
 
   useEffect(() => {
     if (openTradeShopDrawer) {
@@ -260,6 +272,7 @@ export function TradeScreen() {
     historyProposals.length > 0;
 
   const openNegotiate = (teamId?: string, prefill?: Partial<TradeProposal>) => {
+    setNegotiateSourceOffer(undefined);
     setNegotiatePartnerId(teamId);
     setNegotiatePrefill(prefill);
     setNegotiateKey((k) => k + 1);
@@ -267,7 +280,9 @@ export function TradeScreen() {
   };
 
   const openReviseCounter = () => {
-    if (negotiation) {
+    if (franchise.pendingCounter) {
+      openNegotiateFromOffer(franchise.pendingCounter);
+    } else if (negotiation) {
       openNegotiate(negotiation.partnerTeamId);
     } else {
       setNegotiateOpen(true);
@@ -276,6 +291,47 @@ export function TradeScreen() {
 
   const openNegotiateFromOffer = (offer: TradeOffer) => {
     openNegotiate(offer.partnerTeamId, tradeOfferToPrefill(offer));
+    setNegotiateSourceOffer(offer);
+  };
+
+  const sendProposal = (proposal: TradeProposal) => {
+    const previous = useGameStore.getState().franchise?.submittedProposals?.[0]?.id;
+    submitTradeProposal(proposal);
+    const state = useGameStore.getState();
+    const result = state.franchise?.submittedProposals?.[0];
+    if (result && result.id !== previous) {
+      const accepted = result.status === 'accepted';
+      if (accepted) setScreen('trade');
+      const counter = accepted ? undefined : state.franchise?.pendingCounter ?? undefined;
+      setTradeResponse({
+        title: `${result.partnerTeamName} ${accepted ? 'accepted your offer' : counter ? 'sent a counteroffer' : 'declined your offer'}`,
+        accepted,
+        detail: accepted ? state.toast ?? 'Trade completed.' : result.responseNote ?? result.partnerVerdict,
+        proposal,
+        counter,
+      });
+    } else {
+      setTradeResponse({ title: 'Offer could not be sent', detail: state.toast ?? 'Review the package and try again.', proposal });
+    }
+  };
+
+  const acceptOffer = (offer: TradeOffer) => {
+    acceptTrade(offer);
+    const state = useGameStore.getState();
+    const accepted = Boolean(state.toast?.startsWith('Trade completed.'));
+    setScreen('trade');
+    setTradeResponse({ title: accepted ? 'Trade accepted' : 'Trade could not be completed',
+      detail: state.toast ?? 'Review the package and try again.',
+      proposal: tradeOfferToPrefill(offer) as TradeProposal, accepted });
+  };
+
+  const askForCounter = (proposal: TradeProposal) => {
+    const previous = useGameStore.getState().franchise?.pendingCounter;
+    requestTradeCounter(proposal);
+    const state = useGameStore.getState();
+    const counter = state.franchise?.pendingCounter !== previous ? state.franchise?.pendingCounter ?? undefined : undefined;
+    setTradeResponse({ title: counter ? counter.partnerTeam + ' sent a counteroffer' : 'No counteroffer',
+      detail: state.toast ?? 'The partner declined to counter.', proposal, counter });
   };
 
   const blockedPlayers = franchise.roster.filter((p) => isPlayerOnBlock(franchise, p.id));
@@ -403,10 +459,10 @@ export function TradeScreen() {
                   <div className="trade-suggestion-meta">
                     {offer.analysis.partnerAcceptScore !== undefined && (
                       <span className={offer.analysis.partnerAcceptScore >= 70 ? 'chip chip-success' : 'chip chip-gold'}>
-                        {offer.analysis.partnerAcceptScore}% interest
+                        Offer received
                       </span>
                     )}
-                    <button type="button" className="btn btn-primary" style={{ padding: '6px 10px', fontSize: 11 }} onClick={() => acceptTrade(offer)}>
+                    <button type="button" className="btn btn-primary" style={{ padding: '6px 10px', fontSize: 11 }} onClick={() => acceptOffer(offer)}>
                       Accept
                     </button>
                     <button type="button" className="btn btn-secondary" style={{ padding: '6px 10px', fontSize: 11 }} onClick={() => openNegotiateFromOffer(offer)}>
@@ -420,7 +476,12 @@ export function TradeScreen() {
 
           {hasNegotiations && (
             <>
-              <p className="eyebrow trade-inbox-label">Your negotiations</p>
+              {(franchise.pendingCounter || activeProposals.length > 0) && (
+                <button type="button" className="btn btn-secondary trade-disclosure" aria-expanded={showNegotiations} aria-controls="active-negotiations" onClick={() => setShowNegotiations(v => !v)}>
+                  Active negotiations ({counteredProposals.length + pendingOutbound + (franchise.pendingCounter ? 1 : 0)}) · {showNegotiations ? 'Hide' : 'View'}
+                </button>
+              )}
+              {showNegotiations && <div id="active-negotiations" className="trade-active-negotiations">
 
               {franchise.pendingCounter && (
                 <Panel warning accent>
@@ -436,7 +497,7 @@ export function TradeScreen() {
                     {franchise.pendingCounter.analysis.longTerm}
                   </p>
                   <div style={{ display: 'grid', gap: 8, marginTop: 12 }}>
-                    <button type="button" className="btn btn-primary" onClick={acceptPendingCounter}>
+                    <button type="button" className="btn btn-primary" onClick={() => franchise.pendingCounter && acceptOffer(franchise.pendingCounter)}>
                       Accept
                     </button>
                     <button type="button" className="btn btn-secondary" onClick={openReviseCounter}>
@@ -500,15 +561,18 @@ export function TradeScreen() {
                     );
                   })}
 
+              </div>}
+
               {historyProposals.length > 0 && (
                 <Panel>
                   <button
                     type="button"
                     className="btn btn-ghost"
                     style={{ width: '100%', marginBottom: showHistory ? 10 : 0 }}
+                    aria-expanded={showHistory}
                     onClick={() => setShowHistory((v) => !v)}
                   >
-                    {showHistory ? 'Hide history' : `Show history (${historyProposals.length})`}
+                    {showHistory ? 'Hide negotiation history' : `Negotiation history (${historyProposals.length})`}
                   </button>
                   {showHistory &&
                     historyProposals.slice(0, 10).map((p) => {
@@ -695,11 +759,45 @@ export function TradeScreen() {
         league={league}
         initialPartnerId={negotiatePartnerId}
         initialPrefill={negotiatePrefill}
+        sourceOffer={negotiateSourceOffer}
+        onAcceptOffer={acceptOffer}
         negotiation={negotiation ?? undefined}
-        onSubmit={submitTradeProposal}
-        onRequestCounter={requestTradeCounter}
+        onSubmit={sendProposal}
+        onRequestCounter={askForCounter}
         onSubmitChain={submitTradeChain}
       />
+      {tradeResponse && (
+        <div className="trade-response-overlay" onKeyDown={(event) => {
+          if (event.key === 'Escape') setTradeResponse(null);
+          if (event.key === 'Tab') {
+            const buttons = event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not(:disabled)');
+            const first = buttons[0];
+            const last = buttons[buttons.length - 1];
+            if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+            else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+          }
+        }}>
+          <section className="trade-response-dialog" role="alertdialog" aria-modal="true" aria-labelledby="trade-response-title" aria-describedby="trade-response-detail">
+            <p className="eyebrow">Trade response</p>
+            <h2 id="trade-response-title" className="title-md">{tradeResponse.title}</h2>
+            <p id="trade-response-detail" className="body">{tradeResponse.detail}</p>
+            {tradeResponse.counter && <TradeOfferPackageDetail offer={tradeResponse.counter} />}
+            <div className="trade-response-actions">
+              {tradeResponse.counter && (
+                <button type="button" className="btn btn-primary" onClick={() => {
+                  acceptOffer(tradeResponse.counter!);
+                }}>Accept counteroffer</button>
+              )}
+              {!tradeResponse.accepted && <button type="button" className="btn btn-secondary" onClick={() => {
+                if (tradeResponse.counter) openNegotiateFromOffer(tradeResponse.counter);
+                else openNegotiate(tradeResponse.proposal.partnerTeamId, tradeResponse.proposal);
+                setTradeResponse(null);
+              }}>{tradeResponse.counter ? 'Review counteroffer' : 'Revise offer'}</button>}
+              <button id="trade-response-close" type="button" className="btn btn-ghost" onClick={() => setTradeResponse(null)}>{tradeResponse.accepted ? 'Done' : 'Close'}</button>
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   );
 }

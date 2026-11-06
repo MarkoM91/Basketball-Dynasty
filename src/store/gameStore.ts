@@ -116,6 +116,8 @@ import {
   mergeTradeOffers,
   needsBlockOfferReconcile,
   reconcileBlockListingOffers,
+  reconcileSubmittedTradeHistory,
+  recordAcceptedTrade,
   resolveProposalSubmission,
   togglePickOnBlock,
   togglePlayerOnBlock,
@@ -393,7 +395,7 @@ export function normalizeFranchise(f: Franchise): Franchise {
       // Unknown or corrupt scenario id — keep normalized roster as-is.
     }
   }
-  return shaped;
+  return { ...shaped, submittedProposals: reconcileSubmittedTradeHistory(shaped) };
 }
 
 function cloneFranchise(data: Omit<Franchise, 'id'>): Franchise {
@@ -1198,6 +1200,7 @@ export const useGameStore = create<GameStore>()(
     let next = executeTrade(franchise, offer);
     next = {
       ...next,
+      submittedProposals: recordAcceptedTrade(franchise, league, offer),
       ghosts: [...ghosts, ...next.ghosts],
       pendingCounter: null,
       tradeNegotiation: null,
@@ -1283,7 +1286,7 @@ export const useGameStore = create<GameStore>()(
         set({
           franchise: {
             ...current,
-            submittedProposals: [submitted, ...(current.submittedProposals ?? [])].slice(0, 12),
+            submittedProposals: [submitted, ...(current.submittedProposals ?? []).filter((entry) => entry.id !== `accepted-${result.offer!.id}`)].slice(0, 12),
           },
         });
       }
