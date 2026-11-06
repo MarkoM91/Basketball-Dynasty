@@ -1,7 +1,7 @@
 export const SITE_URL = 'https://basketballdynasty.com';
 export const SITE_NAME = 'Basketball Dynasty';
 export const SITE_DESCRIPTION =
-  'The best free browser basketball GM simulation. Run trades, salary cap, draft, coaching, playoffs — no download, no install. Start your dynasty now.';
+  'Play a free basketball GM simulator in your browser. Build your team through trades, the draft and free agency, manage salaries, and compete in the playoffs.';
 
 export const SITE_KEYWORDS = [
   'basketball manager game',
@@ -33,16 +33,16 @@ export const PUBLIC_PAGES: Record<
   }
 > = {
   '/': {
-    title: 'Basketball Dynasty — The Best Free Browser Basketball GM Simulation',
+    title: 'Basketball Dynasty — Free Basketball GM Simulator',
     description: SITE_DESCRIPTION,
-    h1: 'Build a basketball dynasty — free browser GM sim',
+    h1: 'Free basketball GM simulator',
     changefreq: 'weekly',
     priority: 1,
   },
   '/start': {
     title: 'Start Your Franchise — Free Basketball GM Simulation | Basketball Dynasty',
     description:
-      'Pick a scripted crisis or any of 30 franchises. Build a dynasty in the best free browser basketball GM sim — salary cap, trades, draft, playoffs, coaching.',
+      'Choose a scenario or one of 30 franchises. Start a free basketball GM career with trades, salary management, drafting and playoffs. No download or account required.',
     h1: 'Choose a franchise',
     changefreq: 'monthly',
     priority: 0.9,
@@ -50,26 +50,35 @@ export const PUBLIC_PAGES: Record<
   '/guide': {
     title: 'How to Play Basketball Dynasty — Complete GM Guide',
     description:
-      'Master Basketball Dynasty: lineup decisions, trade negotiations, salary cap, two-round draft, free agency, coaching hires, and 16-team playoffs. Full guide for the best free basketball GM game.',
+      'Learn to play Basketball Dynasty: choose a franchise, set your lineup, negotiate trades, manage salaries, draft prospects and compete in the playoffs.',
     h1: 'How to play Basketball Dynasty',
     changefreq: 'monthly',
     priority: 0.85,
   },
   '/compare': {
-    title: 'Best Free Basketball Manager Game — Basketball Dynasty vs Basketball GM',
+    title: 'Basketball Dynasty vs Basketball GM — Basketball Manager Games Compared',
     description:
-      'See why Basketball Dynasty is the best free browser basketball manager game. Compare lineup control, trade war room, cap management, coaching, draft scouting, and mobile play.',
+      'Compare Basketball Dynasty and Basketball GM: lineup control, trade negotiations, salary management, coaching, draft scouting and browser play.',
     h1: 'Compare basketball manager games',
     changefreq: 'monthly',
     priority: 0.85,
   },
 };
 
+/** Public articles use ordinary anchors so their static HTML loads outside the game router. */
+export const PUBLIC_GUIDE_ARTICLES = [
+  { href: '/games-like-basketball-gm/', title: 'Compare basketball manager games', description: 'Explore browser, mobile and desktop options, including Basketball GM and Basketball Dynasty.' },
+  { href: '/guides/first-season/', title: 'Your first season', description: 'Choose a team, assess its roster and plan a direction for your franchise.' },
+  { href: '/guides/trade-strategy/', title: 'Trade strategy', description: 'Build packages, read counteroffers and balance player value with salary rules.' },
+  { href: '/guides/draft-scouting/', title: 'Draft and scouting', description: 'Understand scouting ranges, development potential and the two-round draft.' },
+  { href: '/guides/salary-cap/', title: 'Salary cap guide', description: 'Learn how cap room, luxury tax and signing exceptions affect your roster.' },
+] as const;
+
 export const LANDING_FAQ = [
   {
-    question: 'Is Basketball Dynasty the best free basketball GM game?',
+    question: 'What is Basketball Dynasty?',
     answer:
-      'Basketball Dynasty is built to be the deepest free browser basketball GM simulation available — combining trade negotiations, salary cap management, imperfect scouting, coaching hires, and full playoff brackets in one game with no download and no paywall.',
+      'Basketball Dynasty is a free browser basketball GM simulator. Manage a professional franchise through lineup decisions, trade negotiations, salary rules, scouting, coaching and the playoffs.',
   },
   {
     question: 'Is Basketball Dynasty free to play?',
@@ -94,7 +103,7 @@ export const LANDING_FAQ = [
   {
     question: 'Is there a basketball manager game like Football Manager?',
     answer:
-      'Basketball Dynasty is the closest browser equivalent — a deep management sim where your decisions have real consequences: imperfect scouting, trade counters, salary cap traps, coaching ratings, and ownership pressure all shape your dynasty.',
+      'Basketball Dynasty offers basketball fans a browser management game focused on front-office decisions. Scouting uncertainty, trade counters, salary rules, coaching ratings and ownership pressure shape each franchise.',
   },
   {
     question: 'Can I play on mobile?',

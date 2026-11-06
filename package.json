@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && node scripts/generate-sitemap.mjs && vite build",
+    "build": "tsc -b && node scripts/generate-sitemap.mjs && vite build && npm run validate:seo",
     "preview": "npm run build && wrangler dev",
     "typecheck": "tsc -b --noEmit",
     "compute-ratings": "node scripts/refresh-current-rosters.mjs",
@@ -14,7 +14,8 @@
     "deploy": "npm run build && wrangler deploy",
     "sync:rosters": "node scripts/refresh-current-rosters.mjs",
     "validate:rosters": "node scripts/validate-roster-snapshot.mjs",
-    "validate:simulation": "node scripts/validate-dashboard-simulation.mjs"
+    "validate:simulation": "node scripts/validate-dashboard-simulation.mjs",
+    "validate:seo": "node scripts/validate-public-seo.mjs"
   },
   "dependencies": {
     "react": "^19.1.0",
@@ -24,9 +25,11 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.40.0",
+    "@types/node": "^24.19.2",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
+    "esbuild": "^0.25.12",
     "playwright": "^1.60.0",
     "typescript": "~5.8.3",
     "vite": "^6.3.5",

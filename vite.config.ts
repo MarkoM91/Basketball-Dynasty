@@ -1,11 +1,12 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import { prerenderPublicPages } from './scripts/prerender-public';
 
 import { cloudflare } from "@cloudflare/vite-plugin";
 
 export default defineConfig({
-  plugins: [react(), VitePWA({
+  plugins: [react(), prerenderPublicPages(), VitePWA({
     registerType: 'autoUpdate',
     includeAssets: ['icon.svg', 'robots.txt', 'ads.txt', 'sitemap.xml', '_routes.json'],
     manifest: {
@@ -35,6 +36,12 @@ export default defineConfig({
     },
     workbox: {
       globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
+      // Public pages have their own precached HTML; never replace them with the home shell.
+      navigateFallbackDenylist: [
+        /^\/(?:start|guide|compare)(?:\/|\?|$)/,
+        /^\/guides(?:\/|\?|$)/,
+        /^\/games-like-basketball-gm(?:\/|\?|$)/,
+      ],
     },
   }), cloudflare()],
 });

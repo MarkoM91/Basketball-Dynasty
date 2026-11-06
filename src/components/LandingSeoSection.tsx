@@ -2,6 +2,7 @@ import {
   COMPETITOR_GAPS,
   LANDING_FAQ,
   PUBLIC_PAGES,
+  PUBLIC_GUIDE_ARTICLES,
   SITE_DESCRIPTION,
 } from '../seo';
 import { Link } from 'react-router-dom';
@@ -30,21 +31,7 @@ export function LandingSeoSection() {
         ))}
       </div>
 
-      <div className="landing-seo-keywords">
-        <p className="eyebrow">Built for GM sim fans searching for</p>
-        <ul className="landing-seo-tag-list">
-          {[
-            'free online basketball manager game',
-            'basketball GM simulation browser',
-            'basketball dynasty builder',
-            'basketball front office simulator',
-            'trade deadline & cap management game',
-            'playoff bracket basketball sim',
-          ].map((phrase) => (
-            <li key={phrase}>{phrase}</li>
-          ))}
-        </ul>
-      </div>
+      <PublicGuideLinks />
 
       <LandingCompareSection />
 
@@ -75,6 +62,24 @@ export function StartPageSeoIntro() {
         {page.description} Choose a scripted scenario with a built-in crisis, or pick any franchise
         in the league and write your own rebuild or win-now story.
       </p>
+    </section>
+  );
+}
+
+/** Shared, visible discovery links for the homepage and the main guide. */
+export function PublicGuideLinks() {
+  return (
+    <section className="landing-seo-faq landing-seo-more" aria-labelledby="public-guides-title">
+      <h2 id="public-guides-title" className="title-md landing-seo-title">Basketball GM guides</h2>
+      <p className="body">Learn the game, improve your decisions, or compare basketball management sims.</p>
+      <div className="landing-seo-grid">
+        {PUBLIC_GUIDE_ARTICLES.map((article) => (
+          <article key={article.href} className="landing-seo-card">
+            <h3 className="landing-seo-card-title"><a href={article.href}>{article.title}</a></h3>
+            <p className="body landing-seo-card-body">{article.description}</p>
+          </article>
+        ))}
+      </div>
     </section>
   );
 }

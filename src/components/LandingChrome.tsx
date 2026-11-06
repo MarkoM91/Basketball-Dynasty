@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from './Icon';
+import { ROSTER_SNAPSHOT_LABEL } from '../data/leagueWorld';
 
 type LandingChromeProps = {
   /** When false, logo is not a link (guide/compare subpages). */
@@ -277,7 +278,7 @@ export function LandingFooter({ logoLinksHome = true }: LandingChromeProps) {
         </nav>
       </div>
       <p className="landing-footer-copy">
-        Free browser basketball manager · No download required · League rosters as of 4 June 2026
+        Free browser basketball manager · No download required · League rosters as of {ROSTER_SNAPSHOT_LABEL}
       </p>
     </footer>
   );

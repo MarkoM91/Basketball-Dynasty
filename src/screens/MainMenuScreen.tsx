@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { formatSavedAt } from '../lib/saveFile';
 import { useGameStore } from '../store/gameStore';
 import { SCENARIOS } from '../data/scenarios';
@@ -148,10 +148,10 @@ export function MainMenuScreen() {
         <div className="landing-hero">
           <p className="eyebrow">Free online basketball manager game</p>
           <h1 className="title-lg landing-headline">
-            Build a <span className="landing-headline-accent">dynasty</span>.{' '}
-            <br />
-            Or get fired trying.
+            Free basketball{' '}<br />
+            <span className="landing-headline-accent">GM simulator</span>
           </h1>
+          <p className="eyebrow">Build a dynasty. Or get fired trying.</p>
           <p className="body landing-copy landing-copy-full">
             Browser basketball GM simulation with trades, salary cap, two-round draft, free agency,
             playoff bracket, and franchise memory. Play free — no download, saves on this device.
@@ -184,9 +184,13 @@ export function MainMenuScreen() {
             <p className="body landing-cta-copy" style={{ marginTop: 6 }}>
               Pick a scripted scenario or choose any of 30 franchises — logos, cap sheets, and rosters included.
             </p>
-            <button type="button" className="btn btn-primary landing-play-btn" onClick={handleNewGame}>
+            <Link
+              to="/start"
+              className="btn btn-primary landing-play-btn"
+              onClick={(event) => { event.preventDefault(); handleNewGame(); }}
+            >
               <Icon name="play" size={16} /> Start new franchise
-            </button>
+            </Link>
           </div>
         </div>
       </div>

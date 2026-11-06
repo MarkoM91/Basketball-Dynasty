@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { GUIDE_FAQ, GUIDE_SECTIONS, GUIDE_TIPS } from '../content/guide';
 import { LandingFooter, LandingHeader } from '../components/LandingChrome';
 import { PUBLIC_PAGES } from '../seo';
+import { PublicGuideLinks } from '../components/LandingSeoSection';
 
 export function GuideScreen() {
   const page = PUBLIC_PAGES['/guide'];
@@ -46,6 +47,8 @@ export function GuideScreen() {
             ))}
           </ul>
         </section>
+
+        <PublicGuideLinks />
 
         <section className="guide-faq" aria-labelledby="guide-faq-title">
           <h2 id="guide-faq-title" className="title-md landing-seo-title">Guide FAQ</h2>
