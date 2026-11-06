@@ -202,7 +202,11 @@ export function HomeScreen() {
           gamesPerWeek={GAMES_PER_WEEK}
           primaryLabel={playLabel}
           onPrimary={playPrimary}
-          secondaryActions={[
+          secondaryActions={franchise.phase === 'regular_season' || franchise.phase === 'trade_deadline' ? [
+            { label: 'Sim week', onClick: advanceWeek },
+            { label: 'Sim to playoffs', onClick: advanceToPlayoffs },
+            { label: 'League', onClick: () => setScreen('league') },
+          ] : [
             { label: 'Schedule', onClick: () => setScreen('schedule') },
             { label: 'Finances', onClick: () => setScreen('finances') },
             { label: 'League', onClick: () => setScreen('league') },

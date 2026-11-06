@@ -13,7 +13,8 @@
     "validate:draft-trades": "node scripts/validate-draft-pick-trades.mjs",
     "deploy": "npm run build && wrangler deploy",
     "sync:rosters": "node scripts/refresh-current-rosters.mjs",
-    "validate:rosters": "node scripts/validate-roster-snapshot.mjs"
+    "validate:rosters": "node scripts/validate-roster-snapshot.mjs",
+    "validate:simulation": "node scripts/validate-dashboard-simulation.mjs"
   },
   "dependencies": {
     "react": "^19.1.0",

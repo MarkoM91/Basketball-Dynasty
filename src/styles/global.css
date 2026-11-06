@@ -5356,7 +5356,7 @@ button.back-link {
 
 /* ── Mobile Front Office ──────────────────────────────────────────────────── */
 @media (max-width: 959px) {
-  /* Schedule / Finances / League: one compact row instead of three full-width buttons (~200px). */
+  /* Dashboard shortcuts stay in one row with touch-sized controls. */
   .app-shell .play-menu-secondary {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

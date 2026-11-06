@@ -968,14 +968,16 @@ export const useGameStore = create<GameStore>()(
     while (next.week <= SCHEDULE_WEEKS) {
       const synced = syncUserTeam(nextLeague, next);
       const starters = next.startingFive?.length === 5 ? next.startingFive : autoStartingFive(next);
-      const weekResults = simulateWeekGames(next, synced, GAMES_PER_WEEK, starters);
+      const scheduleThisWeek = buildSeasonSchedule(next, synced).filter((g) => g.week === next.week);
+      const alreadyPlayed = next.gamesThisWeek ?? 0;
+      const remaining = Math.max(0, scheduleThisWeek.length - alreadyPlayed);
+      const weekResults = simulateWeekGames(next, synced, remaining, starters);
       const processed = processWeekResults(next, weekResults, starters);
       next = applyGameResults(processed.franchise, weekResults);
       next = { ...next, gameLog: processed.franchise.gameLog, gamesThisWeek: 0 };
-      const scheduleThisWeek = buildSeasonSchedule(next, synced).filter((g) => g.week === next.week);
       const batchUserGames = userWeekResultsFromGames(
         weekResults,
-        scheduleThisWeek.map((g) => g.opponentId),
+        scheduleThisWeek.slice(alreadyPlayed, alreadyPlayed + weekResults.length).map((g) => g.opponentId),
       );
       nextLeague = simulateLeagueWeek(
         synced,
