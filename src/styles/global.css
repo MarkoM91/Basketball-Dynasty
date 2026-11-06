@@ -7087,3 +7087,35 @@ h1, h2, h3,
 .tc-player-row .player-avatar-pos {
   display: none;
 }
+
+/* New-franchise confirmation (replaces the native confirm dialog). */
+.mm-confirm {
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid rgba(226, 82, 74, 0.45);
+  border-radius: var(--radius-sm);
+  background: rgba(226, 82, 74, 0.08);
+}
+
+.mm-confirm p {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: var(--off-white);
+}
+
+.mm-confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.mm-confirm-actions .btn {
+  min-height: 48px;
+  width: 100%;
+  font-size: 14px;
+}
+
+.mm-confirm-danger {
+  background: var(--danger);
+  color: #fff;
+}

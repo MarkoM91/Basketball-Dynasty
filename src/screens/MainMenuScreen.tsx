@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatSavedAt } from '../lib/saveFile';
 import { useGameStore } from '../store/gameStore';
@@ -27,12 +28,23 @@ export function MainMenuScreen() {
     resetGame,
     resetOnboarding,
   } = useGameStore();
+  const [confirmingNew, setConfirmingNew] = useState(false);
 
-  const handleNewGame = () => {
-    if (started && !window.confirm('Retire your current dynasty and start a new franchise?')) return;
+  // In-page confirmation instead of window.confirm(): in-app browsers and some mobile web views
+  // block native dialogs, which made confirm() return false silently and the button do nothing.
+  const startNewFranchise = () => {
+    setConfirmingNew(false);
     if (started) resetGame();
     else resetOnboarding();
     navigate('/start');
+  };
+
+  const handleNewGame = () => {
+    if (started && !confirmingNew) {
+      setConfirmingNew(true);
+      return;
+    }
+    startNewFranchise();
   };
 
   /* ── RETURNING USER ─────────────────────────────────────────── */
@@ -90,9 +102,25 @@ export function MainMenuScreen() {
 
             {/* Secondary actions */}
             <div className="mm-return-secondary">
-              <button type="button" className="btn btn-ghost mm-return-sec-btn" onClick={handleNewGame}>
-                New franchise
-              </button>
+              {confirmingNew ? (
+                <div className="mm-confirm" role="alertdialog" aria-label="Start a new franchise?">
+                  <p>
+                    Retire {franchise.city} {franchise.name} and start over? This save will be deleted.
+                  </p>
+                  <div className="mm-confirm-actions">
+                    <button type="button" className="btn btn-secondary" onClick={() => setConfirmingNew(false)}>
+                      Keep playing
+                    </button>
+                    <button type="button" className="btn btn-primary mm-confirm-danger" onClick={startNewFranchise}>
+                      Yes, start new
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button type="button" className="btn btn-ghost mm-return-sec-btn" onClick={handleNewGame}>
+                  New franchise
+                </button>
+              )}
             </div>
 
             {lastSavedAt && (
