@@ -27,6 +27,7 @@ import {
   validateProposal,
 } from './tradeBuilder';
 import { hashString, pickInt } from '../lib/visuals/hash';
+import { contractExpired } from './tradeRules';
 
 export const EMPTY_TRADE_BLOCK: TradeBlockState = { playerIds: [], pickKeys: [] };
 
@@ -852,9 +853,9 @@ export function reconcileBlockListingOffers(
 
   if (totalAssets > 1) {
     // Generate combined package offers for all listed assets together
-    const listedPlayers = block.playerIds
+    const listedPlayers = (block.playerIds
       .map((id) => franchise.roster.find((p) => p.id === id))
-      .filter(Boolean) as Player[];
+      .filter(Boolean) as Player[]).filter((p) => !contractExpired(p));
     const listedPicks = block.pickKeys
       .map((k) => franchise.draftPicks.find((p) => pickKey(p) === k))
       .filter(Boolean) as DraftPick[];
@@ -893,7 +894,7 @@ export function generateInstantBlockOffers(
 
   if (trigger.type === 'player') {
     targetPlayer = franchise.roster.find((p) => p.id === trigger.key);
-    if (!targetPlayer) return [];
+    if (!targetPlayer || contractExpired(targetPlayer)) return [];
   } else {
     targetPick = franchise.draftPicks.find((p) => pickKey(p) === trigger.key);
     if (!targetPick) return [];

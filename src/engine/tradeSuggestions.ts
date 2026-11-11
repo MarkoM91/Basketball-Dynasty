@@ -3,6 +3,7 @@ import { getTeamById, teamWantsPicks, teamWantsVeterans } from '../data/league';
 import { formatMoney, playerName, uid } from '../data/scenarios';
 import { pickKey } from './cap';
 import { generatePartnerTradeAssets, pickDescription, validateProposal } from './tradeBuilder';
+import { contractExpired } from './tradeRules';
 
 export interface DealSuggestion {
   id: string;
@@ -64,7 +65,7 @@ export function suggestDealFixes(
     (p) => !base.outgoingPickKeys.includes(pickKey(p)),
   );
   const unusedRoster = franchise.roster.filter(
-    (p) => !base.outgoingPlayerIds.includes(p.id) && !p.isStar && !p.injured,
+    (p) => !base.outgoingPlayerIds.includes(p.id) && !p.isStar && !p.injured && !contractExpired(p),
   );
   const partnerAssets = generatePartnerTradeAssets(partner, league, franchise);
   const unusedIncoming = partnerAssets.filter((p) => !base.incomingPlayers.some((x) => x.id === p.id));

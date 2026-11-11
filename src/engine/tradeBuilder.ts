@@ -5,12 +5,12 @@ import { getTeamById, teamWantsPicks, teamWantsVeterans } from '../data/league';
 import { formatCap, pickKey, userTradeCapWarnings, validateTradeSalaryMatchAtPayroll, estimateTeamPayroll, SECOND_APRON, capTradeScoreAdjust } from './cap';
 import { clearTeamRosterCache, generateTeamRoster as generateCachedRoster } from './leagueRosters';
 import { getTeamRoster as getWorldRoster, rosterPayroll } from './leagueWorld';
-import { salaryMatchSummary, stepienViolation } from './tradeRules';
+import { salaryMatchSummary, stepienViolation, contractExpired, tradeBlockReason } from './tradeRules';
 import type { TradeProposal, TradeValidation } from '../types/game';
 
 export function generatePartnerTradeAssets(partner: LeagueTeam, league?: League, franchise?: Franchise): Player[] {
-  if (league) return getWorldRoster(league, partner, franchise);
-  return generateCachedRoster(partner);
+  const roster = league ? getWorldRoster(league, partner, franchise) : generateCachedRoster(partner);
+  return roster.filter((p) => !contractExpired(p));
 }
 
 export function clearPartnerTradeAssetCache(): void {
@@ -109,6 +109,11 @@ export function validateProposal(
 
   if (!incomingPlayers.length && !proposal.incomingPicks.length && !outgoingPlayers.length && !proposal.outgoingPickKeys.length) {
     errors.push('Add players or picks to the trade.');
+  }
+
+  for (const p of [...outgoingPlayers, ...incomingPlayers]) {
+    const reason = tradeBlockReason(p);
+    if (reason) errors.push(reason);
   }
 
   const incomingSalary = incomingPlayers.reduce((s, p) => s + p.contract.annualSalary, 0);

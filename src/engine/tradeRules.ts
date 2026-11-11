@@ -1,4 +1,19 @@
-import type { DraftPick, Franchise } from '../types/game';
+import type { DraftPick, Franchise, Player } from '../types/game';
+
+/**
+ * A contract with 0 years left has EXPIRED (the player is on the renewals list / an RFA-UFA
+ * decision). Such players cannot be traded until re-signed. A final-year deal during the season
+ * shows 1 year left — "expiring" contracts stay tradeable, as in the NBA.
+ */
+export function contractExpired(p: Player): boolean {
+  return (p.contract?.yearsRemaining ?? 1) <= 0;
+}
+
+export function tradeBlockReason(p: Player): string | null {
+  return contractExpired(p)
+    ? `${p.firstName} ${p.lastName}'s contract has expired — re-sign him before trading.`
+    : null;
+}
 import { CAP_LIMIT, formatCap, pickKey } from './cap';
 
 /** NBA Stepien — cannot trade first-round picks in consecutive future years in one deal. */

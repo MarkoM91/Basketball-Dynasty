@@ -26,6 +26,7 @@ import type {
   TradeOffer,
   TradeProposal,
 } from '../types/game';
+import { contractExpired } from '../engine/tradeRules';
 
 type TradeTab = 'shop' | 'listings';
 
@@ -403,6 +404,8 @@ export function TradeScreen() {
                       className="btn btn-ghost"
                       style={{ padding: '4px 8px', fontSize: 10 }}
                       onClick={() => toggleTradeBlockPlayer(p.id)}
+                    disabled={contractExpired(p) && !isPlayerOnBlock(franchise, p.id)}
+                    title={contractExpired(p) ? 'Contract expired — re-sign him before trading' : undefined}
                     >
                       Remove
                     </button>
@@ -714,6 +717,8 @@ export function TradeScreen() {
                     className={`trade-asset-chip ${onBlock ? 'trade-asset-chip-active' : ''}`}
                     aria-pressed={onBlock}
                     onClick={() => toggleTradeBlockPlayer(p.id)}
+                    disabled={contractExpired(p) && !isPlayerOnBlock(franchise, p.id)}
+                    title={contractExpired(p) ? 'Contract expired — re-sign him before trading' : undefined}
                   >
                     <PlayerAvatar player={p} size={36} />
                     <div>
