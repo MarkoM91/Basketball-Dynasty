@@ -238,6 +238,91 @@ export function canSignFreeAgentAtPayroll(
   return { ok: false, reason: 'No room' };
 }
 
+/**
+ * NBA max contract: 25% of the cap (0–6 years of service), 30% (7–9), 35% (10+). The game has no
+ * service-time field, so age stands in: ≤26 → 25%, 27–29 → 30%, 30+ → 35%.
+ */
+export function maxContractSalary(age: number): number {
+  const pct = age >= 30 ? 0.35 : age >= 27 ? 0.3 : 0.25;
+  return Math.round(CAP_LIMIT * pct);
+}
+
+export type SigningVia = 'Room' | 'MLE' | 'Taxpayer MLE' | 'BAE' | 'Minimum';
+
+/**
+ * Contract length allowed for an outside free agent, by how the deal is signed. Room and the
+ * non-taxpayer MLE allow 4 years; the taxpayer MLE, BAE and minimum deals allow 2. (Five-year
+ * deals exist only for re-signing your own player with Bird rights — handled in renewals.)
+ */
+export function maxContractYears(via: SigningVia): number {
+  return via === 'Room' || via === 'MLE' ? 4 : 2;
+}
+
+/** Which mechanism a given salary would be signed with, or null if the team can't fit it. */
+export function signingVia(franchise: Franchise, salary: number): SigningVia | null {
+  const cap = franchise.cap;
+  if (salary <= MIN_SALARY * 1.5) return 'Minimum';
+  if (cap.effectiveRoom >= salary) return 'Room';
+  if (!cap.mleUsed && !cap.inSecondApron) {
+    if (!cap.inLuxuryTax && salary <= cap.mleAvailable) return 'MLE';
+    if (cap.inLuxuryTax && salary <= TAXPAYER_MLE) return 'Taxpayer MLE';
+  }
+  if (!cap.baeUsed && !cap.inLuxuryTax && salary <= BAE) return 'BAE';
+  return null;
+}
+
+/**
+ * The most this team can offer a free agent right now. Under the cap: its usable room (or the
+ * MLE if that is larger). Over the cap there is no room — only the mid-level exception (once, if
+ * unused; the smaller taxpayer MLE above the tax line, none past the second apron) or a minimum.
+ */
+export function maxFreeAgentOffer(franchise: Franchise): {
+  max: number;
+  via: 'Room' | 'MLE' | 'Minimum';
+  overCap: boolean;
+  explain: string;
+} {
+  const cap = franchise.cap;
+  const minimum = Math.round(MIN_SALARY * 1.5);
+  const room = Math.max(0, cap.effectiveRoom);
+  const mle = cap.mleUsed || cap.inSecondApron
+    ? 0
+    : cap.inLuxuryTax
+      ? TAXPAYER_MLE
+      : cap.mleAvailable;
+  const bae = !cap.baeUsed && !cap.inLuxuryTax ? BAE : 0;
+  const overCap = room <= 0;
+  if (room >= mle && room >= bae && room > minimum) {
+    return { max: room, via: 'Room', overCap, explain: `${formatCap(room)} cap room` };
+  }
+  if (mle > minimum && mle >= bae) {
+    return {
+      max: mle,
+      via: 'MLE',
+      overCap,
+      explain: overCap
+        ? `Over the cap — ${cap.inLuxuryTax ? 'taxpayer ' : ''}mid-level exception up to ${formatCap(mle)}`
+        : `MLE up to ${formatCap(mle)}`,
+    };
+  }
+  if (bae > minimum) {
+    return {
+      max: bae,
+      via: 'MLE',
+      overCap,
+      explain: `Over the cap — bi-annual exception up to ${formatCap(bae)}`,
+    };
+  }
+  return {
+    max: minimum,
+    via: 'Minimum',
+    overCap: true,
+    explain: cap.mleUsed
+      ? 'Over the cap and MLE used — minimum deals only'
+      : 'Over the cap — minimum deals only',
+  };
+}
+
 export function canSignFreeAgent(
   franchise: Franchise,
   salary: number,
@@ -245,7 +330,9 @@ export function canSignFreeAgent(
 ): { ok: boolean; reason: string; useException?: string } {
   const cap = franchise.cap;
 
-  if (via === 'minimum') {
+  // A "minimum" deal is only a minimum deal at minimum money — this used to wave through ANY
+  // salary when the Team-deal pitch was chosen, so over-cap teams could offer $10M+.
+  if (via === 'minimum' && salary <= MIN_SALARY * 1.5) {
     return { ok: true, reason: 'Minimum contract fits under any exception.', useException: 'Minimum' };
   }
 

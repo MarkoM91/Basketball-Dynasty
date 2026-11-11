@@ -3,7 +3,7 @@ import { takeUniqueName } from '../data/names';
 import { uid, playerName, formatMoney } from '../data/scenarios';
 import { canAddPlayer, rosterFullMessage } from './rosterCuts';
 import { strategyLabel } from '../data/league';
-import { canSignFreeAgent, applySigningToCap } from './cap';
+import { applySigningToCap, maxFreeAgentOffer, canSignFreeAgentAtPayroll, maxContractSalary, maxContractYears, signingVia } from './cap';
 import { freeAgentAskingSalary, isMaxContract } from './salaries';
 import { simLeagueFreeAgency } from './leagueWorld';
 
@@ -105,8 +105,11 @@ function scoreRivalSuitability(team: LeagueTeam, fa: FreeAgent): number {
 }
 
 export function pickRivalTeam(league: League, fa: FreeAgent): LeagueTeam | undefined {
+  // Only teams that can actually fit the contract (cap room, MLE or minimum) may bid —
+  // over-cap teams used to make offers they could never sign.
   const suitors = league.teams
     .filter((t) => !t.isUser)
+    .filter((t) => canSignFreeAgentAtPayroll(t.payroll, rivalOfferSalary(fa, t), t.taxAverse).ok)
     .sort((a, b) => scoreRivalSuitability(b, fa) - scoreRivalSuitability(a, fa));
   return suitors[0];
 }
@@ -397,6 +400,9 @@ export function offerSalaryBounds(franchise: Franchise, fa: FreeAgent): {
   rival: number | undefined;
   suggested: number;
   max: number;
+  /** False when the team cannot afford even the player's floor (e.g. over the cap). */
+  affordable: boolean;
+  limitNote: string;
 } {
   const tier = faMarketTier(fa.overall);
   const ask = fa.askingSalary;
@@ -404,17 +410,55 @@ export function offerSalaryBounds(franchise: Franchise, fa: FreeAgent): {
   const suggested = rival
     ? minSalaryToSign(fa, 'max_offer')
     : Math.round(ask * (tier === 'depth' ? 1.0 : 1.05));
-  const max = Math.max(
+  const wishMax = Math.max(
     suggested,
     Math.round(ask * (tier === 'star' ? 1.15 : 1.12)),
     franchise.cap.effectiveRoom > 0 ? franchise.cap.effectiveRoom : ask,
   );
+  const floor = Math.round(ask * (tier === 'depth' ? 0.88 : 0.82));
+  const limit = maxFreeAgentOffer(franchise);
+  // Nobody can be paid more than the CBA max for his experience level.
+  const max = Math.min(wishMax, limit.max, maxContractSalary(fa.age));
+  const affordable = max >= floor;
   return {
-    min: Math.round(ask * (tier === 'depth' ? 0.88 : 0.82)),
+    min: affordable ? floor : max,
     ask,
     rival,
-    suggested,
+    suggested: Math.max(affordable ? floor : max, Math.min(suggested, max)),
     max,
+    affordable,
+    limitNote: limit.explain,
+  };
+}
+
+/**
+ * Real-NBA signing check: the salary must fit cap room, the (taxpayer) MLE, the bi-annual
+ * exception or a minimum deal; it can't exceed the max contract for his experience; and the
+ * years must fit how the deal is signed (4 via room / MLE, 2 via taxpayer MLE / BAE / minimum).
+ */
+function cbaSigningCheck(
+  franchise: Franchise,
+  fa: FreeAgent,
+  salary: number,
+  years: number,
+): { ok: boolean; reason: string; useException?: string } {
+  const maxSalary = maxContractSalary(fa.age);
+  if (salary > maxSalary) {
+    return { ok: false, reason: `Above the max contract for his experience (${formatMoney(maxSalary)}).` };
+  }
+  const via = signingVia(franchise, salary);
+  if (!via) {
+    const limit = maxFreeAgentOffer(franchise);
+    return { ok: false, reason: `${limit.explain}. Lower the offer to ${formatMoney(limit.max)} or less.` };
+  }
+  const maxYears = maxContractYears(via);
+  if (years > maxYears) {
+    return { ok: false, reason: `${via} deals can run at most ${maxYears} years.` };
+  }
+  return {
+    ok: true,
+    reason: via === 'Room' ? 'Fits in cap room.' : `Signed with the ${via === 'Minimum' ? 'minimum exception' : via}.`,
+    useException: via === 'Taxpayer MLE' ? 'MLE' : via,
   };
 }
 
@@ -468,7 +512,7 @@ function evaluateOffer(
     interest -= 20;
   }
 
-  const capCheck = canSignFreeAgent(franchise, salary, pitch === 'team_friendly' ? 'minimum' : 'standard');
+  const capCheck = cbaSigningCheck(franchise, fa, salary, years);
   if (fa.topOfferTeam && pitch === 'team_friendly' && salary < rivalSalary) {
     interest -= tier === 'star' ? 18 : 14;
   }
