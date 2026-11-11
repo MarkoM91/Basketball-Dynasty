@@ -4,6 +4,7 @@ import { ROSTER_SIZE } from '../data/rosterBuilder';
 import { formatMoney } from '../data/scenarios';
 import { formatUsableCapRoom } from '../engine/cap';
 import { canAddPlayer, signingRosterLimit } from '../engine/rosterCuts';
+import { maxContractYears, signingVia } from '../engine/cap';
 
 import {
   marketHeatLabel,
@@ -70,7 +71,13 @@ function FaOfferSheet({
     recommendedPitch ?? (fa.topOfferTeam ? 'max_offer' : 'featured_role'),
   );
   const [salary, setSalary] = useState(bounds.suggested);
-  const [years, setYears] = useState(Math.max(1, Math.min(5, fa.askingYears)));
+  const [years, setYears] = useState(Math.max(1, Math.min(4, fa.askingYears)));
+  // CBA: how this salary would be signed decides the longest contract allowed.
+  const via = signingVia(franchise, salary);
+  const maxYears = via ? maxContractYears(via) : 4;
+  useEffect(() => {
+    if (years > maxYears) setYears(maxYears);
+  }, [years, maxYears]);
 
   useEffect(() => {
     const prev = document.body.style.overflow;
@@ -155,7 +162,7 @@ function FaOfferSheet({
           </button>
           <div className="fa-stepper-value">
             <strong>{formatMoney(salary)}</strong>
-            <span>Asks {formatMoney(fa.askingSalary)} · room {formatUsableCapRoom(franchise.cap)}</span>
+            <span>Asks {formatMoney(fa.askingSalary)} · max {formatMoney(bounds.max)} ({bounds.limitNote})</span>
           </div>
           <button
             type="button"
@@ -191,8 +198,13 @@ function FaOfferSheet({
         </div>
 
         <p className="deal-section-label">Years</p>
+        <p className="fa-via">
+          {via
+            ? `Signed via ${via === 'Room' ? 'cap room' : via === 'Minimum' ? 'the minimum exception' : `the ${via}`} · up to ${maxYears} years`
+            : 'This salary does not fit your cap room or exceptions'}
+        </p>
         <div className="fa-segment" role="radiogroup" aria-label="Contract years">
-          {[1, 2, 3, 4, 5].map((y) => (
+          {Array.from({ length: maxYears }, (_, i) => i + 1).map((y) => (
             <button
               key={y}
               type="button"
@@ -377,13 +389,28 @@ export function FreeAgencyScreen() {
                 <span>Interest in you</span>
                 <ProgressBar value={fa.interest} />
               </div>
-              <button
-                type="button"
-                className={`btn ${target ? 'btn-primary' : 'btn-secondary'}`}
-                onClick={() => setOfferFor(fa.id)}
-              >
-                Make offer
-              </button>
+              {(() => {
+                // Over-cap teams can only offer within their exceptions (MLE / minimum).
+                const bounds = offerSalaryBounds(franchise, fa);
+                return bounds.affordable ? (
+                  <button
+                    type="button"
+                    className={`btn ${target ? 'btn-primary' : 'btn-secondary'}`}
+                    onClick={() => setOfferFor(fa.id)}
+                  >
+                    Make offer
+                  </button>
+                ) : (
+                  <div className="fa-card-blocked">
+                    <button type="button" className="btn btn-secondary" disabled>
+                      Can't afford
+                    </button>
+                    <span>
+                      {bounds.limitNote}. He's asking {formatMoney(fa.askingSalary)}.
+                    </span>
+                  </div>
+                );
+              })()}
             </article>
           );
         })

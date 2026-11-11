@@ -21,6 +21,7 @@ import type {
   TradeOffer,
   TradeValidation,
 } from '../types/game';
+import { contractExpired } from '../engine/tradeRules';
 
 /**
  * Mobile-first deal builder.
@@ -265,12 +266,14 @@ export function TradeNegotiateModal({
           <ul className="deal-pick-list">
             {players.map((p) => {
               const on = sending ? outgoingPlayerIds.includes(p.id) : incomingPlayerIds.includes(p.id);
+              const expired = contractExpired(p);
               return (
                 <li key={p.id}>
                   <button
                     type="button"
-                    className={`deal-option ${on ? 'is-on' : ''}`}
+                    className={`deal-option ${on ? 'is-on' : ''} ${expired ? 'is-locked' : ''}`}
                     aria-pressed={on}
+                    disabled={expired && !on}
                     onClick={() =>
                       sending
                         ? setOutgoingPlayerIds(toggleId(outgoingPlayerIds, p.id))
@@ -283,6 +286,7 @@ export function TradeNegotiateModal({
                       <span>
                         {p.position} · {p.age} · {formatMoney(p.contract.annualSalary)}
                         {p.injured ? ' · Injured' : ''}
+                        {expired ? ' · Contract expired — re-sign first' : ''}
                       </span>
                     </span>
                     <span className="deal-ovr">{p.overall}</span>

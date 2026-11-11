@@ -2,6 +2,7 @@ import type { Franchise, League, Player, Position, TradeMatch, TradeProposal } f
 import { strategyLabel } from '../data/league';
 import { uid, playerName } from '../data/scenarios';
 import { generatePartnerTradeAssets, validateProposal } from './tradeBuilder';
+import { contractExpired } from './tradeRules';
 
 export interface TradeFinderOptions {
   mode: 'acquire' | 'move';
@@ -16,7 +17,7 @@ function salaryClose(a: Player, b: Player): number {
 }
 
 function pickOutgoingForIncoming(franchise: Franchise, incoming: Player): Player | undefined {
-  const pool = franchise.roster.filter((p) => !p.injured);
+  const pool = franchise.roster.filter((p) => !p.injured && !contractExpired(p));
   const byPos = pool.find((p) => p.position === incoming.position);
   if (byPos) return byPos;
   return [...pool].sort((a, b) => salaryClose(a, incoming) - salaryClose(b, incoming))[0];
@@ -33,8 +34,8 @@ export function findTradeMatches(
   const matches: TradeMatch[] = [];
 
   const outgoingPool = options.outgoingPlayerId
-    ? franchise.roster.filter((p) => p.id === options.outgoingPlayerId)
-    : franchise.roster.filter((p) => !p.injured && !p.isStar);
+    ? franchise.roster.filter((p) => p.id === options.outgoingPlayerId && !contractExpired(p))
+    : franchise.roster.filter((p) => !p.injured && !p.isStar && !contractExpired(p));
 
   if (!outgoingPool.length) return [];
 

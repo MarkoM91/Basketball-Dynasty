@@ -18,6 +18,7 @@ import type {
 import { createLeague, getTeamById, normalizeLeague, normalizeLeagueTeam, syncUserTeam } from '../data/league';
 import { buildLeagueSchedule, SEASON_GAME_COUNT } from '../engine/leagueSchedule';
 import { backfillTakeoverHistory } from '../engine/takeoverHistory';
+import { contractExpired, tradeBlockReason } from '../engine/tradeRules';
 import { resolveTeamFullName, resolveTeamIdentity } from '../data/teamNames';
 import { applyRosterSize, fillRosterTo18, normalizeLoadedRoster } from '../data/rosterBuilder';
 import { applyScenarioProfile, strategyForFranchise, teamRatingStrength, ensureScenarioRosterShape } from '../engine/scenarioDifficulty';
@@ -242,6 +243,23 @@ interface GameStore {
   openFreeAgency: () => void;
   acceptDraftPickTrade: (offer: TradeOffer, pickNumber: number) => void;
   submitDraftPickTrade: (proposal: TradeProposal, pickNumber: number) => void;
+}
+
+/**
+ * Offers can be generated before a contract expires (or arrive from the trade block). Check the
+ * CURRENT roster version of every outgoing player — expired contracts cannot be traded.
+ */
+function expiredInOffer(franchise: Franchise, offer: TradeOffer): string | null {
+  for (const p of offer.outgoing.players) {
+    const current = franchise.roster.find((r) => r.id === p.id) ?? p;
+    const reason = tradeBlockReason(current);
+    if (reason) return reason;
+  }
+  for (const p of offer.incoming.players) {
+    const reason = tradeBlockReason(p);
+    if (reason) return reason;
+  }
+  return null;
 }
 
 function withStartingFive(f: Franchise): Franchise {
@@ -1180,6 +1198,11 @@ export const useGameStore = create<GameStore>()(
   acceptTrade: (offer) => {
     const { franchise, league } = get();
     if (!franchise || !league) return;
+    const blocked = expiredInOffer(franchise, offer);
+    if (blocked) {
+      set({ toast: blocked });
+      return;
+    }
 
     const incomingSalary = offer.incoming.players.reduce((s, p) => s + p.contract.annualSalary, 0);
     const outgoingSalary = offer.outgoing.players.reduce((s, p) => s + p.contract.annualSalary, 0);
@@ -1736,6 +1759,11 @@ export const useGameStore = create<GameStore>()(
   toggleTradeBlockPlayer: (playerId) => {
     const { franchise, league } = get();
     if (!franchise || !league) return;
+    const listing = franchise.roster.find((p) => p.id === playerId);
+    if (listing && !isPlayerOnBlock(franchise, playerId) && contractExpired(listing)) {
+      set({ toast: tradeBlockReason(listing) ?? 'Contract expired — re-sign him before trading.' });
+      return;
+    }
     const wasListed = isPlayerOnBlock(franchise, playerId);
     let next = togglePlayerOnBlock(franchise, playerId);
     const nowListed = isPlayerOnBlock(next, playerId);
@@ -1942,6 +1970,11 @@ export const useGameStore = create<GameStore>()(
   acceptDraftPickTrade: (offer, pickNumber) => {
     const { franchise, league } = get();
     if (!franchise || !league) return;
+    const blocked = expiredInOffer(franchise, offer);
+    if (blocked) {
+      set({ toast: blocked });
+      return;
+    }
     if (!remainingUserDraftSlots(franchise, league).includes(pickNumber)) {
       set({ toast: `Pick #${pickNumber} is no longer available to trade.` });
       return;

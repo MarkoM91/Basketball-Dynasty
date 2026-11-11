@@ -10,6 +10,7 @@ import { waiveablePlayers } from '../engine/rosterCuts';
 import { useGameStore } from '../store/gameStore';
 import type { Player, PlayerSeasonStats } from '../types/game';
 import { Panel } from '../components/UI';
+import { contractExpired } from '../engine/tradeRules';
 
 function formatStat(value: number, digits = 1): string {
   return value.toFixed(digits);
@@ -177,6 +178,8 @@ export function RosterScreen() {
                     type="button"
                     className={`btn ${onBlock ? 'btn-primary' : 'btn-secondary'}`}
                     onClick={() => toggleTradeBlockPlayer(p.id)}
+                    disabled={contractExpired(p) && !isPlayerOnBlock(franchise, p.id)}
+                    title={contractExpired(p) ? 'Contract expired — re-sign him before trading' : undefined}
                   >
                     {onBlock ? 'On block' : 'Shop'}
                   </button>
@@ -277,6 +280,8 @@ export function RosterScreen() {
                           className={`btn ${onBlock ? 'btn-primary' : 'btn-ghost'}`}
                           style={{ padding: '4px 8px', fontSize: 10 }}
                           onClick={() => toggleTradeBlockPlayer(p.id)}
+                    disabled={contractExpired(p) && !isPlayerOnBlock(franchise, p.id)}
+                    title={contractExpired(p) ? 'Contract expired — re-sign him before trading' : undefined}
                         >
                           {onBlock ? 'Block' : 'Shop'}
                         </button>

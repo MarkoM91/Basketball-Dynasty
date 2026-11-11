@@ -10,6 +10,7 @@ import {
   buildCareerTradeExtras,
   tradeMarketModifiers,
 } from './careerMode';
+import { contractExpired } from './tradeRules';
 
 export { simulateLeagueWeek, SEASON_GAME_COUNT, SCHEDULE_WEEKS, TRADE_DEADLINE_WEEK, formatWinPct } from './leagueSimulation';
 
@@ -197,9 +198,11 @@ export function generateLeagueTradeOffers(franchise: Franchise, league: League):
   const partners = league.teams.filter((t) => !t.isUser);
   const mod = tradeMarketModifiers(franchise);
   const offers: TradeOffer[] = [];
-  const young = franchise.roster.filter((p) => p.age < 26 && p.overall < 80);
-  const star = franchise.roster.find((p) => p.isStar);
-  const bench = franchise.roster.filter((p) => p.role === 'Bench' || p.role === 'Rotation');
+  // Expired contracts can't be traded — AI offers never ask for them.
+  const tradeable = franchise.roster.filter((p) => !contractExpired(p));
+  const young = tradeable.filter((p) => p.age < 26 && p.overall < 80);
+  const star = tradeable.find((p) => p.isStar);
+  const bench = tradeable.filter((p) => p.role === 'Bench' || p.role === 'Rotation');
 
   if (young.length && franchise.draftPicks.length && !mod.suppressWinNowOffers) {
     const partner = partners.find((t) => teamWantsVeterans(t.strategy)) ?? partners[0];
@@ -296,7 +299,9 @@ export function generateLeagueTradeOffers(franchise: Franchise, league: League):
 
   offers.push(...buildCareerTradeExtras(franchise, partners, makeIncomingPlayer));
 
-  return applyTradeMarketModifiers(offers, franchise).slice(0, 4);
+  // Last line of defence for every offer source (incl. scenario extras): no expired contracts.
+  const legal = offers.filter((o) => !o.outgoing.players.some((p) => contractExpired(p)));
+  return applyTradeMarketModifiers(legal, franchise).slice(0, 4);
 }
 
 export function userMadePlayoffs(league: League): boolean {
