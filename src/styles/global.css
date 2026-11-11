@@ -7241,3 +7241,65 @@ h1, h2, h3,
 .gameday-slot-wrap.is-dragging { opacity: 0.55; }
 .gameday-slot-wrap.is-drop-target { outline: 2px solid var(--signal); outline-offset: 2px; }
 .gameday-drag-handle:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+
+/* Free agency: player the team cannot afford (over the cap / exception used). */
+.fa-card-blocked {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fa-card-blocked .btn {
+  width: 100%;
+}
+
+.fa-card-blocked span {
+  font-size: 13px;
+  color: var(--silver);
+}
+
+.fa-via {
+  margin: -4px 0 8px;
+  font-size: 13px;
+  color: var(--silver);
+}
+
+.fa-segment {
+  grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
+}
+
+/* Lineup rows: grid items default to min-width:auto, so long names plus the 44px drag handle
+   pushed each row past the panel edge on phones. Let rows shrink; names truncate instead. */
+.gameday-slots > li,
+.gameday-slot-wrap {
+  min-width: 0;
+  width: 100%;
+}
+
+.gameday-slot .deal-option-copy strong {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 400px) {
+  .gameday-slot {
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .gameday-slot-pos {
+    width: 26px;
+    font-size: 16px;
+  }
+
+  .gameday-slot .deal-chevron {
+    display: none;
+  }
+}
+
+/* Expired contracts: visible in trade pickers but locked. */
+.deal-option.is-locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
