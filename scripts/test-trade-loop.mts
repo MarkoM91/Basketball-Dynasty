@@ -125,10 +125,19 @@ function runUserProposalForTeam(template: { city: string; name: string; market: 
     // Pick an incoming player whose salary fits in user's cap room
     const cap = franchise.cap;
     const room = Math.max(0, (cap?.effectiveRoom ?? cap?.projectedRoom ?? 0));
-    const incomingPlayer = partnerAssets
+    const fitsRoom = partnerAssets
       .filter((p) => p.contract.annualSalary <= room + 100_000)
       .sort((a, b) => b.overall - a.overall)[0];
-    if (!incomingPlayer) { failures.push({ team: teamLabel, phase: 'setup', reason: `no partner player fits cap room ${room}` }); return; }
+    // Over the cap (e.g. after the Nov-2026 roster refresh): no room to absorb salary, so — as in
+    // the NBA — take back the cheapest player and send out matching salary.
+    const incomingPlayer = fitsRoom ?? [...partnerAssets].sort((a, b) => a.contract.annualSalary - b.contract.annualSalary)[0];
+    if (!incomingPlayer) { failures.push({ team: teamLabel, phase: 'setup', reason: 'partner has no tradeable players' }); return; }
+    const salaryMatch = fitsRoom
+      ? undefined
+      : [...franchise.roster]
+          .filter((p) => !p.isStar && p.contract.yearsRemaining > 0 && p.contract.annualSalary >= incomingPlayer.contract.annualSalary)
+          .sort((a, b) => a.contract.annualSalary - b.contract.annualSalary)[0];
+    if (!fitsRoom && !salaryMatch) { failures.push({ team: teamLabel, phase: 'setup', reason: `over the cap and no salary to match ${incomingPlayer.contract.annualSalary}` }); return; }
     // Pick one R1 + one R2 to avoid Stepien rule (consecutive 1sts)
     const r1 = franchise.draftPicks.find((p) => p.round === 1);
     const r2 = franchise.draftPicks.find((p) => p.round === 2);
@@ -139,7 +148,7 @@ function runUserProposalForTeam(template: { city: string; name: string; market: 
     const proposal: TradeProposal = {
       partnerTeamId: partner.id,
       incomingPlayers: [incomingPlayer],
-      outgoingPlayerIds: [],
+      outgoingPlayerIds: salaryMatch ? [salaryMatch.id] : [],
       incomingPicks: [incomingPick],
       outgoingPickKeys: [pickKey(r1), pickKey(r2)],
     };
@@ -179,9 +188,10 @@ function runUserProposalForTeam(template: { city: string; name: string; market: 
     if (!next.roster.some((p) => p.id === incomingPlayer.id)) {
       failures.push({ team: teamLabel, phase: 'asset', reason: `incoming player ${incomingPlayer.id} not on roster` });
     }
-    // Roster size +1
-    if (next.roster.length !== franchise.roster.length + 1) {
-      failures.push({ team: teamLabel, phase: 'asset', reason: `roster size ${franchise.roster.length} -> ${next.roster.length} (expected +1)` });
+    // Roster size: +1 incoming, minus any salary-matching player sent out.
+    const expectedDelta = 1 - proposal.outgoingPlayerIds.length;
+    if (next.roster.length !== franchise.roster.length + expectedDelta) {
+      failures.push({ team: teamLabel, phase: 'asset', reason: `roster size ${franchise.roster.length} -> ${next.roster.length} (expected ${expectedDelta >= 0 ? '+' : ''}${expectedDelta})` });
     }
     // No duplicates
     const dupes = after.filter((k, i) => after.indexOf(k) !== i);

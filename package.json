@@ -11,6 +11,7 @@
     "compute-ratings": "node scripts/refresh-current-rosters.mjs",
     "validate:core": "node scripts/validate-core-loop.mjs",
     "validate:draft-trades": "node scripts/validate-draft-pick-trades.mjs",
+    "validate:cba": "node scripts/validate-cba-rules.mjs",
     "deploy": "npm run build && wrangler deploy",
     "sync:rosters": "node scripts/refresh-current-rosters.mjs",
     "validate:rosters": "node scripts/validate-roster-snapshot.mjs",
