@@ -4,8 +4,9 @@ import { derivePlayerRatings } from '../lib/playerRatings';
 import { getTeamRoster } from './leagueWorld';
 import { teamRegularSeasonRecord } from './regularSeasonRecord';
 import { PLAYOFF_TEAM_COUNT } from './playoffs';
-import { lineupModifiers, lineupTalent } from './simulation';
-import { NBA_HOME_EDGE, NBA_WIN_PROB_SCALE, TALENT_GAP_AMPLIFIER } from './stats';
+import { lineupModifiers, lineupTalent, winChanceFromDiff } from './simulation';
+import { NBA_HOME_EDGE, TALENT_GAP_AMPLIFIER } from './stats';
+import type { Matchup } from './gamePlan';
 
 /** The sim's fatigue for the 2nd game of a week (see simulateSingleGame). */
 export const BACK_TO_BACK_FATIGUE = 1.4;
@@ -103,14 +104,16 @@ export function gameDayOdds(
   opponentStrengthValue: number,
   home: boolean,
   secondGameOfWeek: boolean,
+  matchup?: Matchup | null,
 ): WinOdds {
   const talent = lineupTalent(franchise, starterIds);
   const mods = lineupModifiers(franchise, starterIds);
   const fatigue = secondGameOfWeek ? BACK_TO_BACK_FATIGUE : 0;
   const talentPts = (talent - opponentStrengthValue) * TALENT_GAP_AMPLIFIER;
   const homePts = home ? NBA_HOME_EDGE : 0;
-  const diff = talentPts + mods - fatigue + homePts;
-  const win = Math.round(100 / (1 + Math.exp(-diff / (NBA_WIN_PROB_SCALE * 1.15))));
+  const planPts = matchup?.edge ?? 0;
+  const diff = talentPts + mods - fatigue + planPts + homePts;
+  const win = winChanceFromDiff(diff, matchup?.varianceScale ?? 1);
 
   const factors: { label: string; weight: number }[] = [];
   const gap = Math.round(talent - opponentStrengthValue);
@@ -118,6 +121,9 @@ export function gameDayOdds(
   if (home) factors.push({ label: 'Home court', weight: homePts });
   else factors.push({ label: 'On the road', weight: 0.5 });
   if (secondGameOfWeek) factors.push({ label: '2nd game this week', weight: fatigue });
+  if (Math.abs(planPts) >= 0.5) {
+    factors.push({ label: planPts > 0 ? 'Game plan edge' : 'Game plan plays into their hands', weight: Math.abs(planPts) });
+  }
   // Only mention chemistry/coaching when it's big enough to notice — it's near-constant per team.
   if (Math.abs(mods) >= 2) {
     factors.push({ label: mods > 0 ? 'Team chemistry & coaching' : 'Morale & chemistry drag', weight: Math.abs(mods) });

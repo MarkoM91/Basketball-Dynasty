@@ -8,6 +8,7 @@ import { lineupSimAdjustment, ensureScenarioRosterShape, evolveFranchiseWindow, 
 import { evaluateJobSecurity } from './careerMode';
 import { strengthFromRoster } from './leagueWorld';
 import { buildGameStory } from './gameStory';
+import { applyGameFatigue, effectiveOverall, matchupFor, planOf, ROTATION_WEIGHTS_BY_SIZE, withRestApplied } from './gamePlan';
 
 export const GAMES_PER_WEEK = SCHEDULE_GAMES_PER_WEEK;
 
@@ -85,7 +86,12 @@ export function lineupTalent(franchise: Franchise, starterIds: string[]): number
     .filter((p) => !p.injured && !starters.some((s) => s.id === p.id))
     .sort((a, b) => b.overall - a.overall);
   const ordered = [...[...starters].sort((a, b) => b.overall - a.overall), ...bench];
-  return strengthFromRoster(ordered.map((p) => ({ ...p, injured: false })), true);
+  // Fatigue lowers tonight's rating; the rotation size decides how much the top players count.
+  return strengthFromRoster(
+    ordered.map((p) => ({ ...p, overall: effectiveOverall(p), injured: false })),
+    true,
+    ROTATION_WEIGHTS_BY_SIZE[planOf(franchise).rotation],
+  );
 }
 
 /** Situational edge in strength points — NOT amplified by the talent-gap multiplier. */
@@ -99,6 +105,14 @@ export function lineupModifiers(franchise: Franchise, starterIds: string[]): num
     franchise.starHappiness === 'Happy' ? 1 : franchise.starHappiness === 'Angry' ? -2 : 0;
   const starBoost = starters.some((p) => p.isStar) ? 0.5 : 0;
   return moraleBonus + coachBonus + chemistry + starBoost + lineupSimAdjustment(franchise);
+}
+
+/**
+ * Win chance (0–100) from the pre-variance edge. Game-night randomness is folded into a flatter
+ * logistic; faster games (more randomness) flatten it further.
+ */
+export function winChanceFromDiff(diff: number, varianceScale = 1): number {
+  return Math.round(100 / (1 + Math.exp(-diff / (NBA_WIN_PROB_SCALE * (1 + 0.15 * varianceScale)))));
 }
 
 /**
@@ -117,7 +131,7 @@ export function estimateWinChance(
     (lineupTalent(franchise, ids) - opponentStrengthValue) * TALENT_GAP_AMPLIFIER +
     lineupModifiers(franchise, ids) +
     (home ? NBA_HOME_EDGE : 0);
-  return Math.round(100 / (1 + Math.exp(-diff / (NBA_WIN_PROB_SCALE * 1.15))));
+  return winChanceFromDiff(diff);
 }
 
 export function lineupStrength(franchise: Franchise, starterIds: string[]): number {
@@ -139,8 +153,10 @@ export function simulateSingleGame(
   let oppName: string;
   let oppStrength: number;
   let gameInWeek: number | undefined;
+  let oppId: string | undefined;
 
   if (scheduled && league) {
+    oppId = scheduled.opponentId;
     home = scheduled.home;
     oppName = scheduled.opponentName;
     oppStrength = opponentStrength(league, scheduled.opponentId, franchise, franchise.week);
@@ -149,6 +165,7 @@ export function simulateSingleGame(
     const gameSlot = (franchise.gamesThisWeek ?? 0) + 1;
     const fallback = scheduledGameAt(franchise, league, franchise.week, gameSlot);
     if (fallback) {
+      oppId = fallback.opponentId;
       home = fallback.home;
       oppName = fallback.opponentName;
       oppStrength = opponentStrength(league, fallback.opponentId, franchise, franchise.week);
@@ -156,6 +173,7 @@ export function simulateSingleGame(
     } else {
       const pool = league.teams.filter((t) => !t.isUser);
       const team = pool[Math.floor(Math.random() * pool.length)];
+      oppId = team?.id;
       home = Math.random() > 0.5;
       oppName = team?.fullName ?? 'Unknown';
       oppStrength = team?.strength ?? 75;
@@ -169,15 +187,20 @@ export function simulateSingleGame(
 
   const homeAdv = home ? NBA_HOME_EDGE : 0;
   const fatigue = (gameInWeek ?? 1) > 1 ? 1.4 : 0;
+  // Game plan vs their plan: the same matchup the Game Day odds show.
+  const matchup = league && oppId ? matchupFor(franchise, league, oppId) : null;
+  const planEdge = matchup?.edge ?? 0;
+  const varianceScale = matchup?.varianceScale ?? 1;
   const result = simulateTeamGameScores(talent, oppStrength, homeAdv, {
     isUserTeam: true,
-    teamAdj: modifiers - fatigue,
+    teamAdj: modifiers - fatigue + planEdge,
+    varianceScale,
   });
   const teamScore = result.teamScore;
   const oppScore = result.oppScore;
   const won = result.won;
-  const diff = (talent - oppStrength) * TALENT_GAP_AMPLIFIER + modifiers - fatigue + homeAdv;
-  const winChance = Math.round(100 / (1 + Math.exp(-diff / (NBA_WIN_PROB_SCALE * 1.15))));
+  const diff = (talent - oppStrength) * TALENT_GAP_AMPLIFIER + modifiers - fatigue + planEdge + homeAdv;
+  const winChance = winChanceFromDiff(diff, varianceScale);
   // The story comes from what happened, not from the pre-game talent gap.
   const story = buildGameStory(teamScore, oppScore, oppName, winChance);
 
@@ -208,14 +231,57 @@ export function simulateWeekGames(
   const results: GameResult[] = [];
 
   const startSlot = (franchise.gamesThisWeek ?? 0) + 1;
+  // Fatigue builds game to game inside the batch; rest only applies to the next game.
+  let cur = franchise;
   for (let i = 0; i < gamesCount; i++) {
     const gameInWeek = startSlot + i;
     const scheduled =
       league ? scheduledGameAt(franchise, league, franchise.week, gameInWeek) : undefined;
-    results.push(simulateSingleGame(franchise, league, ids, scheduled));
+    const tonight = gameFranchise(cur, ids);
+    results.push(simulateSingleGame(tonight.franchise, league, tonight.starters, scheduled));
+    cur = afterGameFatigue(cur, tonight.starters);
   }
 
   return results;
+}
+
+/**
+ * The franchise as it takes the floor tonight: rested players sit (treated as unavailable) and
+ * any rested starter is replaced by the best available player at that spot.
+ */
+export function gameFranchise(franchise: Franchise, starterIds: string[]): { franchise: Franchise; starters: string[] } {
+  const playing = withRestApplied(franchise);
+  const rest = franchise.restTonight ?? [];
+  let starters = starterIds.filter((id) => !rest.includes(id) && playing.roster.some((p) => p.id === id && !p.injured));
+  if (starters.length !== 5) {
+    const auto = autoStartingFive(playing).filter((id) => !starters.includes(id));
+    starters = [...starters, ...auto].slice(0, 5);
+  }
+  return { franchise: playing, starters };
+}
+
+/** Fatigue for a batch of simmed games (rest applies to the first one only). */
+export function applyBatchFatigue(franchise: Franchise, starterIds: string[], games: number): Franchise {
+  let cur = franchise;
+  for (let i = 0; i < games; i++) cur = afterGameFatigue(cur, gameFranchise(cur, starterIds).starters);
+  return cur;
+}
+
+/** After a game played on the rest-applied franchise: put rested players back, then add fatigue. */
+export function finishRestedGame(played: Franchise, original: Franchise, starters: string[]): Franchise {
+  const rest = original.restTonight ?? [];
+  const roster = played.roster.map((p) => {
+    if (!rest.includes(p.id)) return p;
+    const before = original.roster.find((o) => o.id === p.id);
+    return { ...p, injured: before?.injured, injuryWeeks: before?.injuryWeeks, role: before?.role ?? p.role };
+  });
+  return afterGameFatigue({ ...played, roster, restTonight: rest }, starters);
+}
+
+/** Roster fatigue after a game played with these starters; clears tonight's rest list. */
+export function afterGameFatigue(franchise: Franchise, starters: string[]): Franchise {
+  const roster = applyGameFatigue(franchise.roster, starters, planOf(franchise), franchise.restTonight ?? []);
+  return { ...franchise, roster, restTonight: [] };
 }
 export function processWeekResults(
   franchise: Franchise,
@@ -302,9 +368,11 @@ export function advanceDevelopment(franchise: Franchise): Franchise {
 }
 
 export function rollInjuries(franchise: Franchise): { franchise: Franchise; injuryNote?: string } {
-  const candidate = franchise.roster.find(
-    (p) => !p.injured && p.injuryRisk !== 'Low' && Math.random() < (p.injuryRisk === 'High' ? 0.08 : 0.04),
-  );
+  // Fatigue above 50 adds up to +6% weekly risk, even for durable players.
+  const chance = (p: Player) =>
+    (p.injuryRisk === 'High' ? 0.08 : p.injuryRisk === 'Medium' ? 0.04 : 0) +
+    (Math.max(0, (p.fatigue ?? 0) - 50) / 50) * 0.06;
+  const candidate = franchise.roster.find((p) => !p.injured && Math.random() < chance(p));
   if (!candidate) return { franchise };
 
   const weeks = 2 + Math.floor(Math.random() * 6);
