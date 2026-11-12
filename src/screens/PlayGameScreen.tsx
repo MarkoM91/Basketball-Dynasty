@@ -3,13 +3,14 @@ import { playerName } from '../data/scenarios';
 import { getTeamById } from '../data/league';
 import { getUserPlayoffMatchup } from '../engine/playoffs';
 import { currentScheduledGame, opponentStrength } from '../engine/schedule';
-import { autoStartingFive, estimateWinChance, GAMES_PER_WEEK, lineupTalent } from '../engine/simulation';
+import { autoStartingFive, GAMES_PER_WEEK } from '../engine/simulation';
+import { gameDayOdds, scoutOpponent, standingsLine } from '../engine/gameDay';
 import { PlayerAvatar } from '../components/PlayerAvatar';
 import { TeamLogo } from '../components/TeamLogo';
 import { CourtBackdrop } from '../components/CourtBackdrop';
 import { Icon } from '../components/Icon';
 import { useGameStore } from '../store/gameStore';
-import type { Player, Position } from '../types/game';
+import type { GameLogEntry, Player, Position } from '../types/game';
 
 const SLOTS: Position[] = ['PG', 'SG', 'SF', 'PF', 'C'];
 const EMPTY: string[] = ['', '', '', '', ''];
@@ -31,7 +32,19 @@ export function PlayGameScreen() {
     playPlayoffGame,
     advanceWeek,
     advanceToPlayoffs,
+    setScreen,
   } = useGameStore();
+  const [editFive, setEditFive] = useState(false);
+  const [recapId, setRecapId] = useState<string | null>(null);
+  // Id of the newest game BEFORE pressing Play; when a newer one appears, show its recap.
+  const pendingRecap = useRef<string | null | undefined>(undefined);
+  const topGameId = franchise?.gameLog?.[0]?.id;
+  useEffect(() => {
+    if (pendingRecap.current !== undefined && topGameId && topGameId !== pendingRecap.current) {
+      setRecapId(topGameId);
+      pendingRecap.current = undefined;
+    }
+  }, [topGameId]);
   const [slots, setSlots] = useState<string[]>(EMPTY);
   const [pickingSlot, setPickingSlot] = useState<number | null>(null);
   const [confirmSkip, setConfirmSkip] = useState(false);
@@ -62,15 +75,19 @@ export function PlayGameScreen() {
   const home = isPlayoffs ? false : Boolean(nextRegular?.home);
   const full = slots.every(Boolean);
 
+  const secondGame = !isPlayoffs && gamesPlayed >= 1;
   const odds = useMemo(() => {
     if (!franchise || !league || !opponentId || !full) return null;
     const opp = opponentStrength(league, opponentId, franchise, franchise.week);
-    return {
-      you: Math.round(lineupTalent(franchise, slots)),
-      them: Math.round(opp),
-      win: estimateWinChance(franchise, slots, opp, home),
-    };
-  }, [franchise, league, opponentId, slots, full, home]);
+    const current = gameDayOdds(franchise, slots, opp, home, secondGame);
+    const auto = autoStartingFive(franchise);
+    const best = auto.length === 5 ? gameDayOdds(franchise, auto, opp, home, secondGame) : current;
+    return { ...current, bestWin: best.win };
+  }, [franchise, league, opponentId, slots, full, home, secondGame]);
+  const scouting = useMemo(
+    () => (franchise && league && opponentId ? scoutOpponent(league, opponentId, franchise) : null),
+    [franchise, league, opponentId],
+  );
 
   if (!franchise) return null;
 
@@ -118,6 +135,7 @@ export function PlayGameScreen() {
   const handlePlay = () => {
     if (!full) return;
     setStartingFive(slots);
+    if (!isPlayoffs) pendingRecap.current = franchise.gameLog?.[0]?.id ?? null;
     if (isPlayoffs) playPlayoffGame();
     else playGame();
   };
@@ -181,6 +199,82 @@ export function PlayGameScreen() {
     );
   }
 
+  // ── Recap (shown right after Play — no jump to Box Scores) ─────────────────
+  const recap: GameLogEntry | undefined = recapId ? franchise.gameLog?.find((g) => g.id === recapId) : undefined;
+  if (recap) {
+    const standing = league ? standingsLine(league) : null;
+    const performers = [
+      recap.topScorer && `${recap.topScorer.name} ${recap.topScorer.pts} pts`,
+      recap.topRebounder && `${recap.topRebounder.name} ${recap.topRebounder.reb} reb`,
+      recap.topAssister && `${recap.topAssister.name} ${recap.topAssister.ast} ast`,
+    ].filter(Boolean) as string[];
+    const nextAction = () => {
+      setRecapId(null);
+      if (gamesLeft > 0) return;
+      advanceWeek();
+      // Both games played → straight to next week's Game Day (advanceWeek lands on the Office).
+      const after = useGameStore.getState();
+      const inSeason = after.franchise?.phase === 'regular_season' || after.franchise?.phase === 'trade_deadline';
+      if (inSeason && after.screen === 'home') setScreen('play_game');
+    };
+    return (
+      <div className="page page-court gameday">
+        <section className={`recap recap--${recap.won ? 'win' : 'loss'}`}>
+          <p className="eyebrow">
+            Final · {recap.home ? 'vs' : '@'} {recap.opponent}
+            {recap.winChance !== undefined ? ` · you had a ${recap.winChance}% chance` : ''}
+          </p>
+          <div className="recap-score">
+            <span className="recap-result">{recap.won ? 'W' : 'L'}</span>
+            <strong>{recap.teamScore}</strong>
+            <span className="recap-dash">–</span>
+            <strong className="recap-them">{recap.oppScore}</strong>
+          </div>
+          <h1 className="title-lg recap-headline">{recap.headline ?? recap.note}</h1>
+          {recap.quarters && (
+            <table className="recap-quarters">
+              <thead>
+                <tr><th /><th>1</th><th>2</th><th>3</th><th>4</th><th>F</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>{franchise.name}</th>
+                  {recap.quarters.map(([us], i) => <td key={i}>{us}</td>)}
+                  <td className="recap-final">{recap.teamScore}</td>
+                </tr>
+                <tr>
+                  <th>{recap.opponent.split(' ').slice(-1)[0]}</th>
+                  {recap.quarters.map(([, them], i) => <td key={i}>{them}</td>)}
+                  <td className="recap-final">{recap.oppScore}</td>
+                </tr>
+              </tbody>
+            </table>
+          )}
+          {recap.turningPoint && <p className="recap-turning"><Icon name="development" size={14} /> Turning point: {recap.turningPoint}</p>}
+          {performers.length > 0 && (
+            <ul className="recap-performers">
+              {performers.map((line) => <li key={line}>{line}</li>)}
+            </ul>
+          )}
+          {standing && <p className="recap-standing">{standing}</p>}
+          <button type="button" className="btn btn-ghost recap-box" onClick={() => setScreen('results')}>
+            All box scores
+          </button>
+        </section>
+        <div className="gameday-bar">
+          {gamesLeft > 0 && (
+            <button type="button" className="btn btn-secondary" onClick={() => { setRecapId(null); advanceWeek(); }}>
+              Sim rest of week
+            </button>
+          )}
+          <button type="button" className="btn btn-primary" onClick={nextAction}>
+            {gamesLeft > 0 ? 'Next game' : 'Next week'}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // ── Game day ────────────────────────────────────────────────────────────────
   return (
     <div className="page page-court gameday">
@@ -220,15 +314,47 @@ export function PlayGameScreen() {
             </div>
           </div>
         )}
+        {odds && odds.reasons.length > 0 && (
+          <p className="gameday-why">Why: {odds.reasons.join(' · ')}</p>
+        )}
+        {scouting && (
+          <p className="gameday-scout">
+            <strong>{scouting.record}</strong>
+            {scouting.star ? ` · ${scouting.star.name} (${scouting.star.overall}) leads them` : ''}
+            <span>{scouting.line}</span>
+          </p>
+        )}
       </CourtBackdrop>
 
       <section className="panel gameday-five">
         <div className="gameday-five-head">
           <p className="eyebrow" style={{ margin: 0 }}>Starting five</p>
-          <button type="button" className="btn btn-ghost" onClick={bestLineup}>
-            Best lineup
+          <button type="button" className="btn btn-ghost" onClick={() => setEditFive((v) => !v)}>
+            {editFive ? 'Done' : 'Edit'}
           </button>
         </div>
+        {odds && odds.bestWin > odds.win && (
+          <button type="button" className="gameday-best-hint" onClick={bestLineup}>
+            Best lineup: {odds.bestWin}% (+{odds.bestWin - odds.win}) — tap to use it
+          </button>
+        )}
+        {!editFive && (
+          <ul className="gameday-chips">
+            {SLOTS.map((pos, i) => {
+              const p = slots[i] ? byId(slots[i]) : undefined;
+              return (
+                <li key={pos}>
+                  <button type="button" onClick={() => setPickingSlot(i)}>
+                    <span className="gameday-chip-pos">{pos}</span>
+                    <span className="gameday-chip-name">{p ? p.lastName : 'Empty'}</span>
+                    <span className="gameday-chip-ovr">{p ? p.overall : '—'}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        {editFive && (<>
         <p className="gameday-drag-hint">Drag the handles to swap positions, or tap a player to choose a replacement.</p>
         <ul className="gameday-slots">
           {SLOTS.map((pos, i) => {
@@ -295,6 +421,7 @@ export function PlayGameScreen() {
             );
           })}
         </ul>
+        </>)}
       </section>
 
       {!isPlayoffs && (

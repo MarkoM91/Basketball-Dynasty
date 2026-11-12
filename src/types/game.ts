@@ -357,6 +357,12 @@ export interface GameResult {
   won: boolean;
   note: string;
   gameInWeek?: number;
+  /** Quarter-by-quarter [us, them]; sums to the final. */
+  quarters?: [number, number][];
+  headline?: string;
+  turningPoint?: string;
+  /** Pre-game win chance (0–100) shown on Game Day. */
+  winChance?: number;
 }
 
 export interface GameLogEntry extends GameResult {

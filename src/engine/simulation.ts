@@ -7,6 +7,7 @@ import { applyGameStats, mergeTeamScoring, simulateTeamGameScores, NBA_HOME_EDGE
 import { lineupSimAdjustment, ensureScenarioRosterShape, evolveFranchiseWindow, refreshScenarioOdds, windowSeasonBump } from './scenarioDifficulty';
 import { evaluateJobSecurity } from './careerMode';
 import { strengthFromRoster } from './leagueWorld';
+import { buildGameStory } from './gameStory';
 
 export const GAMES_PER_WEEK = SCHEDULE_GAMES_PER_WEEK;
 
@@ -175,13 +176,10 @@ export function simulateSingleGame(
   const teamScore = result.teamScore;
   const oppScore = result.oppScore;
   const won = result.won;
-  const diff = (talent - oppStrength) * 3.3 + modifiers + homeAdv;
-
-  let note = won
-    ? 'Your starting five controlled tempo and closed strong.'
-    : 'Starting unit struggled — rotation depth hurt you.';
-  if (won && diff > 8) note = 'Starters dominated — bench sealed it in the fourth.';
-  if (!won && diff < -8) note = 'Mismatch on the floor — lineup may need a tweak.';
+  const diff = (talent - oppStrength) * TALENT_GAP_AMPLIFIER + modifiers - fatigue + homeAdv;
+  const winChance = Math.round(100 / (1 + Math.exp(-diff / (NBA_WIN_PROB_SCALE * 1.15))));
+  // The story comes from what happened, not from the pre-game talent gap.
+  const story = buildGameStory(teamScore, oppScore, oppName, winChance);
 
   return {
     opponent: oppName,
@@ -189,8 +187,12 @@ export function simulateSingleGame(
     teamScore,
     oppScore,
     won,
-    note,
+    note: `${story.headline}. ${story.turningPoint}.`,
     gameInWeek,
+    quarters: story.quarters,
+    headline: story.headline,
+    turningPoint: story.turningPoint,
+    winChance,
   };
 }
 

@@ -943,12 +943,13 @@ export const useGameStore = create<GameStore>()(
       ? `Final: ${result.teamScore}–${result.oppScore} Win vs ${result.opponent}. ${result.note}`
       : `Final: ${result.teamScore}–${result.oppScore} Loss vs ${result.opponent}. ${result.note}`;
 
+    // Stay on Game Day: the recap is shown inline there (it used to jump to Box Scores, where the
+    // game you just played wasn't even at the top).
     set({
       franchise: next,
       league: nextLeague,
       lastWeekSummary: { results: [result], headline },
-      screen: 'results',
-      toast: headline,
+      screen: 'play_game',
     });
 
     if (shouldBeginPostseason(next, nextLeague)) {
