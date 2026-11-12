@@ -91,7 +91,13 @@ export function buildPlayerFromSlot(
   const rated = getTeamSlotRating(city, teamName, slot);
   const named = takeTeamRosterName(city, teamName, slot, usedNames, seed);
 
-  const overall = rated?.overall ?? (team ? fallbackOverall(team, slot) : 72);
+  const baseOverall = rated?.overall ?? (team ? fallbackOverall(team, slot) : 72);
+  // The roster data clamps deep benches to a floor (often 62), leaving 4–7 identical players per
+  // team. Give floor-rated bench slots a small, stable spread so backups actually differ.
+  const overall =
+    rated && slot >= 8 && baseOverall <= 63
+      ? Math.max(50, baseOverall + (hashString(`${city}|${teamName}|${slot}`) % 7) - 3)
+      : baseOverall;
   const potential = rated?.potential ?? clamp(overall + pickInt(seed, -2, 8, 4), overall, 94);
   const age = rated?.age ?? (team ? fallbackAge(team, slot, overall) : 24);
   const mpg = rated?.mpg ?? (overall >= 80 ? 30 : overall >= 75 ? 22 : overall >= 70 ? 14 : 6);
