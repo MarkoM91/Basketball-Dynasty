@@ -5,6 +5,7 @@ import { autoStartingFive, lineupModifiers, lineupTalent } from './simulation';
 import { adjustSeasonReview as applyCareerSeasonReview } from './careerMode';
 import { effectiveGameStrength } from './leagueWorld';
 import { simulateTeamGameScores, NBA_HOME_EDGE, TALENT_GAP_AMPLIFIER } from './stats';
+import { matchupFor } from './gamePlan';
 
 /** Top 16 = standard playoff field. */
 export const PLAYOFF_TEAM_COUNT = 16;
@@ -183,6 +184,15 @@ function advanceSeriesGame(series: PlayoffSeries, league: League, franchise?: Fr
 
   const home = { id: homeId, strength: teamStrength(league, homeId, franchise), name: getTeamById(league, homeId)?.fullName ?? 'Home' };
   const away = { id: awayId, strength: teamStrength(league, awayId, franchise), name: getTeamById(league, awayId)?.fullName ?? 'Away' };
+  // Your game plan counts in the playoffs too (unamplified edge, scaled like the modifiers).
+  if (franchise) {
+    for (const [us, them] of [[home, away], [away, home]] as const) {
+      if (getTeamById(league, us.id)?.isUser) {
+        const m = matchupFor(franchise, league, them.id);
+        if (m) us.strength += m.edge / TALENT_GAP_AMPLIFIER;
+      }
+    }
+  }
   const game = simGame(home, away, franchise, league, true);
 
   let higherWins = series.higherWins;

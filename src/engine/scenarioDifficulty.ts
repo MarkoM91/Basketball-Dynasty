@@ -36,21 +36,21 @@ const PROFILES: Record<ScenarioId, ScenarioProfile> = {
     strategy: 'playin',
     simPenalty: 0,
     depthSimPenalty: 0,
-    reshape: (f) => reshapeMediocreRoster(f, { cap: 83, depthPenalty: -2 }),
+    reshape: (f) => liftByRank(f, { star: 0, top: 4, rotation: 4, bench: 2, cap: 83 }),
   },
   aging_contender: {
     window: 'Aging Contender',
     strategy: 'all_in',
     simPenalty: 0,
     depthSimPenalty: 0,
-    reshape: (f) => reshapeContenderRoster(f, { floor: 77, starBoost: 2 }),
+    reshape: (f) => liftByRank(f, { star: 2, top: 4, rotation: 4, bench: 2 }),
   },
   small_market_star: {
     window: 'Rising Contender',
     strategy: 'contend',
     simPenalty: 0,
     depthSimPenalty: 0,
-    reshape: (f) => reshapeContenderRoster(f, { floor: 72, starBoost: 1 }),
+    reshape: (f) => liftByRank(f, { star: 1, top: 3, rotation: 3, bench: 1 }),
   },
 };
 
@@ -120,33 +120,27 @@ function reshapeRebuildRoster(franchise: Franchise): Player[] {
   });
 }
 
-function reshapeMediocreRoster(
+/**
+ * Scenario lift by rank: star, top four, rotation (5–8) and bench each get their own boost, so
+ * the roster keeps its real shape. The old floors ("everyone at least 77") left 16 of 18
+ * Golden State players at exactly 77 — every lineup choice between them was meaningless.
+ */
+function liftByRank(
   franchise: Franchise,
-  opts: { cap: number; depthPenalty: number },
-): Player[] {
-  const sorted = [...franchise.roster].sort((a, b) => b.overall - a.overall);
-  const keepIds = new Set(sorted.slice(0, 3).map((p) => p.id));
-  return franchise.roster.map((p) => {
-    if (keepIds.has(p.id)) {
-      const overall = Math.min(p.overall, opts.cap);
-      return { ...p, overall, role: roleForOverall(overall, p.isStar ?? false) };
-    }
-    const overall = clamp(p.overall - opts.depthPenalty, 62, 77);
-    return { ...p, overall, isStar: false, role: roleForOverall(overall, false) };
-  });
-}
-
-function reshapeContenderRoster(
-  franchise: Franchise,
-  opts: { floor: number; starBoost: number },
+  opts: { star: number; top: number; rotation: number; bench: number; cap?: number },
 ): Player[] {
   const starId = starPlayerId(franchise.roster);
-  return franchise.roster.map((p) => {
-    let overall = Math.max(p.overall, opts.floor);
-    if (p.id === starId && opts.starBoost) overall = Math.min(95, overall + opts.starBoost);
+  const sorted = [...franchise.roster].sort((a, b) => b.overall - a.overall);
+  const rankById = new Map(sorted.map((p, i) => [p.id, i]));
+  const lifted = franchise.roster.map((p) => {
+    const rank = rankById.get(p.id) ?? 99;
+    const lift = p.id === starId ? opts.star + opts.top : rank < 4 ? opts.top : rank < 8 ? opts.rotation : opts.bench;
+    const overall = clamp(p.overall + lift, 40, opts.cap ?? 95);
     return { ...p, overall, role: roleForOverall(overall, p.id === starId) };
   });
+  return lifted;
 }
+
 
 export function rosterTopEightAvg(roster: Player[]): number {
   const top = [...roster].sort((a, b) => b.overall - a.overall).slice(0, 8);

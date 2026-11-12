@@ -81,6 +81,8 @@ export interface Player {
   devFocus?: DevFocus;
   injured?: boolean;
   injuryWeeks?: number;
+  /** 0–100 game fatigue. Above 40 it lowers effective rating and raises injury risk. */
+  fatigue?: number;
   isStar?: boolean;
   /** True OVR used in simulation. When undefined, overall IS the true value. */
   hiddenOverall?: number;
@@ -357,6 +359,12 @@ export interface GameResult {
   won: boolean;
   note: string;
   gameInWeek?: number;
+  /** Quarter-by-quarter [us, them]; sums to the final. */
+  quarters?: [number, number][];
+  headline?: string;
+  turningPoint?: string;
+  /** Pre-game win chance (0–100) shown on Game Day. */
+  winChance?: number;
 }
 
 export interface GameLogEntry extends GameResult {
@@ -615,6 +623,13 @@ export interface SeasonReview {
   offseasonPriority: string;
 }
 
+export interface GamePlan {
+  pace: 'slow' | 'normal' | 'fast';
+  focus: 'inside' | 'balanced' | 'threes';
+  defense: 'drop' | 'switch' | 'trap';
+  rotation: 8 | 9 | 10;
+}
+
 export interface Franchise {
   id: string;
   leagueTeamId: string;
@@ -669,6 +684,10 @@ export interface Franchise {
   leagueStats?: LeagueStatSnapshot;
   startingFive: string[];
   gamesThisWeek: number;
+  /** Persistent coaching plan used by every game the user plays or sims. */
+  gamePlan?: GamePlan;
+  /** Players sitting out the next game for rest (cleared after each game). */
+  restTonight?: string[];
   /** -20 to +20 — ticket price vs league default. */
   ticketPriceBias?: number;
   /** 1–10 scouting / player development spend. */

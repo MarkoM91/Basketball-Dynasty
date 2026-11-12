@@ -42,13 +42,13 @@ export function rosterPayroll(players: Player[]): number {
 /** Minutes-style weights: stars drive outcomes, the 9th–10th men barely move the needle. */
 const ROTATION_WEIGHTS = [1.6, 1.35, 1.2, 1.05, 1, 0.8, 0.65, 0.5, 0.35, 0.25];
 
-export function strengthFromRoster(players: Player[], presorted = false): number {
+export function strengthFromRoster(players: Player[], presorted = false, weights: number[] = ROTATION_WEIGHTS): number {
   const active = players.filter((p) => !p.injured);
   if (!active.length) return 62;
   const sorted = presorted ? active : [...active].sort((a, b) => b.overall - a.overall);
   let sum = 0;
   let weight = 0;
-  ROTATION_WEIGHTS.forEach((w, i) => {
+  weights.forEach((w, i) => {
     // A missing rotation slot is filled by a replacement-level body.
     const ovr = sorted[i]?.overall ?? 58;
     sum += ovr * w;
