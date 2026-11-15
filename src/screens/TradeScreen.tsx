@@ -684,7 +684,16 @@ export function TradeScreen() {
                     type="button"
                     className="btn btn-secondary"
                     style={{ marginTop: 10, width: '100%' }}
-                    onClick={() => openNegotiate(row.teamId)}
+                    onClick={() =>
+                      openNegotiate(
+                        row.teamId,
+                        row.playerId
+                          ? { incomingPlayers: [{ id: row.playerId } as Player] }
+                          : row.pick
+                            ? { incomingPicks: [row.pick] }
+                            : undefined,
+                      )
+                    }
                   >
                     Make offer
                   </button>

@@ -14,7 +14,6 @@ import type {
 } from '../types/game';
 import { getTeamById, teamWantsPicks, teamWantsVeterans } from '../data/league';
 import { LEAGUE_CALENDAR_YEAR } from '../data/leagueWorld';
-import { takeTeamRosterName } from '../data/names';
 import { marketSalary } from '../engine/salaries';
 import { uid, playerName } from '../data/scenarios';
 import { pickKey, validateTradeSalaryMatch } from './cap';
@@ -59,23 +58,31 @@ export function clearTradeBlock(franchise: Franchise): Franchise {
   return { ...franchise, tradeBlock: EMPTY_TRADE_BLOCK };
 }
 
-function clamp(n: number, lo: number, hi: number): number {
-  return Math.max(lo, Math.min(hi, n));
-}
 
-function syntheticBlockPlayer(
+/**
+ * A REAL player from the team's roster (the old listings invented names that weren't on the
+ * roster, so Make offer opened an empty builder). Rebuilders shop their veterans; everyone else
+ * shops rotation players. Nobody shops their best player; contenders keep their top two.
+ */
+function blockPlayer(
   team: LeagueTeam,
+  roster: Player[],
   slot: number,
-  usedNames: Set<string>,
-): LeagueTradeBlockListing {
+  usedIds: Set<string>,
+): LeagueTradeBlockListing | null {
   const seed = hashString(`${team.id}-block-${slot}`);
-  const positions = ['PG', 'SG', 'SF', 'PF', 'C'] as const;
-  const overall = clamp(team.strength + pickInt(seed, -8, 6, 2), 68, 90);
-  const age = pickInt(seed, 22, 33, 3);
-  const named = takeTeamRosterName(team.city, team.name, slot, usedNames, seed + slot * 31);
-  const fn = named.firstName;
-  const ln = named.lastName;
-  const position = named.position ?? positions[pickInt(seed, 0, positions.length - 1, 1)];
+  const ranked = [...roster].sort((a, b) => b.overall - a.overall);
+  const rebuilding = teamWantsPicks(team.strategy);
+  let pool = ranked
+    .slice(rebuilding ? 1 : 2, 10)
+    .filter((p) => !usedIds.has(p.id) && (!rebuilding || p.age >= 27));
+  if (!pool.length) pool = ranked.slice(2, 12).filter((p) => !usedIds.has(p.id));
+  if (!pool.length) return null;
+  const player = pool[pickInt(seed, 0, pool.length - 1, 1)];
+  usedIds.add(player.id);
+  const { overall, age, position } = player;
+  const fn = player.firstName;
+  const ln = player.lastName;
 
   let askingNote = 'Available for the right return.';
   const shoppingFor: TradeShoppingTag[] = [];
@@ -99,18 +106,26 @@ function syntheticBlockPlayer(
     position,
     overall,
     age,
-    salary: marketSalary(overall, age),
+    salary: player.contract?.annualSalary ?? marketSalary(overall, age),
     askingNote,
     interestForUser: overall >= 80 ? 'High' : overall >= 74 ? 'Medium' : 'Low',
     shoppingFor,
+    playerId: player.id,
   };
 }
 
-function syntheticBlockPick(team: LeagueTeam, slot: number): LeagueTradeBlockListing {
+/** One of the picks the trade builder offers for this team, so Make offer can pre-fill it. */
+function blockPick(team: LeagueTeam, slot: number): LeagueTradeBlockListing {
   const seed = hashString(`${team.id}-pick-${slot}`);
-  const year = LEAGUE_CALENDAR_YEAR + pickInt(seed, 1, 3, 1);
-  const round = pickInt(seed, 1, 2, 2) as 1 | 2;
-  const protectedPick = round === 1 && pickInt(seed, 0, 2, 3) === 0;
+  const options: DraftPick[] = [
+    { year: LEAGUE_CALENDAR_YEAR + 1, round: 1, originalTeam: team.fullName, protections: 'Top-8 protected' },
+    { year: LEAGUE_CALENDAR_YEAR + 2, round: 1, originalTeam: team.fullName },
+    { year: LEAGUE_CALENDAR_YEAR + 1, round: 2, originalTeam: team.fullName },
+    { year: LEAGUE_CALENDAR_YEAR + 2, round: 2, originalTeam: team.fullName },
+  ];
+  const pick = options[pickInt(seed, 0, options.length - 1, 1)];
+  const { year, round } = pick;
+  const protectedPick = Boolean(pick.protections);
   const shoppingFor: TradeShoppingTag[] = teamWantsPicks(team.strategy)
     ? ['draft_picks', 'young_talent']
     : ['veteran_help'];
@@ -126,28 +141,29 @@ function syntheticBlockPick(team: LeagueTeam, slot: number): LeagueTradeBlockLis
       : 'Pick is on the market — young talent or more picks.',
     interestForUser: round === 1 ? 'High' : 'Medium',
     shoppingFor,
+    pick,
   };
 }
 
 export function generateLeagueTradeBlockListings(league: League, franchise: Franchise): LeagueTradeBlockListing[] {
   const listings: LeagueTradeBlockListing[] = [];
   const partners = league.teams.filter((t) => !t.isUser);
-  const usedNames = new Set<string>();
-  for (const player of franchise.roster) {
-    usedNames.add(`${player.firstName} ${player.lastName}`.toLowerCase());
-  }
-
   for (const team of partners) {
     const seed = hashString(`${franchise.season}-${team.id}-block`);
     const count = pickInt(seed, 1, 3, 1);
+    const roster = generatePartnerTradeAssets(team, league, franchise);
+    const usedIds = new Set<string>();
+    const usedPicks = new Set<string>();
     for (let i = 0; i < count; i += 1) {
-      if (teamWantsPicks(team.strategy) && pickInt(seed, 0, 1, 2 + i) === 0) {
-        listings.push(syntheticBlockPlayer(team, i, usedNames));
-      } else if (pickInt(seed, 0, 2, 4 + i) === 0) {
-        listings.push(syntheticBlockPick(team, i));
-      } else {
-        listings.push(syntheticBlockPlayer(team, i + 3, usedNames));
+      const wantPick = !(teamWantsPicks(team.strategy) && pickInt(seed, 0, 1, 2 + i) === 0) && pickInt(seed, 0, 2, 4 + i) === 0;
+      const listing = wantPick ? blockPick(team, i) : blockPlayer(team, roster, i, usedIds);
+      if (!listing) continue;
+      if (listing.pick) {
+        const key = pickKey(listing.pick);
+        if (usedPicks.has(key)) continue;
+        usedPicks.add(key);
       }
+      listings.push(listing);
     }
   }
 

@@ -249,6 +249,10 @@ export interface LeagueTradeBlockListing {
   askingNote: string;
   interestForUser: 'High' | 'Medium' | 'Low';
   shoppingFor: TradeShoppingTag[];
+  /** The real player on the partner's roster (Make offer pre-fills him). */
+  playerId?: string;
+  /** The exact pick on offer (Make offer pre-fills it). */
+  pick?: DraftPick;
 }
 
 export type TradeShoppingTag =
