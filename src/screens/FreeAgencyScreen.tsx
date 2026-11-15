@@ -1,3 +1,5 @@
+import { TraitChips } from '../components/TraitChips';
+import { freeAgentTraitInterest } from '../engine/personality';
 import { useEffect, useMemo, useState } from 'react';
 
 import { ROSTER_SIZE } from '../data/rosterBuilder';
@@ -382,6 +384,11 @@ export function FreeAgencyScreen() {
                 <span className="chip">{marketHeatLabel(fa)}</span>
                 {(fa.suitorCount ?? 0) > 0 && <span className="chip chip-warning">{fa.suitorCount} suitors</span>}
               </div>
+              <TraitChips subject={fa} />
+              {(() => {
+                const why = freeAgentTraitInterest(fa, franchise).reason;
+                return why ? <p className="fa-card-trait-note">{why}</p> : null;
+              })()}
               {fa.topOfferTeam && (
                 <p className="fa-card-rival">{rivalPitchWarning(fa) ?? `Leaning ${fa.topOfferTeam}`}</p>
               )}

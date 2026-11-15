@@ -89,8 +89,9 @@ export function PlayGameScreen() {
     const healthy = new Set(franchise.roster.filter((p) => !p.injured).map((p) => p.id));
     const saved = franchise.startingFive?.length === 5 ? franchise.startingFive : autoStartingFive(franchise);
     setSlots(saved.map((id) => (healthy.has(id) ? id : '')).concat(EMPTY).slice(0, 5));
+    // Also re-sync when the saved five changes elsewhere (e.g. a player demand put someone in it).
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [franchise?.id]);
+  }, [franchise?.id, franchise?.startingFive?.join('|')]);
 
   const isPlayoffs = franchise?.phase === 'playoffs';
   const gamesPlayed = franchise?.gamesThisWeek ?? 0;

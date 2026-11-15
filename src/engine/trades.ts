@@ -3,6 +3,7 @@ import { rookieScaleSalary } from './salaries';
 import { uid } from '../data/scenarios';
 import { pickKey } from './cap';
 import { resolveCareerEvent } from './careerMode';
+import { resolveTraitDemand } from './personality';
 import { DRAFT_TEAM_COUNT } from './draftNight';
 
 function clamp(n: number, min: number, max: number): number {
@@ -320,6 +321,10 @@ export function resolveEvent(franchise: Franchise, eventId: string, optionId: st
     if (optionId === 'trade' || optionId === 'listen' || optionId === 'add' || optionId === 'shakeup') {
       /* trade offers refreshed in game store with league context */
     }
+  }
+
+  if (event.type === 'player_demand') {
+    updated = resolveTraitDemand(updated, event, optionId);
   }
 
   if (event.type === 'trade_deadline' && optionId === 'review') {
