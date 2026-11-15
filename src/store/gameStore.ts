@@ -5,6 +5,7 @@ import type {
   DraftNightState,
   DraftPick,
   Franchise,
+  GamePlan,
   GameResult,
   League,
   PitchType,
@@ -83,12 +84,16 @@ import {
   refreshCap,
   rollInjuries,
   simulateSingleGame,
+  applyBatchFatigue,
+  finishRestedGame,
+  gameFranchise,
   simulateWeekGames,
   tickInjuries,
   updateJobSecurity,
   moraleAfterWinStreak,
   validateStartingFive,
 } from '../engine/simulation';
+import { planOf } from '../engine/gamePlan';
 import { currentScheduledGame, buildSeasonSchedule } from '../engine/schedule';
 import {
   applyUserGameToLeague,
@@ -196,6 +201,10 @@ interface GameStore {
   playGame: () => void;
   playPlayoffGame: () => void;
   setStartingFive: (playerIds: string[]) => void;
+  /** Update the persistent game plan (pace, focus, defense, rotation). */
+  setGamePlan: (patch: Partial<GamePlan>) => void;
+  /** Sit (or un-sit) a player for the next game only. */
+  toggleRestTonight: (playerId: string) => void;
   advanceToPlayoffs: () => void;
   watchPlayoffs: () => void;
   advancePlayoffGame: () => void;
@@ -793,6 +802,7 @@ export const useGameStore = create<GameStore>()(
       const processed = processWeekResults(next, weekResults, starters);
       next = applyGameResults(processed.franchise, weekResults);
       next.gameLog = processed.franchise.gameLog;
+      next = applyBatchFatigue(next, starters, weekResults.length);
     }
 
     const scheduleThisWeek = buildSeasonSchedule(next, nextLeague).filter((g) => g.week === franchise.week);
@@ -887,6 +897,29 @@ export const useGameStore = create<GameStore>()(
     });
   },
 
+  setGamePlan: (patch) => {
+    const { franchise } = get();
+    if (!franchise) return;
+    set({ franchise: { ...franchise, gamePlan: { ...planOf(franchise), ...patch } } });
+  },
+
+  toggleRestTonight: (playerId) => {
+    const { franchise } = get();
+    if (!franchise) return;
+    const rest = franchise.restTonight ?? [];
+    const player = franchise.roster.find((p) => p.id === playerId);
+    if (!player || player.injured) return;
+    if (!rest.includes(playerId)) {
+      const available = franchise.roster.filter((p) => !p.injured && !rest.includes(p.id)).length;
+      if (available <= 8) {
+        set({ toast: 'Need at least 8 available players — can not rest anyone else tonight.' });
+        return;
+      }
+    }
+    const next = rest.includes(playerId) ? rest.filter((id) => id !== playerId) : [...rest, playerId];
+    set({ franchise: { ...franchise, restTonight: next } });
+  },
+
   setStartingFive: (playerIds) => {
     const { franchise } = get();
     if (!franchise) return;
@@ -912,21 +945,24 @@ export const useGameStore = create<GameStore>()(
 
     const starters =
       franchise.startingFive?.length === 5 ? franchise.startingFive : autoStartingFive(franchise);
-    const check = validateStartingFive(franchise, starters);
+    // Rested players sit tonight; a rested starter is replaced for this game only.
+    const tonight = gameFranchise(franchise, starters);
+    const check = validateStartingFive(tonight.franchise, tonight.starters);
     if (!check.ok) {
       set({ toast: check.error, screen: 'play_game' });
       return;
     }
 
     const result = simulateSingleGame(
-      franchise,
+      tonight.franchise,
       league,
-      starters,
+      tonight.starters,
       currentScheduledGame(franchise, league),
     );
     const scheduled = currentScheduledGame(franchise, league);
-    const processed = processWeekResults(franchise, [result], starters);
+    const processed = processWeekResults(tonight.franchise, [result], tonight.starters);
     let next = applyGameResults(processed.franchise, [result]);
+    next = finishRestedGame(next, franchise, tonight.starters);
     next = {
       ...next,
       gameLog: processed.franchise.gameLog,
@@ -943,12 +979,13 @@ export const useGameStore = create<GameStore>()(
       ? `Final: ${result.teamScore}–${result.oppScore} Win vs ${result.opponent}. ${result.note}`
       : `Final: ${result.teamScore}–${result.oppScore} Loss vs ${result.opponent}. ${result.note}`;
 
+    // Stay on Game Day: the recap is shown inline there (it used to jump to Box Scores, where the
+    // game you just played wasn't even at the top).
     set({
       franchise: next,
       league: nextLeague,
       lastWeekSummary: { results: [result], headline },
-      screen: 'results',
-      toast: headline,
+      screen: 'play_game',
     });
 
     if (shouldBeginPostseason(next, nextLeague)) {
@@ -984,6 +1021,7 @@ export const useGameStore = create<GameStore>()(
       const processed = processWeekResults(next, weekResults, starters);
       next = applyGameResults(processed.franchise, weekResults);
       next = { ...next, gameLog: processed.franchise.gameLog, gamesThisWeek: 0 };
+      next = applyBatchFatigue(next, starters, weekResults.length);
       const batchUserGames = userWeekResultsFromGames(
         weekResults,
         scheduleThisWeek.slice(alreadyPlayed, alreadyPlayed + weekResults.length).map((g) => g.opponentId),

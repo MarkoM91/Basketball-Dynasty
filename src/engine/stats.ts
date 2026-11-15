@@ -80,7 +80,14 @@ export function simulateTeamGameScores(
   teamStrength: number,
   oppStrength: number,
   homeAdvantage = 0,
-  opts?: { isUserTeam?: boolean; isPlayoffs?: boolean; /** Unamplified situational edge. */ teamAdj?: number },
+  opts?: {
+    isUserTeam?: boolean;
+    isPlayoffs?: boolean;
+    /** Unamplified situational edge. */
+    teamAdj?: number;
+    /** Multiplier on game-night randomness (game plan pace). */
+    varianceScale?: number;
+  },
 ): {
   teamScore: number;
   oppScore: number;
@@ -90,7 +97,7 @@ export function simulateTeamGameScores(
   const userAdj = opts?.teamAdj ?? 0;
   const homeAdv = homeAdvantage + (opts?.isPlayoffs ? 0.4 : 0);
   const diff = (teamStrength - oppStrength) * TALENT_GAP_AMPLIFIER + userAdj + homeAdv;
-  const variance = (Math.random() - 0.5) * NBA_GAME_VARIANCE;
+  const variance = (Math.random() - 0.5) * NBA_GAME_VARIANCE * (opts?.varianceScale ?? 1);
   const adjusted = diff + variance;
   const winProb = 1 / (1 + Math.exp(-adjusted / NBA_WIN_PROB_SCALE));
   const won = Math.random() < winProb;

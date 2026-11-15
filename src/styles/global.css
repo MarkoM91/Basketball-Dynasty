@@ -7303,3 +7303,383 @@ h1, h2, h3,
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* ═══ Game Day polish: why-line, scouting, compact five, inline recap ═══════ */
+.gameday-why {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--silver);
+}
+
+.gameday-scout {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 6px;
+  font-size: 13px;
+  color: var(--off-white);
+  background: rgba(0, 0, 0, 0.3);
+  border-left: 3px solid var(--signal);
+  border-radius: 2px;
+}
+
+.gameday-scout strong {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.gameday-scout span {
+  flex-basis: 100%;
+  color: var(--silver);
+}
+
+.gameday-best-hint {
+  width: 100%;
+  min-height: 44px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background: rgba(63, 174, 122, 0.1);
+  border: 1px solid rgba(63, 174, 122, 0.4);
+  border-radius: var(--radius-sm);
+  color: var(--success);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.gameday-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.gameday-chips button {
+  width: 100%;
+  min-height: 68px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 6px 2px;
+  background: var(--slate);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  color: var(--off-white);
+  cursor: pointer;
+}
+
+.gameday-chip-pos {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--signal);
+}
+
+.gameday-chip-name {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.gameday-chip-ovr {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.recap {
+  padding: 16px;
+  margin-bottom: 12px;
+  background: var(--charcoal);
+  border: 1px solid var(--hairline);
+  border-top: 4px solid var(--success);
+  border-radius: var(--radius);
+}
+
+.recap--loss {
+  border-top-color: var(--danger);
+}
+
+.recap-score {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 6px 0 4px;
+  font-family: var(--font-display);
+  line-height: 1;
+}
+
+.recap-score strong {
+  font-size: 56px;
+  font-weight: 800;
+}
+
+.recap-score .recap-them {
+  color: var(--silver);
+}
+
+.recap-dash {
+  font-size: 32px;
+  color: var(--silver);
+}
+
+.recap-result {
+  align-self: center;
+  padding: 4px 8px;
+  border-radius: 2px;
+  font-size: 18px;
+  font-weight: 800;
+  background: var(--success);
+  color: #06120c;
+}
+
+.recap--loss .recap-result {
+  background: var(--danger);
+  color: #fff;
+}
+
+.recap-headline {
+  margin: 4px 0 12px;
+  font-size: 26px;
+}
+
+.recap-quarters {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+
+.recap-quarters th,
+.recap-quarters td {
+  padding: 6px 4px;
+  text-align: center;
+  font-size: 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.recap-quarters thead th {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--silver);
+}
+
+.recap-quarters tbody th {
+  text-align: left;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recap-final {
+  font-weight: 800;
+}
+
+.recap-turning {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 12px 0 8px;
+  font-size: 14px;
+  color: var(--off-white);
+}
+
+.recap-turning .icon {
+  color: var(--signal);
+}
+
+.recap-performers {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--silver);
+}
+
+.recap-standing {
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--hairline);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.recap-box {
+  width: 100%;
+  margin-top: 12px;
+}
+
+/* ═══ Game plan & load management ═══════════════════════════════════════════ */
+.gameday-plan,
+.gameday-load {
+  display: grid;
+  gap: 8px;
+}
+
+.gameday-plan-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  width: 100%;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--off-white);
+  cursor: pointer;
+  text-align: left;
+}
+
+.gameday-plan-summary > span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 52px;
+  justify-content: center;
+  padding: 6px 8px;
+  background: var(--slate);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gameday-plan-summary small {
+  font-family: var(--font-body, inherit);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+
+.gameday-plan-rows {
+  display: grid;
+  gap: 10px;
+}
+
+.gameday-plan-row {
+  display: grid;
+  gap: 4px;
+}
+
+.gameday-plan-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+
+.gameday-plan-row .seg {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.gameday-plan-row .seg button {
+  min-height: 44px;
+  padding: 6px 4px;
+  background: var(--slate);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  color: var(--off-white);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.gameday-plan-row .seg button.is-on {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: #0b0b0b;
+}
+
+.gameday-plan-hint,
+.gameday-plan-them {
+  margin: 0;
+  font-size: 13px;
+  color: var(--silver);
+}
+
+.gameday-chip-fatigue {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 1px 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--silver);
+}
+
+.gameday-chip-fatigue.is-tired {
+  background: rgba(230, 170, 50, 0.18);
+  color: #e6aa32;
+}
+
+.gameday-chip-fatigue.is-exhausted {
+  background: rgba(220, 70, 60, 0.2);
+  color: var(--danger);
+}
+
+.gameday-chips button.is-resting {
+  opacity: 0.55;
+}
+
+.gameday-load-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.gameday-load-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.gameday-load-name {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+}
+
+.gameday-load-name strong {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gameday-load-list .btn {
+  flex-shrink: 0;
+  min-height: 44px;
+}
