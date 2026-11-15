@@ -6,6 +6,7 @@ import { strategyLabel } from '../data/league';
 import { applySigningToCap, maxFreeAgentOffer, canSignFreeAgentAtPayroll, maxContractSalary, maxContractYears, signingVia } from './cap';
 import { freeAgentAskingSalary, isMaxContract } from './salaries';
 import { simLeagueFreeAgency } from './leagueWorld';
+import { freeAgentTraitInterest, playerTraits } from './personality';
 
 function clamp(n: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, n));
@@ -178,6 +179,7 @@ function baseInterest(franchise: Franchise, fa: FreeAgent, league: League): numb
   }
 
   interest += winPct * 20;
+  interest += freeAgentTraitInterest(fa, franchise).delta;
   if (franchise.starHappiness === 'Happy') interest += 5;
   if (franchise.starHappiness === 'Angry') interest -= 10;
 
@@ -499,6 +501,8 @@ function evaluateOffer(
     pitchImpact = Math.round(pitchImpact * mult);
   }
   if (pitch === 'team_friendly' && fa.topOfferTeam && tier !== 'depth') pitchImpact -= 8;
+  // Personality: a mercenary loves the max pitch, a diva the featured role (ring-chasing is in base interest).
+  pitchImpact += freeAgentTraitInterest(fa, franchise, pitch).delta - freeAgentTraitInterest(fa, franchise).delta;
   interest += pitchImpact;
 
   if (customSalary && fa.priorities.includes('money')) {
@@ -681,6 +685,7 @@ export function pitchFreeAgent(
 
   const player = {
     id: uid('pl'),
+    traits: playerTraits(fa),
     firstName: fa.firstName,
     lastName: fa.lastName,
     age: fa.age,

@@ -19,6 +19,7 @@ import type { Franchise, GamePlan, League, LeagueTeam, Player } from '../types/g
 import { getTeamById } from '../data/league';
 import { derivePlayerRatings } from '../lib/playerRatings';
 import { getTeamRoster } from './leagueWorld';
+import { fatigueLoadFactor } from './personality';
 
 export const DEFAULT_GAME_PLAN: GamePlan = { pace: 'normal', focus: 'balanced', defense: 'switch', rotation: 9 };
 
@@ -68,8 +69,8 @@ export function applyGameFatigue(roster: Player[], starterIds: string[], plan: G
     const before = p.fatigue ?? 0;
     let f = before * (1 - RECOVERY_RATE);
     if (restIds.includes(p.id)) f -= REST_RECOVERY;
-    else if (starters.has(p.id)) f += STARTER_LOAD[plan.rotation] * pace;
-    else if (benchIds.has(p.id)) f += BENCH_LOAD * pace;
+    else if (starters.has(p.id)) f += STARTER_LOAD[plan.rotation] * pace * fatigueLoadFactor(p);
+    else if (benchIds.has(p.id)) f += BENCH_LOAD * pace * fatigueLoadFactor(p);
     const next = Math.round(Math.max(0, Math.min(100, f)));
     return next === before ? p : { ...p, fatigue: next };
   });

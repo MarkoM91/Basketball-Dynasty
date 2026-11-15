@@ -8,6 +8,7 @@ import { evaluateTradeForTeam } from './league';
 import { generateTeamRoster } from './leagueRosters';
 import { CAP_LIMIT, canSignFreeAgentAtPayroll } from './cap';
 import { faMarketTier } from './freeAgency';
+import { playerTraits } from './personality';
 import { freeAgentAskingSalary, marketSalary, rookieScaleSalary } from './salaries';
 import { buildLeagueSchedule } from './leagueSchedule';
 import { initialTeamScoring } from './stats';
@@ -244,6 +245,7 @@ export function playerToFreeAgent(player: Player, fromTeam?: string): FreeAgent 
     signed: false,
     userPitchAttempts: 0,
     formerTeam: fromTeam,
+    traits: playerTraits(player),
   };
 }
 

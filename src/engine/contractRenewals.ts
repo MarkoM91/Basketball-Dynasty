@@ -3,6 +3,7 @@ import { uid } from '../data/scenarios';
 import { fireCoach } from './coaches';
 import { canRenewWithBirdRights } from './cap';
 import { renewalSalary, roundSalary } from './salaries';
+import { renewalSalaryFactor } from './personality';
 
 export function expiringPlayers(franchise: Franchise): Player[] {
   return franchise.roster.filter((p) => p.contract.yearsRemaining === 0 || p.contract.isExpiring);
@@ -20,7 +21,7 @@ export function pendingRenewalCount(franchise: Franchise): number {
 export function playerRenewalTerms(player: Player): { years: number; salary: number } {
   return {
     years: player.isStar || player.role === 'Franchise Player' || player.role === 'Star' ? 3 : 2,
-    salary: renewalSalary(player.contract.annualSalary, player.overall, player.age),
+    salary: Math.round(renewalSalary(player.contract.annualSalary, player.overall, player.age) * renewalSalaryFactor(player) / 50_000) * 50_000,
   };
 }
 

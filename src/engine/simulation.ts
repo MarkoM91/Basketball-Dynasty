@@ -8,6 +8,7 @@ import { lineupSimAdjustment, ensureScenarioRosterShape, evolveFranchiseWindow, 
 import { evaluateJobSecurity } from './careerMode';
 import { strengthFromRoster } from './leagueWorld';
 import { buildGameStory } from './gameStory';
+import { developmentFactor, injuryFactor, traitLineupEdge } from './personality';
 import { applyGameFatigue, effectiveOverall, matchupFor, planOf, ROTATION_WEIGHTS_BY_SIZE, withRestApplied } from './gamePlan';
 
 export const GAMES_PER_WEEK = SCHEDULE_GAMES_PER_WEEK;
@@ -104,7 +105,8 @@ export function lineupModifiers(franchise: Franchise, starterIds: string[]): num
   const chemistry =
     franchise.starHappiness === 'Happy' ? 1 : franchise.starHappiness === 'Angry' ? -2 : 0;
   const starBoost = starters.some((p) => p.isStar) ? 0.5 : 0;
-  return moraleBonus + coachBonus + chemistry + starBoost + lineupSimAdjustment(franchise);
+  const personality = traitLineupEdge(roster, starterIds);
+  return moraleBonus + coachBonus + chemistry + starBoost + personality + lineupSimAdjustment(franchise);
 }
 
 /**
@@ -351,7 +353,7 @@ export function advanceDevelopment(franchise: Franchise): Franchise {
     const ethicFactor = p.workEthic === 'Elite' ? 1.2 : p.workEthic === 'High' ? 1 : 0.6;
     const coachFactor = franchise.coach.devRating / 80;
     const scoutingFactor = (franchise.scoutingBudget ?? 5) / 10;
-    const chance = minutesFactor * ethicFactor * coachFactor * scoutingFactor * 0.35;
+    const chance = minutesFactor * ethicFactor * coachFactor * scoutingFactor * 0.35 * developmentFactor(p, franchise.roster);
 
     if (Math.random() > chance) return p;
 
@@ -370,8 +372,9 @@ export function advanceDevelopment(franchise: Franchise): Franchise {
 export function rollInjuries(franchise: Franchise): { franchise: Franchise; injuryNote?: string } {
   // Fatigue above 50 adds up to +6% weekly risk, even for durable players.
   const chance = (p: Player) =>
-    (p.injuryRisk === 'High' ? 0.08 : p.injuryRisk === 'Medium' ? 0.04 : 0) +
-    (Math.max(0, (p.fatigue ?? 0) - 50) / 50) * 0.06;
+    ((p.injuryRisk === 'High' ? 0.08 : p.injuryRisk === 'Medium' ? 0.04 : 0) +
+      (Math.max(0, (p.fatigue ?? 0) - 50) / 50) * 0.06) *
+    injuryFactor(p);
   const candidate = franchise.roster.find((p) => !p.injured && Math.random() < chance(p));
   if (!candidate) return { franchise };
 

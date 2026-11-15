@@ -1,3 +1,4 @@
+import { TraitChips } from '../components/TraitChips';
 import { formatMoney, playerName } from '../data/scenarios';
 import { ROSTER_SIZE } from '../data/rosterBuilder';
 import { formatCapBar } from '../engine/cap';
@@ -170,6 +171,7 @@ export function RosterScreen() {
                   <div><dt>Reb</dt><dd>{fmt(stats?.rpg)}</dd></div>
                   <div><dt>Ast</dt><dd>{fmt(stats?.apg)}</dd></div>
                 </dl>
+                <TraitChips subject={p} />
                 <div className="roster-card-foot">
                   <span className="roster-card-contract">
                     {formatMoney(p.contract.annualSalary)} · {p.contract.yearsRemaining}yr
@@ -233,6 +235,7 @@ export function RosterScreen() {
                         <PlayerAvatar player={p} size={32} />
                         <div>
                           <strong>{playerName(p)}</strong>
+                          <TraitChips subject={p} />
                           <span className="roster-player-meta">
                             {playerHeightLabel(p)} · {ovrTier(p.overall)}
                             {rookie && <span className="chip chip-rookie" style={{ marginLeft: 6 }}>Rookie</span>}

@@ -60,6 +60,16 @@ export interface Contract {
   hasTeamOption?: boolean;
 }
 
+export type PlayerTrait =
+  | 'leader'
+  | 'gym_rat'
+  | 'clutch'
+  | 'iron_man'
+  | 'loyal'
+  | 'ring_chaser'
+  | 'diva'
+  | 'mercenary';
+
 export interface Player {
   id: string;
   firstName: string;
@@ -81,8 +91,10 @@ export interface Player {
   devFocus?: DevFocus;
   injured?: boolean;
   injuryWeeks?: number;
-  /** 0–100 game fatigue. Above 40 it lowers effective rating and raises injury risk. */
+  /** 0–100 game fatigue. Above 50 it lowers effective rating and raises injury risk. */
   fatigue?: number;
+  /** Personality. Usually derived from the id (see engine/personality); stored when carried over. */
+  traits?: PlayerTrait[];
   isStar?: boolean;
   /** True OVR used in simulation. When undefined, overall IS the true value. */
   hiddenOverall?: number;
@@ -427,7 +439,9 @@ export interface TradeChainProposal {
 
 export interface PendingEvent {
   id: string;
-  type: 'locker_room' | 'trade_deadline' | 'star_unhappy' | 'ownership' | 'injury';
+  type: 'locker_room' | 'trade_deadline' | 'star_unhappy' | 'ownership' | 'injury' | 'player_demand';
+  /** The player behind a personality-driven demand. */
+  playerId?: string;
   title: string;
   body: string;
   options: EventOption[];
@@ -614,6 +628,8 @@ export interface FreeAgent {
   scoutNote: string;
   archetype: string;
   signed: boolean;
+  /** Personality carried over when a player hits free agency. */
+  traits?: PlayerTrait[];
   /** Where they played last season — league-wide FA pool. */
   formerTeam?: string;
 }

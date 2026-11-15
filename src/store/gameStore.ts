@@ -94,6 +94,7 @@ import {
   validateStartingFive,
 } from '../engine/simulation';
 import { planOf } from '../engine/gamePlan';
+import { generateTraitDemand } from '../engine/personality';
 import { currentScheduledGame, buildSeasonSchedule } from '../engine/schedule';
 import {
   applyUserGameToLeague,
@@ -867,6 +868,12 @@ export const useGameStore = create<GameStore>()(
 
     const locker = generateLockerRoomEvent(next);
     if (locker) next.pendingEvents = [...next.pendingEvents, locker];
+
+    const demand = generateTraitDemand(next);
+    if (demand) {
+      next.pendingEvents = [...next.pendingEvents, demand.event];
+      next = markCareerBeatSeen(next, demand.key);
+    }
 
     const careerBeat = generateCareerBeat(next);
     if (careerBeat) {
