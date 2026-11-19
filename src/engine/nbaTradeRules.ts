@@ -57,6 +57,11 @@ export interface TradeSide {
   payroll: number;
   /** Salaries this team sends out. */
   outgoing: number[];
+  /**
+   * Hard-capped at the first apron this season: the team used the non-taxpayer mid-level or
+   * bi-annual exception, or took a player in a sign-and-trade. It can't end a trade above it.
+   */
+  hardCappedAtFirstApron?: boolean;
 }
 
 export interface SideVerdict {
@@ -92,9 +97,21 @@ export function checkSide(side: TradeSide, incomingSalaries: number[]): SideVerd
   const payrollAfter = side.payroll - outgoing + incoming;
   const statusBefore = capStatus(side.payroll);
   const statusAfter = capStatus(payrollAfter);
-  const aggregating = side.outgoing.filter((x) => x > 0).length > 1;
+  const contracts = side.outgoing.filter((x) => x > 0).length;
+  const aggregating = contracts > 1;
   const warnings: string[] = [];
   const base = { name: side.name, outgoing, incoming, payrollAfter, statusBefore, statusAfter };
+
+  // Combining contracts to match hard-caps any team at the second apron for the season.
+  if (aggregating && incoming > Math.max(...side.outgoing)) {
+    warnings.push(`${side.name} combines ${contracts} contracts, which hard-caps it at the second apron (${fmtExact(NBA_SECOND_APRON)}) for the rest of the season.`);
+  }
+
+  // A team hard-capped at the first apron can never finish a trade above it.
+  if (side.hardCappedAtFirstApron && payrollAfter > NBA_FIRST_APRON) {
+    const over = payrollAfter - NBA_FIRST_APRON;
+    return { ...base, ok: false, maxIncoming: Math.max(0, incoming - over), rule: 'Hard cap: first apron', reason: `${side.name} is hard-capped at the first apron (${fmtExact(NBA_FIRST_APRON)}) and would end at ${fmtMoney(payrollAfter)}. Cut ${fmtMoney(over)} from what it takes back, or send that much more.`, warnings };
+  }
 
   // Taking back no more than you send is always fine on salary (outside the hard-cap case below).
   // Ending under the cap (plus the allowance) works through cap room.
@@ -103,16 +120,13 @@ export function checkSide(side: TradeSide, incomingSalaries: number[]): SideVerd
   // 1) Ends above the first apron: 100% matching; above the second apron, no aggregation.
   if (payrollAfter > NBA_FIRST_APRON) {
     const maxIncoming = outgoing;
-    if (aggregating) {
-      warnings.push(`Combining ${side.outgoing.filter((x) => x > 0).length} salaries hard-caps ${side.name} at the second apron (${fmtMoney(NBA_SECOND_APRON)}) for the rest of the season.`);
-    }
-    if (payrollAfter > NBA_SECOND_APRON && aggregating) {
-      return { ...base, ok: false, maxIncoming, rule: 'Second apron', reason: `Teams over the second apron can't combine salaries to match. Send one contract, or end below ${fmtMoney(NBA_SECOND_APRON)}.`, warnings };
+    if (payrollAfter > NBA_SECOND_APRON && aggregating && incoming > Math.max(...side.outgoing)) {
+      return { ...base, ok: false, maxIncoming: Math.max(...side.outgoing), rule: 'Second apron: no combining salaries', reason: `${side.name} would end at ${fmtMoney(payrollAfter)}, over the second apron, where teams can't combine contracts to match. One contract would have to cover the ${fmtMoney(incoming)} coming back, or ${side.name} must end below ${fmtExact(NBA_SECOND_APRON)}.`, warnings };
     }
     if (incoming <= maxIncoming) {
-      return { ...base, ok: true, maxIncoming, rule: 'Apron team: 100% matching', reason: `${side.name} ends over the first apron, so it can take back up to 100% of what it sends (${fmtMoney(maxIncoming)}).`, warnings };
+      return { ...base, ok: true, maxIncoming, rule: 'Apron team: 100% matching', reason: `${side.name} ends at ${fmtMoney(payrollAfter)}, over the first apron, so it can take back up to what it sends (${fmtMoney(maxIncoming)}).`, warnings };
     }
-    return { ...base, ok: false, maxIncoming, rule: 'Apron team: 100% matching', reason: `${side.name} would end at ${fmtMoney(payrollAfter)}, over the first apron. Apron teams can't take back more than they send: ${fmtMoney(incoming)} in vs ${fmtMoney(outgoing)} out.`, warnings };
+    return { ...base, ok: false, maxIncoming, rule: 'Apron team: 100% matching', reason: `${side.name} would end at ${fmtMoney(payrollAfter)}, over the first apron, where teams can't take back more than they send (${fmtMoney(incoming)} in, ${fmtMoney(outgoing)} out). Send ${fmtMoney(incoming - outgoing)} more, or take that much less back.`, warnings };
   }
 
   // 2) Ends at or under the cap (+allowance): absorbed with room.
@@ -136,4 +150,29 @@ export function checkTrade(a: TradeSide, b: TradeSide): { ok: boolean; sides: [S
   const va = checkSide(a, b.outgoing);
   const vb = checkSide(b, a.outgoing);
   return { ok: va.ok && vb.ok, sides: [va, vb] };
+}
+
+/** A contract in a (possibly multi-team) trade. */
+export interface TradeAsset {
+  from: number;
+  to: number;
+  salary: number;
+  name?: string;
+}
+
+export interface TradeTeam {
+  name: string;
+  payroll: number;
+  hardCappedAtFirstApron?: boolean;
+}
+
+/** Two- or three-team trade: each team is checked on what it sends against what it receives. */
+export function checkMultiTeamTrade(teams: TradeTeam[], assets: TradeAsset[]): { ok: boolean; sides: SideVerdict[] } {
+  const sides = teams.map((team, i) =>
+    checkSide(
+      { ...team, outgoing: assets.filter((a) => a.from === i && a.to !== i).map((a) => a.salary) },
+      assets.filter((a) => a.to === i && a.from !== i).map((a) => a.salary),
+    ),
+  );
+  return { ok: sides.every((s) => s.ok), sides };
 }
