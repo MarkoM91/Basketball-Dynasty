@@ -63,6 +63,22 @@ export const PUBLIC_PAGES: Record<
     changefreq: 'monthly',
     priority: 0.9,
   },
+  '/luxury-tax-calculator': {
+    title: 'NBA Luxury Tax Calculator 2026-27: Tax Bill & Repeater Rates | Basketball Dynasty',
+    description:
+      'Free NBA luxury tax calculator: enter a team salary and see the 2026-27 tax bill bracket by bracket, the repeater rate, and what one more contract really costs.',
+    h1: 'NBA luxury tax calculator',
+    changefreq: 'monthly',
+    priority: 0.9,
+  },
+  '/max-contract-calculator': {
+    title: 'NBA Max Contract Calculator 2026-27: Year-by-Year Salary | Basketball Dynasty',
+    description:
+      'Free NBA max contract calculator: see a 2026-27 max deal year by year for 0–6, 7–9 and 10+ year players, re-signing with his own team or signing with a new one.',
+    h1: 'NBA max contract calculator',
+    changefreq: 'monthly',
+    priority: 0.9,
+  },
   '/compare': {
     title: 'Basketball Dynasty vs Basketball GM — Basketball Manager Games Compared',
     description:

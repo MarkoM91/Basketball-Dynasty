@@ -39,6 +39,22 @@ const pages = [
     schema: ['WebApplication', 'FAQPage', 'Organization', 'VideoGame'],
   },
   {
+    path: '/luxury-tax-calculator',
+    file: 'luxury-tax-calculator.html',
+    h1: 'NBA luxury tax calculator',
+    content: ['Luxury tax bill', 'Repeater', 'Luxury tax FAQ', 'What a new contract really costs'],
+    links: ['/', '/start', '/trade-checker', '/max-contract-calculator'],
+    schema: ['WebApplication', 'FAQPage', 'Organization', 'VideoGame'],
+  },
+  {
+    path: '/max-contract-calculator',
+    file: 'max-contract-calculator.html',
+    h1: 'NBA max contract calculator',
+    content: ['Max contract', 'Year by year', 'Max contract FAQ', '105%'],
+    links: ['/', '/start', '/trade-checker', '/luxury-tax-calculator'],
+    schema: ['WebApplication', 'FAQPage', 'Organization', 'VideoGame'],
+  },
+  {
     path: '/compare',
     file: 'compare.html',
     h1: 'Compare basketball manager games',

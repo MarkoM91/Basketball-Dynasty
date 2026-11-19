@@ -7929,3 +7929,277 @@ h1, h2, h3,
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* ═══ NBA cap calculators ═══════════════════════════════════════════════════ */
+.tc-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tc-presets .btn {
+  min-height: 40px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.tc-seg {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 4px;
+}
+
+.tc-seg button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 48px;
+  padding: 6px 4px;
+  background: var(--slate);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  color: var(--off-white);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tc-seg button small {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--silver);
+}
+
+.tc-seg button.is-on {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: #0b0b0b;
+}
+
+.tc-seg button.is-on small {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.tc-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--silver);
+}
+
+.tc-field input[type='range'] {
+  min-height: 32px;
+  padding: 0;
+  accent-color: var(--signal);
+  background: transparent;
+  border: 0;
+}
+
+.lt-big {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.lt-cost {
+  margin: 0;
+  font-size: 15px;
+  color: var(--off-white);
+}
+
+.lt-table-wrap {
+  overflow-x: auto;
+}
+
+.lt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.lt-table caption {
+  text-align: left;
+  font-size: 12px;
+  color: var(--silver);
+  padding-bottom: 6px;
+}
+
+.lt-table th,
+.lt-table td {
+  padding: 8px 6px;
+  text-align: right;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 14px;
+}
+
+.lt-table th:first-child,
+.lt-table td:first-child {
+  text-align: left;
+}
+
+.lt-table th {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+
+.lt-total td {
+  font-weight: 800;
+}
+
+.nba-tools-nav ul {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.nba-tools-nav a {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  min-height: 44px;
+  background: var(--slate);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  color: var(--off-white);
+  text-decoration: none;
+}
+
+.nba-tools-nav a span {
+  font-size: 13px;
+  color: var(--silver);
+}
+
+.tc-check {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: var(--silver);
+  cursor: pointer;
+}
+
+.tc-check input {
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  flex-shrink: 0;
+  accent-color: var(--signal);
+}
+
+.tc-player {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 84px auto;
+  gap: 6px;
+}
+
+.tc-player:has(select) {
+  grid-template-columns: minmax(0, 1fr) 76px;
+}
+
+.tc-player select {
+  grid-column: 1;
+  min-height: 44px;
+  padding: 6px 8px;
+  background: var(--charcoal);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  color: var(--off-white);
+  font-size: 15px;
+}
+
+.tc-player .btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 10px;
+}
+
+.tc-add-team {
+  justify-self: start;
+  min-height: 44px;
+}
+
+.tc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tc-actions .btn {
+  min-height: 44px;
+}
+
+.tc-sides.is-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tc-bar {
+  padding: 14px 0 4px;
+}
+
+.tc-bar-track {
+  position: relative;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+}
+
+.tc-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--success);
+}
+
+.tc-bar-fill.is-over {
+  background: #4f8fd8;
+}
+
+.tc-bar-fill.is-tax {
+  background: #e6aa32;
+}
+
+.tc-bar-fill.is-apron {
+  background: var(--danger);
+}
+
+.tc-bar-before {
+  position: absolute;
+  top: -3px;
+  width: 4px;
+  height: 16px;
+  margin-left: -2px;
+  background: var(--off-white);
+  border-radius: 2px;
+}
+
+.tc-bar-line {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.tc-bar-line em {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-style: normal;
+  font-size: 10px;
+  color: var(--silver);
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .tc-sides.is-three {
+    grid-template-columns: 1fr;
+  }
+}

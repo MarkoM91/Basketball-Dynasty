@@ -275,6 +275,12 @@ export function LandingFooter({ logoLinksHome = true }: LandingChromeProps) {
           <Link to="/trade-checker" className="btn btn-ghost landing-guide-link">
             Trade checker
           </Link>
+          <Link to="/luxury-tax-calculator" className="btn btn-ghost landing-guide-link">
+            Luxury tax calculator
+          </Link>
+          <Link to="/max-contract-calculator" className="btn btn-ghost landing-guide-link">
+            Max contract calculator
+          </Link>
           <a href="https://discord.gg/Uh7Z9j6uS" className="btn btn-ghost landing-guide-link" target="_blank" rel="noopener">
             Discord
           </a>

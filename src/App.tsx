@@ -29,6 +29,8 @@ import { GuideScreen } from './screens/GuideScreen';
 import { ContractRenewalsScreen } from './screens/ContractRenewalsScreen';
 import { CompareScreen } from './components/LandingCompareSection';
 import { TradeCheckerScreen } from './screens/TradeCheckerScreen';
+import { LuxuryTaxScreen } from './screens/LuxuryTaxScreen';
+import { MaxContractScreen } from './screens/MaxContractScreen';
 
 function AnalyticsTracker() {
   const location = useLocation();
@@ -59,6 +61,8 @@ export default function App() {
             <Route path="/guide" element={<GuideScreen />} />
             <Route path="/compare" element={<CompareScreen />} />
             <Route path="/trade-checker" element={<TradeCheckerScreen />} />
+            <Route path="/luxury-tax-calculator" element={<LuxuryTaxScreen />} />
+            <Route path="/max-contract-calculator" element={<MaxContractScreen />} />
             <Route element={<RequireFranchise />}>
               <Route element={<GameLayout />}>
                 <Route path="/office" element={<HomeScreen />} />
