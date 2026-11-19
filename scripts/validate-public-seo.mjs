@@ -176,8 +176,17 @@ async function validate() {
   assert.equal(renderedRoots.size, pages.length, 'Public pages must contain their own rendered content');
   const sitemap = (await builtFile('sitemap.xml')).toString('utf8');
   const sitemapUrls = Array.from(sitemap.matchAll(/<loc>([^<]+)<\/loc>/g), ([, url]) => decodeEntities(url));
-  assert.deepEqual(sitemapUrls.toSorted(), pages.map((page) => `${site}${page.path}`).toSorted(),
-    'The sitemap must contain exactly the four public URLs');
+  const manifest = JSON.parse(await readFile(new URL('../public/static-content-manifest.json', import.meta.url), 'utf8'));
+  const articleUrls = [];
+  for (const article of manifest) {
+    const url = `${site}${article.slug}/`;
+    articleUrls.push(url);
+    const html = (await builtFile(`${article.slug.replace(/^\//, '')}/index.html`)).toString('utf8');
+    const canonical = exactlyOne(tags(html, 'link').filter((link) => link.rel === 'canonical'), `${article.slug} canonical`);
+    assert.equal(canonical.href, url, `${article.slug}: canonical must be the 200-status trailing-slash URL`);
+  }
+  assert.deepEqual(sitemapUrls.toSorted(), [...pages.map((page) => `${site}${page.path}`), ...articleUrls].toSorted(),
+    'The sitemap must contain exactly the public pages and the guide articles');
 
   const serviceWorker = (await builtFile('sw.js')).toString('utf8');
   const entries = new Map(Array.from(serviceWorker.matchAll(/\{\s*["']?url["']?\s*:\s*["']([^"']+)["']\s*,\s*["']?revision["']?\s*:\s*(null|["']([^"']+)["'])\s*\}/g),
@@ -187,7 +196,7 @@ async function validate() {
     assert.equal(entries.get(page.file), revision,
       `${page.path}: sw.js must precache ${page.file} with its current HTML revision (prerender before PWA generation)`);
   }
-  console.log(`Public SEO validation passed: ${pages.length} prerendered pages, four-URL sitemap, and current service worker revisions.`);
+  console.log(`Public SEO validation passed: ${pages.length} prerendered pages, ${pages.length + manifest.length}-URL sitemap with ${manifest.length} guide articles, and current service worker revisions.`);
 }
 
 await validate().catch((error) => {
