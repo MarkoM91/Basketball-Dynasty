@@ -38,7 +38,7 @@ export default defineConfig({
       globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
       // Public pages have their own precached HTML; never replace them with the home shell.
       navigateFallbackDenylist: [
-        /^\/(?:start|guide|compare|trade-checker)(?:\/|\?|$)/,
+        /^\/(?:start|guide|compare|trade-checker|luxury-tax-calculator|max-contract-calculator)(?:\/|\?|$)/,
         /^\/guides(?:\/|\?|$)/,
         /^\/games-like-basketball-gm(?:\/|\?|$)/,
       ],

@@ -8,6 +8,8 @@ const pages = [
   { path: '/guide', changefreq: 'monthly', priority: '0.85' },
   { path: '/compare', changefreq: 'monthly', priority: '0.85' },
   { path: '/trade-checker', changefreq: 'monthly', priority: '0.9' },
+  { path: '/luxury-tax-calculator', changefreq: 'monthly', priority: '0.9' },
+  { path: '/max-contract-calculator', changefreq: 'monthly', priority: '0.9' },
 ];
 
 const lastmod = new Date().toISOString().slice(0, 10);

@@ -4,6 +4,8 @@ Allow: /start
 Allow: /guide
 Allow: /compare
 Allow: /trade-checker
+Allow: /luxury-tax-calculator
+Allow: /max-contract-calculator
 
 # App screens — local save required; keep crawl budget on public pages.
 Disallow: /office

@@ -5,6 +5,8 @@ import { OnboardingScreen } from './screens/OnboardingScreen';
 import { GuideScreen } from './screens/GuideScreen';
 import { CompareScreen } from './components/LandingCompareSection';
 import { TradeCheckerScreen } from './screens/TradeCheckerScreen';
+import { LuxuryTaxScreen } from './screens/LuxuryTaxScreen';
+import { MaxContractScreen } from './screens/MaxContractScreen';
 import { PUBLIC_PAGES } from './seo';
 import { getPageSeo } from './lib/pageSeo';
 
@@ -14,6 +16,8 @@ const screens = {
   '/guide': GuideScreen,
   '/compare': CompareScreen,
   '/trade-checker': TradeCheckerScreen,
+  '/luxury-tax-calculator': LuxuryTaxScreen,
+  '/max-contract-calculator': MaxContractScreen,
 };
 
 export function renderPublicPages() {
