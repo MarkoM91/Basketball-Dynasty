@@ -12,6 +12,14 @@ const sources = [
   ['scripts/static-content/05-salary-cap-guide.md', '/guides/salary-cap'],
 ];
 
+/**
+ * Cloudflare serves each article from its folder and redirects /guides/x to /guides/x/, so the
+ * trailing-slash URL is the one that answers 200. Canonicals, schema, sitemap and links all use it.
+ */
+export function articleUrl(slug) {
+  return `${SITE_URL}${slug}/`;
+}
+
 function escapeHtml(value) {
   return value
     .replaceAll('&', '&amp;')
@@ -150,7 +158,8 @@ function renderMarkdown(markdown) {
 }
 
 function pageFromSource([file, slug]) {
-  const raw = readFileSync(file, 'utf8');
+  // Normalise Windows line endings: the field and FAQ parsers expect plain \n.
+  const raw = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
   const title = extractField(raw, 'Title tag', titleFromSlug(slug));
   const meta = extractField(raw, 'Meta description', '');
   const h1 = extractField(raw, 'H1', title);
@@ -173,7 +182,8 @@ function schema(page) {
       headline: page.h1,
       datePublished: published,
       dateModified: published,
-      mainEntityOfPage: `${SITE_URL}${page.slug}`,
+      mainEntityOfPage: articleUrl(page.slug),
+      url: articleUrl(page.slug),
     },
     {
       '@context': 'https://schema.org',
@@ -187,12 +197,27 @@ function schema(page) {
   ]);
 }
 
+const NAV_LABELS = {
+  '/games-like-basketball-gm': 'Games like Basketball GM',
+  '/guides/first-season': 'First season guide',
+  '/guides/trade-strategy': 'Trade strategy',
+  '/guides/draft-scouting': 'Draft and scouting',
+  '/guides/salary-cap': 'Salary cap guide',
+};
+
 function navFor(page) {
   const ref = page.slug.split('/').filter(Boolean).at(-1);
-  const links = ['/', `/play?ref=guide-${ref}`, ...sources.map(([, slug]) => slug).filter((slug) => slug !== page.slug).slice(0, 3)];
-  return links
-    .map((href) => `<a href="${href}">${href === '/' ? 'Home' : href.startsWith('/play') ? 'Play free' : href}</a>`)
-    .join('');
+  // Descriptive anchor text and the 200-status (trailing-slash) URLs, plus the main guide hub.
+  const links = [
+    ['/', 'Home'],
+    ['/guide', 'How to play'],
+    [`/play?ref=guide-${ref}`, 'Play free'],
+    ...sources
+      .map(([, slug]) => slug)
+      .filter((slug) => slug !== page.slug)
+      .map((slug) => [`${slug}/`, NAV_LABELS[slug] ?? slug]),
+  ];
+  return links.map(([href, label]) => `<a href="${href}">${escapeHtml(label)}</a>`).join('');
 }
 
 function render(page) {
@@ -203,7 +228,13 @@ function render(page) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${escapeHtml(page.title)}</title>
   <meta name="description" content="${escapeHtml(page.meta)}">
-  <link rel="canonical" href="${SITE_URL}${page.slug}">
+  <link rel="canonical" href="${articleUrl(page.slug)}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="${articleUrl(page.slug)}">
+  <meta property="og:title" content="${escapeHtml(page.title)}">
+  <meta property="og:description" content="${escapeHtml(page.meta)}">
+  <meta property="og:image" content="${SITE_URL}/promo/01-landing-hero.png">
+  <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">${schema(page)}</script>
   <style>
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;margin:0;background:#f8fafc;color:#111827;line-height:1.65}
@@ -246,6 +277,6 @@ for (const page of pages) {
 
 writeFileSync(
   'public/static-content-manifest.json',
-  JSON.stringify(pages.map(({ slug, title, meta }) => ({ slug, title, meta })), null, 2),
+  JSON.stringify(pages.map(({ slug, title, meta }) => ({ slug, url: articleUrl(slug), title, meta, lastmod: published })), null, 2),
 );
 console.log(`Generated ${pages.length} static SEO pages from markdown sources`);

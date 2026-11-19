@@ -1,4 +1,4 @@
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 
 const SITE_URL = 'https://basketballdynasty.com';
 
@@ -15,13 +15,24 @@ function loc(path) {
   return path === '/' ? `${SITE_URL}/` : `${SITE_URL}${path}`;
 }
 
+// The static guide articles (public/<slug>/index.html), at the URLs that answer 200.
+const articles = JSON.parse(readFileSync('public/static-content-manifest.json', 'utf8'));
+for (const article of articles) {
+  pages.push({
+    path: article.url ? article.url.replace(SITE_URL, '') : `${article.slug}/`,
+    changefreq: 'monthly',
+    priority: '0.7',
+    lastmod: article.lastmod,
+  });
+}
+
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${pages
   .map(
     (page) => `  <url>
     <loc>${loc(page.path)}</loc>
-    <lastmod>${lastmod}</lastmod>
+    <lastmod>${page.lastmod ?? lastmod}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
   </url>`,
