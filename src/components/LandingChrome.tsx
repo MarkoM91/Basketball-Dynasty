@@ -243,6 +243,9 @@ export function LandingHeader({ logoLinksHome = true }: LandingChromeProps) {
           <Link to="/compare" className="btn btn-ghost landing-topbar-btn">
             Compare
           </Link>
+          <Link to="/trade-checker" className="btn btn-ghost landing-topbar-btn">
+            Trade checker
+          </Link>
         </nav>
       )}
     </header>
@@ -268,6 +271,9 @@ export function LandingFooter({ logoLinksHome = true }: LandingChromeProps) {
           </Link>
           <Link to="/compare" className="btn btn-ghost landing-guide-link">
             Compare
+          </Link>
+          <Link to="/trade-checker" className="btn btn-ghost landing-guide-link">
+            Trade checker
           </Link>
           <a href="https://discord.gg/Uh7Z9j6uS" className="btn btn-ghost landing-guide-link" target="_blank" rel="noopener">
             Discord

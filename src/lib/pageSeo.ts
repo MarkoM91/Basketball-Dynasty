@@ -4,6 +4,7 @@ import {
 } from '../seo';
 import { guideFaqJsonLd, howToJsonLd } from '../content/guide';
 import { compareFaqJsonLd } from '../content/compare';
+import { tradeCheckerJsonLd } from '../content/tradeChecker';
 
 /** Shared by the static publisher and client navigation so their metadata stays aligned. */
 export function getPageSeo(pathname: string) {
@@ -27,7 +28,7 @@ export function getPageSeo(pathname: string) {
     { name: 'twitter:description', content: description },
   ];
   const jsonLd: Record<string, object | null> = {
-    'seo-jsonld-app': webApplicationJsonLd(),
+    'seo-jsonld-app': path === '/trade-checker' ? tradeCheckerJsonLd() : webApplicationJsonLd(),
     'seo-jsonld-org': organizationJsonLd(),
     'seo-jsonld-game': videoGameJsonLd(),
     'seo-jsonld-faq': path === '/' ? faqPageJsonLd() : null,

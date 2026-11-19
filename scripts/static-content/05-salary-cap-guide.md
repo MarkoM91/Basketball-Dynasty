@@ -4,12 +4,27 @@
 **Title tag:** Salary Cap Guide: Contracts, Cap Space, and Building a Title Roster
 **Meta description:** How the salary cap works in Basketball Dynasty — contract value, cap space as an asset, avoiding the max-contract trap, and structuring a roster that can win and last.
 **H1:** The Salary Cap Guide: How to Turn Money Into Wins
+**Updated:** 2026-11-19
 
 ---
 
 Every franchise in Basketball Dynasty operates under the same cap. The difference between a dynasty and a decade of mediocrity isn't spending more — it's spending *better*. This guide covers how to think about contracts, when cap space is a weapon, and the contract mistakes that quietly end championship windows.
 
-> *Note for the editor (Marco): drop in the game's actual numbers where marked — cap figure, max contract terms, roster size — so the page doubles as accurate documentation. [VERIFY] markers below.*
+## The numbers in Basketball Dynasty
+
+Basketball Dynasty runs a fictional league with its own simplified figures, structured like the NBA's:
+
+| Line | In the game |
+|---|---|
+| Salary cap | $140M |
+| Luxury tax line | $170M |
+| Second apron (hard cap) | $189M |
+| Mid-level exception | $12.8M |
+| Taxpayer mid-level | $5M |
+| Bi-annual exception | $4.7M |
+| Minimum salary | $1.1M |
+
+A maximum contract is 25%, 30% or 35% of the cap depending on the player's experience. For the real NBA's 2026-27 numbers, see [how NBA free agency works](/guides/nba-free-agency-rules/).
 
 ## The cap is a budget for mistakes
 
@@ -19,7 +34,7 @@ Here's the reframe that separates good cap managers from bad ones: every team ca
 
 A player's real value to your franchise is the gap between what he produces and what he costs. A star on a max deal producing star value is *neutral*. A solid starter on a cheap deal is *positive*. A declining veteran on a big number is the negative that cancels a positive elsewhere. Build your roster ledger this way and trades start making sense instantly — you're not trading players, you're trading value gaps.
 
-The most valuable contract class in the game: **good young players before their second contract.** [VERIFY: rookie-scale mechanics] Production rising, price fixed. Every season of star-level play on a cheap deal is a season you can afford an extra real player elsewhere. Dynasties are built in exactly that window.
+The most valuable contract class in the game: **good young players before their second contract.** Drafted players sign rookie-scale deals: about $10.5M in year one for the #1 pick, down to about $2.4M for the 30th, rising each season. Production rising, price nearly fixed. Every season of star-level play on a cheap deal is a season you can afford an extra real player elsewhere. Dynasties are built in exactly that window.
 
 ## Cap space is a player
 
@@ -39,9 +54,15 @@ The honest framework: max contracts are for players who decide playoff series. I
 
 ## Structuring a contender
 
-A sustainable title roster usually carries: two or three max-level contracts that are genuinely earned, a core of mid-priced players in their prime years, and minimum-cost depth from smart drafting [VERIFY: roster size and minimum contracts]. The contender-killer pattern is the inverse — one earned max, two unearned ones, and no cheap young talent because the picks were traded chasing last year's deadline.
+A sustainable title roster usually carries: two or three max-level contracts that are genuinely earned, a core of mid-priced players in their prime years, and minimum-cost depth from smart drafting and minimum contracts. The contender-killer pattern is the inverse — one earned max, two unearned ones, and no cheap young talent because the picks were traded chasing last year's deadline.
 
 Timing matters as much as structure: align your contracts so your stars' deals and your window peak together. A roster where the best player's contract expires just as the second star arrives isn't a window — it's a revolving door.
+
+## Over the cap, your options shrink
+
+Once you're over the cap you can't bid with cap room. You can sign outside free agents only with the mid-level exception (once a season), the smaller taxpayer mid-level above the tax line, the bi-annual exception, or a minimum deal. Past the second apron, it's minimum deals only. Your own free agents are different: Bird rights let you re-sign them over the cap. A **Loyal** player re-signs for about 12% less; a **Mercenary** asks about 10% more.
+
+Trades follow salary-matching rules too, and a contract that has expired can't be traded until you re-sign the player. To test a real NBA deal, try the free [NBA trade checker](/trade-checker).
 
 ## When to go over budget — and when the bill comes due
 
@@ -58,6 +79,9 @@ Absolutely, and digging out costs assets and seasons. The game won't bail you ou
 **Do contracts affect trades?**
 Constantly. Salaries shape what trades are possible, and contract quality is half of every player's trade value.
 
+**Can I sign free agents when I'm over the cap?**
+Only with exceptions: the mid-level, the taxpayer mid-level, the bi-annual exception or a minimum deal. Re-signing your own players with Bird rights is the exception to the cap.
+
 ---
 
-*Internal links: → /guides/trade-strategy (cap-space arbitrage), → /guides/draft-scouting (rookie deals as the cap cheat code), → /guides/first-season. CTA: "Take over a cap sheet and fix it — play free, no signup."*
+*Internal links: → /guides/nba-free-agency-rules, → /trade-checker, → /guides/trade-strategy (cap-space arbitrage), → /guides/draft-scouting (rookie deals as the cap cheat code), → /guides/first-season. CTA: "Take over a cap sheet and fix it — play free, no signup."*

@@ -4,6 +4,7 @@
 **Title tag:** Basketball Dynasty Beginner's Guide: How to Survive Your First Season
 **Meta description:** New GM? This beginner's guide to Basketball Dynasty covers your first roster review, lineup, trades, the draft, and how to avoid getting fired in year one.
 **H1:** Beginner's Guide: How to Survive Your First Season as GM
+**Updated:** 2026-11-19
 
 ---
 
@@ -20,12 +21,17 @@ Look at three things, in order:
 1. **Age vs. ability.** A 31-year-old star and a 24-year-old star are different assets entirely. One is a win-now piece losing value every season; the other is a foundation.
 2. **Contracts.** Find your worst contract — every roster has one. Big money for declining production is the anchor you'll be working around all year.
 3. **The gap between your best five and the league.** Be brutal. If your starting five wouldn't scare a playoff team, don't pretend a hot streak will fix it.
+4. **Personalities.** Every player has one or two traits. Note your Divas (they need to start), anyone who wants a ring (he won't stay patient through a rebuild) and your Mentors (keep them around young players). The [player personalities guide](/guides/player-personalities/) covers all eight.
 
 This audit tells you which of three modes you're in: **contend**, **retool**, or **rebuild**. Committing to one is the decision; trying to do all three at once is how franchises rot.
 
-## Step 3: Set your lineup yourself
+## Step 3: Set your lineup and your game plan
 
 Don't leave the rotation on autopilot. Pin your best players as starters, bench the veterans blocking your young talent (if you're rebuilding) or the projects who aren't ready (if you're contending). Small lineup edges compound across 82 games.
+
+![Game Day screen with win chance, the reasons behind it and a scouting report](/promo/guides/game-day-odds.jpg "Game Day shows your win chance, why it is what it is, and who you're facing.")
+
+Then set a game plan. Game Day shows your win chance, the reasons behind it and a one-line scouting report on the opponent. Pick pace, offense, defense and rotation to attack their weakness, and watch the odds move before you play. Keep an eye on fatigue too: tired starters play worse and get hurt more, and the Rest tonight button exists for a reason. The [game plan guide](/guides/game-plan/) explains every option.
 
 ## Step 4: Your first trade — and the trades to refuse
 
@@ -53,7 +59,8 @@ You don't get fired for losing. You get fired for *missing expectations*. A 28-w
 
 - Read owner expectations before touching the roster
 - Pick a mode: contend, retool, or rebuild — and commit
-- Set the lineup manually
+- Set the lineup manually and pick a game plan for each opponent
+- Rest anyone who is Exhausted
 - Make one trade that serves your timeline (and refuse the rest)
 - Draft on talent and range, not roster need
 - Check expectations again at midseason and adjust
@@ -71,4 +78,4 @@ No. It runs in your browser on desktop or mobile, and your save is stored on you
 
 ---
 
-*Internal links: → /games-like-basketball-gm, → /guides/trade-strategy, → /guides/draft-scouting, → /guides/salary-cap. CTA top and bottom: "Start your first season free — no download, no signup."*
+*Internal links: → /guides/game-plan, → /guides/player-personalities, → /guides/trade-strategy, → /guides/draft-scouting, → /guides/salary-cap. CTA top and bottom: "Start your first season free — no download, no signup."*

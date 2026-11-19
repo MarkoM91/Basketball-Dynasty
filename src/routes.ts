@@ -22,7 +22,7 @@ export const SCREEN_PATHS: Record<ScreenId, string> = {
 };
 
 /** Marketing/help pages — never hijacked by in-game screen navigation. */
-export const PUBLIC_PATHS = ['/', '/start', '/guide', '/compare'] as const;
+export const PUBLIC_PATHS = ['/', '/start', '/guide', '/compare', '/trade-checker'] as const;
 
 const PATH_TO_SCREEN = Object.fromEntries(
   Object.entries(SCREEN_PATHS).map(([screen, path]) => [path, screen]),

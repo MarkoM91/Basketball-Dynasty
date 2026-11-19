@@ -7,6 +7,7 @@ const pages = [
   { path: '/start', changefreq: 'monthly', priority: '0.9' },
   { path: '/guide', changefreq: 'monthly', priority: '0.85' },
   { path: '/compare', changefreq: 'monthly', priority: '0.85' },
+  { path: '/trade-checker', changefreq: 'monthly', priority: '0.9' },
 ];
 
 const lastmod = new Date().toISOString().slice(0, 10);

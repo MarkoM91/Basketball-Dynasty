@@ -7740,3 +7740,192 @@ h1, h2, h3,
   margin: 2px 0 6px;
   color: var(--off-white);
 }
+
+/* ═══ Trade checker (public tool page) ══════════════════════════════════════ */
+.tc-main {
+  display: grid;
+  gap: 16px;
+  padding-bottom: 32px;
+}
+
+.tc-thresholds {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.tc-thresholds > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+  background: var(--slate);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+}
+
+.tc-thresholds span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+
+.tc-thresholds strong {
+  font-family: var(--font-display);
+  font-size: 18px;
+}
+
+.tc-sides {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.tc-side {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+}
+
+.tc-side legend {
+  padding: 0 4px;
+}
+
+.tc-field {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--silver);
+}
+
+.tc-field input {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  background: var(--charcoal);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  color: var(--off-white);
+  font-size: 16px;
+}
+
+.tc-salary-row {
+  display: flex;
+  gap: 6px;
+}
+
+.tc-salary-row .btn {
+  flex-shrink: 0;
+  min-height: 44px;
+}
+
+.tc-add {
+  min-height: 44px;
+}
+
+.tc-result {
+  display: grid;
+  gap: 10px;
+  border-top: 4px solid var(--success);
+}
+
+.tc-result.is-bad {
+  border-top-color: var(--danger);
+}
+
+.tc-result h2 {
+  margin: 0;
+}
+
+.tc-verdict {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.25);
+  border-left: 3px solid var(--success);
+  border-radius: var(--radius-sm);
+}
+
+.tc-verdict.is-bad {
+  border-left-color: var(--danger);
+}
+
+.tc-verdict p {
+  margin: 0;
+}
+
+.tc-verdict-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 16px;
+}
+
+.tc-verdict-head span {
+  font-weight: 800;
+  color: var(--success);
+}
+
+.tc-verdict.is-bad .tc-verdict-head span {
+  color: var(--danger);
+}
+
+.tc-verdict-reason {
+  font-size: 14px;
+  color: var(--off-white);
+}
+
+.tc-verdict-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+}
+
+.tc-verdict-stats dt {
+  font-size: 11px;
+  color: var(--silver);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.tc-verdict-stats dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.tc-verdict-rule,
+.tc-sources {
+  font-size: 12px;
+  color: var(--silver);
+}
+
+.tc-verdict-warn {
+  font-size: 13px;
+  color: #e6aa32;
+}
+
+.tc-rules {
+  padding-left: 20px;
+  display: grid;
+  gap: 4px;
+}
+
+.tc-sources a {
+  color: var(--off-white);
+}
+
+@media (max-width: 640px) {
+  .tc-sides {
+    grid-template-columns: 1fr;
+  }
+
+  .tc-thresholds,
+  .tc-verdict-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

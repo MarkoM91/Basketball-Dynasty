@@ -28,6 +28,7 @@ import { TeamRosterScreen } from './screens/TeamRosterScreen';
 import { GuideScreen } from './screens/GuideScreen';
 import { ContractRenewalsScreen } from './screens/ContractRenewalsScreen';
 import { CompareScreen } from './components/LandingCompareSection';
+import { TradeCheckerScreen } from './screens/TradeCheckerScreen';
 
 function AnalyticsTracker() {
   const location = useLocation();
@@ -57,6 +58,7 @@ export default function App() {
             <Route path="/start" element={<OnboardingScreen />} />
             <Route path="/guide" element={<GuideScreen />} />
             <Route path="/compare" element={<CompareScreen />} />
+            <Route path="/trade-checker" element={<TradeCheckerScreen />} />
             <Route element={<RequireFranchise />}>
               <Route element={<GameLayout />}>
                 <Route path="/office" element={<HomeScreen />} />

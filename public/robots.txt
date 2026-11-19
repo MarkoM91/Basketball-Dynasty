@@ -3,6 +3,7 @@ Allow: /
 Allow: /start
 Allow: /guide
 Allow: /compare
+Allow: /trade-checker
 
 # App screens — local save required; keep crawl budget on public pages.
 Disallow: /office

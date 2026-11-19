@@ -4,6 +4,7 @@ import { MainMenuScreen } from './screens/MainMenuScreen';
 import { OnboardingScreen } from './screens/OnboardingScreen';
 import { GuideScreen } from './screens/GuideScreen';
 import { CompareScreen } from './components/LandingCompareSection';
+import { TradeCheckerScreen } from './screens/TradeCheckerScreen';
 import { PUBLIC_PAGES } from './seo';
 import { getPageSeo } from './lib/pageSeo';
 
@@ -12,6 +13,7 @@ const screens = {
   '/start': OnboardingScreen,
   '/guide': GuideScreen,
   '/compare': CompareScreen,
+  '/trade-checker': TradeCheckerScreen,
 };
 
 export function renderPublicPages() {
