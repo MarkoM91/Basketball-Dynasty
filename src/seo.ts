@@ -55,6 +55,14 @@ export const PUBLIC_PAGES: Record<
     changefreq: 'monthly',
     priority: 0.85,
   },
+  '/trade-checker': {
+    title: 'NBA Trade Checker 2026-27 — Salary Matching & Apron Rules | Basketball Dynasty',
+    description:
+      'Free NBA trade checker: enter each team\'s salary and the contracts they send, and see if the trade works under 2026-27 salary-matching, first apron and second apron rules.',
+    h1: 'NBA trade checker: does this trade work?',
+    changefreq: 'monthly',
+    priority: 0.9,
+  },
   '/compare': {
     title: 'Basketball Dynasty vs Basketball GM — Basketball Manager Games Compared',
     description:
@@ -72,6 +80,9 @@ export const PUBLIC_GUIDE_ARTICLES = [
   { href: '/guides/trade-strategy/', title: 'Trade strategy', description: 'Build packages, read counteroffers and balance player value with salary rules.' },
   { href: '/guides/draft-scouting/', title: 'Draft and scouting', description: 'Understand scouting ranges, development potential and the two-round draft.' },
   { href: '/guides/salary-cap/', title: 'Salary cap guide', description: 'Learn how cap room, luxury tax and signing exceptions affect your roster.' },
+  { href: '/guides/game-plan/', title: 'Game plan guide', description: 'Set pace, offense, defense and rotation for each opponent, and manage fatigue and rest.' },
+  { href: '/guides/player-personalities/', title: 'Player personalities', description: 'What each trait does, and how to handle Divas, ring chasers and trade demands.' },
+  { href: '/guides/nba-free-agency-rules/', title: 'How NBA free agency works', description: 'Cap room, the mid-level exception and Bird rights, with the 2026-27 numbers.' },
 ] as const;
 
 export const LANDING_FAQ = [

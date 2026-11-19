@@ -4,6 +4,7 @@
 **Title tag:** Basketball Trade Strategy: How to Win Trades Against a Real AI
 **Meta description:** Learn how to win trades in Basketball Dynasty, where the AI counters offers like a real front office. Asset value, timing, counter-offers, and the trades to never make.
 **H1:** Trade Strategy Guide: Winning Negotiations Against an AI That Fights Back
+**Updated:** 2026-11-19
 
 ---
 
@@ -21,6 +22,18 @@ When the AI counters, it's showing you its hand. A counter that strips out your 
 2. **Young players on cheap deals.** The engine of every rebuild. Their value is part production, part contract — a solid starter making little money is a tradeable surplus everywhere.
 3. **Draft picks.** Pure optionality. Picks are most valuable in the hands of teams that don't need them now, which is why contenders pay heavily for them at the wrong time. Sell picks when you're contending; hoard them when you're not.
 4. **Cap space.** The invisible asset. Taking back a bad contract *costs* you flexibility, so always charge for it — a pick, a prospect, something. Renting cap room to desperate teams is the quietest value engine in the game.
+
+## Salary matching: what the rules allow
+
+Value is only half of a trade. The other half is salary. Teams over the cap have to send out enough salary to cover what they take back, and teams over the apron face tighter limits still. Basketball Dynasty enforces NBA-style rules: the trade builder warns you when your cap blocks a deal, and contracts that have expired can't be traded until you re-sign the player.
+
+![Trade checker showing a trade that works for both teams on salary](/promo/guides/trade-checker.jpg "The free NBA trade checker shows how much salary each team can take back.")
+
+Want to test a real NBA deal? The free [NBA trade checker](/trade-checker) applies the 2026-27 salary-matching and apron rules to any trade you can think of.
+
+## Trade demands are a deadline
+
+Some players force your hand. A star who wants a ring will ask out of a losing team, and a Diva on your bench wants to start or leave. A trade demand is the worst time to sell, because everyone knows you have to move him. Read your locker room early and sell a year before the demand, not the week after. The [player personalities guide](/guides/player-personalities/) explains who demands what.
 
 ## Timing beats talent evaluation
 
@@ -55,8 +68,11 @@ Mostly no — lopsided offers get rejected or countered. The fun is that winning
 Yes. Franchise players move only when the situation justifies it, which keeps the league believable.
 
 **Is there a trade deadline?**
-The season has a real structure — windows matter, and value shifts as the playoffs approach.
+Yes. The deadline arrives mid-season, and offers and prices shift as it approaches.
+
+**Do salaries have to match in trades?**
+Yes, for teams over the cap. Try the free NBA trade checker to see how much salary a team can take back.
 
 ---
 
-*Internal links: → /guides/salary-cap (cap mechanics behind trades), → /guides/first-season, → /guides/draft-scouting. CTA: "Test your trade instincts against an AI that says no — play free."*
+*Internal links: → /trade-checker, → /guides/salary-cap (cap mechanics behind trades), → /guides/player-personalities, → /guides/first-season, → /guides/draft-scouting. CTA: "Test your trade instincts against an AI that says no — play free."*

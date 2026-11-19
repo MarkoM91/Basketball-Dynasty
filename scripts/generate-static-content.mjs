@@ -10,6 +10,9 @@ const sources = [
   ['scripts/static-content/03-trade-strategy-guide.md', '/guides/trade-strategy'],
   ['scripts/static-content/04-draft-scouting-guide.md', '/guides/draft-scouting'],
   ['scripts/static-content/05-salary-cap-guide.md', '/guides/salary-cap'],
+  ['scripts/static-content/06-game-plan-guide.md', '/guides/game-plan'],
+  ['scripts/static-content/07-player-personalities-guide.md', '/guides/player-personalities'],
+  ['scripts/static-content/08-nba-free-agency-rules.md', '/guides/nba-free-agency-rules'],
 ];
 
 /**
@@ -30,6 +33,7 @@ function escapeHtml(value) {
 
 function inlineMarkdown(value) {
   return escapeHtml(value)
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, text, href) => `<a href="${href}">${text}</a>`)
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>');
 }
@@ -56,6 +60,7 @@ function cleanMarkdown(raw) {
     .replace(/^\*\*Title tag:\*\*.+\n/m, '')
     .replace(/^\*\*Meta description:\*\*.+\n/m, '')
     .replace(/^\*\*H1:\*\*.+\n/m, '')
+    .replace(/^\*\*Updated:\*\*.+\n/m, '')
     .replace(/^---\n+/gm, '')
     .trim();
 }
@@ -108,10 +113,24 @@ function renderMarkdown(markdown) {
       table.push(trimmed);
       continue;
     }
-    if (trimmed.startsWith('*Internal links:')) {
+    if (trimmed.startsWith('*Internal links')) {
+      // Editorial note in the source: publish only the linked pages, never the CTA notes.
       flushList();
       flushTable();
-      html.push(`<p class="source-note">${inlineMarkdown(trimmed.replace(/^\*/, '').replace(/\*$/, ''))}</p>`);
+      const paths = [...new Set(trimmed.match(/\/(?:guides\/[a-z-]+|games-like-basketball-gm|trade-checker|guide|compare)\b/g) ?? [])];
+      if (paths.length) {
+        const links = paths.map((path) => `<a href="${hrefFor(path)}">${escapeHtml(NAV_LABELS[path] ?? path)}</a>`).join(' · ');
+        html.push(`<p class="source-note">Related: ${links}</p>`);
+      }
+      continue;
+    }
+    const image = trimmed.match(/^!\[([^\]]+)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)$/);
+    if (image) {
+      flushList();
+      flushTable();
+      const [, alt, src, caption] = image;
+      // Phone screenshots are captured at 750x1624 and shown at half size.
+      html.push(`<figure><img src="${src}" alt="${escapeHtml(alt)}" width="375" height="812" loading="lazy" decoding="async">${caption ? `<figcaption>${inlineMarkdown(caption)}</figcaption>` : ''}</figure>`);
       continue;
     }
     if (trimmed.startsWith('>')) {
@@ -157,19 +176,27 @@ function renderMarkdown(markdown) {
   return html.join('\n');
 }
 
+/** Articles live at /x/ (the 200 URL); app pages like /guide and /trade-checker have no slash. */
+function hrefFor(path) {
+  return /^\/(?:guides\/|games-like-basketball-gm)/.test(path) ? `${path}/` : path;
+}
+
 function pageFromSource([file, slug]) {
   // Normalise Windows line endings: the field and FAQ parsers expect plain \n.
   const raw = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
   const title = extractField(raw, 'Title tag', titleFromSlug(slug));
   const meta = extractField(raw, 'Meta description', '');
   const h1 = extractField(raw, 'H1', title);
+  const updated = extractField(raw, 'Updated', published);
   const markdown = cleanMarkdown(raw).replace(new RegExp(`#\\s*${h1.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\n?`), '');
   return {
     slug,
     title,
     meta,
     h1,
+    updated,
     body: renderMarkdown(markdown),
+    image: markdown.match(/!\[[^\]]*\]\(([^)\s]+)/)?.[1],
     faq: extractFaq(markdown),
   };
 }
@@ -181,7 +208,8 @@ function schema(page) {
       '@type': 'Article',
       headline: page.h1,
       datePublished: published,
-      dateModified: published,
+      dateModified: page.updated,
+      image: page.image ? `${SITE_URL}${page.image}` : undefined,
       mainEntityOfPage: articleUrl(page.slug),
       url: articleUrl(page.slug),
     },
@@ -203,6 +231,12 @@ const NAV_LABELS = {
   '/guides/trade-strategy': 'Trade strategy',
   '/guides/draft-scouting': 'Draft and scouting',
   '/guides/salary-cap': 'Salary cap guide',
+  '/guides/game-plan': 'Game plan guide',
+  '/guides/player-personalities': 'Player personalities',
+  '/guides/nba-free-agency-rules': 'NBA free agency rules',
+  '/trade-checker': 'NBA trade checker',
+  '/guide': 'How to play',
+  '/compare': 'Compare games',
 };
 
 function navFor(page) {
@@ -212,6 +246,7 @@ function navFor(page) {
     ['/', 'Home'],
     ['/guide', 'How to play'],
     [`/play?ref=guide-${ref}`, 'Play free'],
+    ['/trade-checker', 'NBA trade checker'],
     ...sources
       .map(([, slug]) => slug)
       .filter((slug) => slug !== page.slug)
@@ -233,7 +268,7 @@ function render(page) {
   <meta property="og:url" content="${articleUrl(page.slug)}">
   <meta property="og:title" content="${escapeHtml(page.title)}">
   <meta property="og:description" content="${escapeHtml(page.meta)}">
-  <meta property="og:image" content="${SITE_URL}/promo/01-landing-hero.png">
+  <meta property="og:image" content="${SITE_URL}${page.image ?? '/promo/01-landing-hero.png'}">
   <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">${schema(page)}</script>
   <style>
@@ -251,6 +286,11 @@ function render(page) {
     th,td{border:1px solid #cbd5e1;padding:8px;text-align:left;vertical-align:top}
     .source-note{border-top:1px solid #cbd5e1;margin-top:34px;padding-top:18px;color:#64748b}
     footer{margin-top:44px;color:#64748b;font-size:.95rem}
+    .updated{margin:0;color:#64748b;font-size:.95rem}
+    figure{margin:28px auto;max-width:340px;text-align:center}
+    figure img{width:100%;height:auto;border-radius:14px;box-shadow:0 10px 30px rgba(15,23,42,.25);background:#0a0c10}
+    figcaption{margin-top:10px;color:#475569;font-size:.92rem}
+    main a{color:#0f766e}
   </style>
 </head>
 <body>
@@ -258,6 +298,7 @@ function render(page) {
     <nav>${navFor(page)}</nav>
     <h1>${escapeHtml(page.h1)}</h1>
     <p class="lede">${escapeHtml(page.meta)}</p>
+    <p class="updated">Updated <time datetime="${page.updated}">${new Date(`${page.updated}T12:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</time></p>
     <a class="cta" href="/play?ref=guide-${page.slug.split('/').filter(Boolean).at(-1)}">Play free</a>
     ${page.body}
     <footer>Basketball Dynasty guide page. Static HTML, separate from the game bundle.</footer>
@@ -277,6 +318,6 @@ for (const page of pages) {
 
 writeFileSync(
   'public/static-content-manifest.json',
-  JSON.stringify(pages.map(({ slug, title, meta }) => ({ slug, url: articleUrl(slug), title, meta, lastmod: published })), null, 2),
+  JSON.stringify(pages.map(({ slug, title, meta, updated }) => ({ slug, url: articleUrl(slug), title, meta, lastmod: updated })), null, 2),
 );
 console.log(`Generated ${pages.length} static SEO pages from markdown sources`);

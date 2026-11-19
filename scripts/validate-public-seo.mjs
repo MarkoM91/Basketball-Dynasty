@@ -31,6 +31,14 @@ const pages = [
     schema: ['WebApplication', 'Organization', 'VideoGame', 'FAQPage', 'HowTo'],
   },
   {
+    path: '/trade-checker',
+    file: 'trade-checker.html',
+    h1: 'NBA trade checker: does this trade work?',
+    content: ['salary matching', 'First apron', 'Trade checker FAQ', 'This trade works on salary'],
+    links: ['/', '/start', '/guide'],
+    schema: ['WebApplication', 'FAQPage', 'Organization', 'VideoGame'],
+  },
+  {
     path: '/compare',
     file: 'compare.html',
     h1: 'Compare basketball manager games',

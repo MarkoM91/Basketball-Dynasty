@@ -4,6 +4,7 @@
 **Title tag:** Draft Guide: Scouting Ranges, the Lottery, and Finding Hidden Gems
 **Meta description:** Master the draft in Basketball Dynasty: how imperfect scouting works, reading prospect ranges, lottery strategy, when to tank, and how to find steals other GMs miss.
 **H1:** The Draft Guide: Scouting, the Lottery, and the Art of Drafting Under Uncertainty
+**Updated:** 2026-11-19
 
 ---
 
@@ -26,12 +27,16 @@ This changes drafting from a lookup exercise into a portfolio decision. You're n
 The draft lottery means losing doesn't guarantee the top pick — it buys odds. That makes tanking a calculated risk, not a strategy with a receipt. Honest rules:
 
 - **Tank with a purpose and a deadline.** "Be bad until we draft a star" is a plan; "be bad" is a doom loop your owner will eventually end — with your job.
-- **Half-tanking is the worst outcome.** Winning 35 games gets you mid-lottery odds and no playoff revenue of experience. Commit in either direction.
+- **Half-tanking is the worst outcome.** Winning 35 games gets you mid-lottery odds and no playoff revenue or experience. Commit in either direction.
 - **The lottery punishes entitlement.** Build your plan around your *likely* pick, not the #1 you're dreaming about.
 
 ## Where gems hide
 
 Steals cluster in predictable places: late first-round prospects with wide ranges that other teams were too risk-averse to take, and second-rounders whose floor scared everyone but whose range still includes a real player. The math is simple — late picks cost almost nothing, so any hit is enormous value. A GM who consistently takes intelligent risks late in the draft funds an entire dynasty's depth for free.
+
+## Personality matters after the pick
+
+Some prospects develop faster than others. A **Gym rat** improves about 40% faster, and any player aged 24 or under develops about 30% faster with a **Mentor** on the roster. When two prospects look equal, take the Gym rat, and keep one veteran Mentor around your young core. See the [player personalities guide](/guides/player-personalities/).
 
 ## Draft-day trading
 
@@ -56,8 +61,8 @@ Yes. Scouting reduces uncertainty; it doesn't eliminate it. That's the design, b
 Yes — wide-range prospects fall, and patient teams catch them. Some of the best dynasty cornerstones come from picks nobody celebrated.
 
 **Does my development environment matter?**
-Young players grow through seasons and minutes — a prospect buried on a contender's bench resolves more slowly than one playing real minutes on a rebuilding team.
+Young players grow through seasons and minutes — a prospect buried on a contender's bench resolves more slowly than one playing real minutes on a rebuilding team. Gym rats and players with a Mentor on the roster develop faster.
 
 ---
 
-*Internal links: → /guides/first-season, → /guides/trade-strategy (draft-day deals), → /guides/salary-cap (rookie contracts as cap assets). CTA: "Run your own draft night — play free in your browser."*
+*Internal links: → /guides/first-season, → /guides/player-personalities, → /guides/trade-strategy (draft-day deals), → /guides/salary-cap (rookie contracts as cap assets). CTA: "Run your own draft night — play free in your browser."*

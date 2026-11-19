@@ -4,6 +4,7 @@
 **Title tag:** Games Like Basketball GM (2026): 7 Basketball Manager Sims Compared
 **Meta description:** Looking for games like Basketball GM? Honest 2026 comparison of free basketball GM simulators — browser, mobile, and PC — including which one to play and why.
 **H1:** Games Like Basketball GM: The Best Basketball Manager Sims in 2026
+**Updated:** 2026-11-19
 
 ---
 
@@ -23,9 +24,9 @@ The genre's gold standard since 2013. Browser-based, completely free, absurdly d
 **Play it if:** you want maximum depth and don't care about presentation.
 
 ### 2. Basketball Dynasty (that's us)
-A browser GM sim built around one idea: the front office should be a survival game. Your owner sets expectations and fires you for missing them. Stars demand trades when they lose faith. The trade AI negotiates back with counter-offers instead of accepting fleece jobs. Drafting uses imperfect scouting — you see ranges, not true ratings, so busts and steals both happen. Full league structure: draft lottery, play-in tournament, full playoff bracket. Plays instantly on desktop or phone, no download, no signup, saves on your device.
+A browser GM sim built around one idea: the front office should be a survival game. Your owner sets expectations and fires you for missing them. Every player has a personality: a Diva demands to start, a star who wants a ring asks out of a losing team, and a Loyal veteran re-signs for less. Before each game you set a game plan (pace, offense, defense and rotation) against that opponent, and you manage fatigue and rest across the season. Free agency and trades follow NBA-style cap rules: cap room, the mid-level exception, aprons and salary matching. The trade AI negotiates back with counter-offers instead of accepting fleece jobs. Drafting uses imperfect scouting — you see ranges, not true ratings, so busts and steals both happen. Full league structure: draft lottery, play-in tournament, full playoff bracket. Plays instantly on desktop or phone, no download, no signup, saves on your device.
 
-**Play it if:** you want BBGM-style depth with a modern interface and actual stakes. [Start a dynasty free →](/play)
+**Play it if:** you want BBGM-style depth with a modern, mobile-first interface and actual stakes. [Start a dynasty free →](/play)
 
 ### 3. Hoop Land
 A retro-styled on-court basketball sim with a franchise mode attached. Gorgeous pixel charm and great physics, with Steam Workshop modding. But it's a *gameplay* sim first — the GM layer is the side dish, not the meal.
@@ -67,11 +68,11 @@ If you came to basketball GM games from OOTP Baseball or Football Manager, you a
 The closest equivalents are the browser GM sims — Basketball GM for raw depth, Basketball Dynasty for the career-pressure side of FM (board expectations, getting sacked, fighting for your job).
 
 **Are there basketball GM games with no download?**
-Yes — Basketball GM and Basketball Dynasty both run entirely in the browser on desktop and mobile. Basketball Dynasty also requires no signup; your save lives on your device.
+Yes — Basketball GM and Basketball Dynasty both run entirely in the browser on desktop and mobile. Basketball Dynasty is designed for phones first and requires no signup; your save lives on your device.
 
 **Why don't these games have real NBA players?**
 Licensing. The browser sims use generated players and fictional teams, which is also why they can stay free. The upside: no roster-update treadmill, and every league you start is genuinely yours.
 
 ---
 
-*Internal links to include in body: → /guides/first-season (beginner guide), → /guides/trade-strategy, → /guides/draft-scouting. CTA block after section 2 and at page end.*
+*Internal links to include in body: → /guides/first-season (beginner guide), → /guides/game-plan, → /guides/player-personalities, → /guides/trade-strategy, → /trade-checker. CTA block after section 2 and at page end.*

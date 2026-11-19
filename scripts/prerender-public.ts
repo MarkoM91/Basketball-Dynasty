@@ -37,7 +37,7 @@ export function prerenderPublicPages(): Plugin {
         const file = page.path === '/' ? 'index.html' : `${page.path.slice(1)}.html`;
         await writeFile(resolve(outDir, file), html);
       }
-      config.logger.info('Prerendered four public pages with route-specific metadata.');
+      config.logger.info('Prerendered public pages with route-specific metadata.');
     },
   };
 }
